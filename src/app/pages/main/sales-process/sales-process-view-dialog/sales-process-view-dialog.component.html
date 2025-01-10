@@ -1,0 +1,267 @@
+<div class="w-full md:h-full flex items-center justify-center bg-[rgb(227,227,227)]">
+    <div class="bg-[rgb(227,227,227)] md:h-full w-full flex flex-col rounded-b-xl">
+        <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+        <div class="flex flex-row bg-[#E8E8E8] drop-shadow-lg">
+            <div
+                class="w-64 bg-[#000000] drop-shadow-lg h-12 items-center rounded-tr-full rounded-br-full flex justify-center">
+                <p class="large text-center pt-2 gotham-book text-white">Edición de Registro</p>
+            </div>
+            <div class="w-full h-full flex justify-end">
+                <mat-icon class="scale-75 fixed flex self-start text-gray-500 cursor-pointer mt-2 mr-2"
+                    mat-dialog-close>close</mat-icon>
+            </div>
+        </div>
+        <div class="bg-[rgb(227,227,227)] w-full h-full flex md:flex-row flex-col gap-2 pt-5">
+            <div class="bg-[#E8E8E8] md:w-1/5 w-full px-2">
+                <div class="lch-field flex flex-col w-full">
+                    <div class="bg-[#A8A8A8] drop-shadow-lg h-12">
+                        <p class="large pt-2 gotham-book text-white p-3">Errores</p>
+                    </div>
+                    <div class="gotham-book px-4 py-2">
+                        <div class="flex flex-row items-center">
+                            <p matTooltip="{{odsWholesale.errorName}}" matTooltipPosition="above"
+                                matTooltipShowDelay="1000" class="px-4">
+                                ({{odsWholesale.errores}}) {{odsWholesale.errorName}}
+                            </p>
+                            <button matTooltip="Crear Grado" matTooltipPosition="above"
+                                class="bg-blue-950 rounded-full h-6 w-6" (click)="createGrado()">
+                                <mat-icon class="text-white text-center scale-75">add</mat-icon>
+                            </button>
+                        </div>
+                        <mat-divider></mat-divider>
+                    </div>
+                </div>
+            </div>
+            <div class="md:w-4/5 w-full px-2">
+                <div class="lch-field flex flex-col w-full">
+                    <div class="bg-[#A8A8A8] drop-shadow-lg h-12">
+                        <p class="large pt-2 gotham-book text-white p-3">Datos</p>
+                    </div>
+                </div>
+                <div class="bg-[#E8E8E8] grow shrink basis-[1e-09px] md:flex md:flex-1 w-full justify-center items-center p-4 overflow-auto"
+                    [formGroup]="formGroup">
+                    <div
+                        class="bg-[#E8E8E8] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 gap-4 w-full h-full">
+                        <!-- <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Fábrica</span>
+                            <mat-form-field appearance="fill" class="w-full">
+                                <mat-select #factory formControlName="factory" placeholder="Seleccionar">
+                                    <mat-option *ngFor="let g of grados" [value]="g.id">{{g.grade}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Marca</span>
+                            <mat-form-field appearance="fill" class="w-full">
+                                <mat-select #brand formControlName="brand" placeholder="Seleccionar">
+                                    <mat-option *ngFor="let vt of vehicleTypes" [value]="vt.id">{{vt.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div> -->
+
+                        <!-- <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Grado</span>
+                            <mat-form-field  class="w-full"> 
+
+                                <ngx-mat-select clientSide [options]="filteredGrados" [multiple]="false" [hasSearchBox]="true" 
+                                [optionLabel]="'grade'" [optionValue]="'id'"
+                                      formControlName="grado" [searchComparison]="searchComparisonFn">
+                                </ngx-mat-select> 
+                            </mat-form-field>
+                        </div> -->
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Grado</span>
+                            <input type="text" placeholder="Grado" formControlName="codTrademark"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly />
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Año/Mes</span>
+                            <input type="text" placeholder="Año/Mes" formControlName="yearMonth"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Marca</span>
+                            <input type="text" placeholder="Marca" formControlName="codBrand"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Modelo</span>
+                            <input type="text" placeholder="Modelo" formControlName="codModel"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly />
+                        </div>
+                        
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Puertas</span>
+                            <input type="text" placeholder="Puertas" formControlName="doorsQty"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Cilindrada</span>
+                            <input type="text" placeholder="Cilindrada" formControlName="engine"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Tipo de Motor</span>
+                            <input type="text" placeholder="Tipo de Motor" formControlName="motorType"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Combustible</span>
+                            <input type="text" placeholder="Combustible" formControlName="fuelType"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Potencia</span>
+                            <input type="text" placeholder="Potencia" formControlName="power"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Unidad de Potencia</span>
+                            <input type="text" placeholder="Unidad de Potencia" formControlName="powerUnit"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Tipo de Vehiculo</span>
+                            <input type="text" placeholder="Tipo de Vehiculo" formControlName="vehicleType"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Tracción</span>
+                            <input type="text" placeholder="Tracción" formControlName="traction"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Cantidad de Marchas</span>
+                            <input type="text" placeholder="Cantidad de Marchas" formControlName="gearsQty"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Tipo de Transmisión</span>
+                            <input type="text" placeholder="Tipo de Transmisión" formControlName="transmissionType"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Cantidad de Ejes</span>
+                            <input type="text" placeholder="Cantidad de Ejes" formControlName="axleQty"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Peso</span>
+                            <input type="text" placeholder="Peso" formControlName="weight"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Capacidad de Carga</span>
+                            <input type="text" placeholder="Capacidad de Carga" formControlName="loadCapacity"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Categoría</span>
+                            <input type="text" placeholder="Categoría" formControlName="category"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Origen del vehìculo</span>
+                            <input type="text" placeholder="Origen del vehìculo" formControlName="origin"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Stock inicial</span>
+                            <input type="text" placeholder="Stock inicial" formControlName="initialStock"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Import/Prod. Mes</span>
+                            <input type="text" placeholder="Import/Prod. Mes" formControlName="import_ProdMonth"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly />
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Import/Prod. Acum.</span>
+                            <input type="text" placeholder="Import/Prod. Acum." formControlName="import_ProdAccum"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Venta mensual RS</span>
+                            <input type="text" placeholder="Venta mensual RS" formControlName="monthlySale"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Venta Acumulada</span>
+                            <input type="text" placeholder="Venta Acumulada" formControlName="monthlyAccum"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Exportación Mensual</span>
+                            <input type="text" placeholder="Exportación Mensual" formControlName="exportMonthly"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Exportación Acumulada</span>
+                            <input type="text" placeholder="Exportación Acumulada" formControlName="exportAccum"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Sist. Ahorro Mes</span>
+                            <input type="text" placeholder="Sist. Ahorro Mes" formControlName="savingSystemMonthly"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Sist. Ahorro Acum.</span>
+                            <input type="text" placeholder="Sist. Ahorro Acum." formControlName="savingSystemAccum"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Stock Final</span>
+                            <input type="text" placeholder="Stock Final" formControlName="finalStock"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Stock No OK</span>
+                            <input type="text" placeholder="Stock No OK" formControlName="noOkStock"
+                                class="lch-input-disabled w-full px-6 py-1.5" readonly/>
+                        </div>
+                        <!-- <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Fecha de inscripción</span>
+                            <mat-form-field appearance="fill" class="w-full">
+                                <input matInput placeholder="Fecha de inscripción" formControlName="registerDateDisplay"
+                                    mask="A0/B0/C000" (blur)="onRegisterDateBlur($event)" />
+                                <mat-icon matSuffix (click)="openRegisterDatePicker($event)"
+                                    class="iconDate cursor-pointer">date_range
+                                </mat-icon>
+                            </mat-form-field>
+                            <mat-form-field [style.display]="'none'" class="w-0 h-0">
+                                <input matInput placeholder="" [matDatepicker]="registerDate" class="w-8"
+                                    formControlName="registerDate" (dateChange)="onRegisterDateChange($event)" />
+                                <mat-datepicker #registerDate></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Motor</span>
+                            <input type="text" placeholder="Motor" formControlName="motor"
+                                class="lch-input w-full px-6 py-1.5" />
+                        </div>
+                        <div class="lch-field flex flex-col w-full">
+                            <span class="lch-placeholder mb-1">Tipo de Vehículo</span>
+                            <mat-form-field appearance="fill" class="w-full">
+                                <mat-select #vehicleType formControlName="vehicleType" placeholder="Seleccionar">
+                                    <mat-option *ngFor="let n of vehicleTypes" [value]="n.id">{{n.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="bg-[rgb(227,227,227)] flex flex-row justify-center items-center gap-3 mt-3 mb-16">
+                    <button type="button"
+                        class="w-24 h-10 px-4 py-3 bg-[#941c1c] rounded-md text-white outline-none hover:bg-[#cc4c4c] cursor-pointer focus:shadow-lg transform active:bg-[#AA0A0A] mb-8"
+                        mat-dialog-close>Cancelar</button>
+                    <button type="button"
+                        class="w-24 h-10 px-4 py-3 enabled:bg-[#294a71] rounded-md text-white outline-none enabled:hover:bg-[#376195] cursor-pointer enabled:focus:shadow-lg transform enabled:active:bg-[#15263a] disabled:bg-gray-500 disabled:hover:cursor-default mb-8"
+                        (click)="save()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

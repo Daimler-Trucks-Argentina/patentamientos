@@ -1,0 +1,21 @@
+.large {
+    font-size: large !important;
+}
+
+.smaller {
+    font-size: x-small !important;
+}
+
+.medium {
+    font-size: x-large !important;
+}
+
+::ng-deep .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control[data-indeterminate=true]:enabled~.mdc-checkbox__background {
+    border-color: #3081AB !important;
+    background: rgba(48, 129, 171, 1) !important;
+}
+
+.error {
+    font-size: smaller;
+    position: absolute;
+}

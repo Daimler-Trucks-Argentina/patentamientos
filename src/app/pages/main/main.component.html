@@ -1,0 +1,16 @@
+<div class="background">
+    <mat-drawer-container class="flex flex-row overflow-x-hidden overflow-y-hidden w-full h-full bg-transparent"
+        [hasBackdrop]="hasBackdrop">
+        <mat-drawer #drawer
+            class="flex-none w-64 h-full opacity-90 bg-gradient-to-b from-[#000000] from-60% to-[#6d6d6d]" [mode]="mode"
+            [opened]="opened" (openedChange)="onDrawerOpenedChange($event)">
+            <app-navigation [drawer]="drawer"></app-navigation>
+        </mat-drawer>
+        <mat-drawer-content class="grow overflow-hidden h-full">
+            <div class="grow w-full bg-image overflow-hidden">
+                <app-header [drawer]="drawer" *ngIf="showHeader"></app-header>
+                <router-outlet></router-outlet>
+            </div>
+        </mat-drawer-content>
+    </mat-drawer-container>
+</div>

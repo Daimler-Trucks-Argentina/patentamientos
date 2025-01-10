@@ -1,0 +1,127 @@
+<div class="h-full w-full flex flex-col items-center justify-center p-4">
+    <div class="bg-[rgb(227,227,227)] h-full w-full md:w-11/12 flex flex-col rounded-b-xl mt-4">
+        <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+        <div class="flex flex-row bg-[#E8E8E8]">
+            <div class="w-52 bg-[#000000] h-20 items-center rounded-tr-full rounded-br-full flex justify-center">
+                <p class="large text-center pr-5 pl-2 pt-2 gotham-book text-white">Versiones Claves</p>
+            </div>
+            <div class="flex items-center ml-12">
+                <input (keyup)="applyFilter($event)" #input
+                    class="gotham-book h-8 w-40 md:w-60 rounded-full pl-3 drop-shadow-xl pr-7">
+                <div
+                    class="flex flex-row items-center -ml-6 bg-[#294A71] drop-shadow-xl h-8 rounded-full w-10 md:w-28 justify-center z-0">
+                    <mat-icon class="text-white md:-ml-5">search</mat-icon>
+                    <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">Buscar</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <mat-table [dataSource]="dataSource" class="mat-elevation-z8 mt-3 md:mt-0">
+                
+                <ng-container matColumnDef="mVersionClaveId">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> VERSIÓN CLAVE ID </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Versión Clave Id:</span>
+                        {{element.mercedesVersionClaveId ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="mTerminalId">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> TERMINAL ID </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Terminal Id:</span>
+                        {{element.mercedesTerminalId ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mMarcaId">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> MARCA ID </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Marca Id:</span>
+                        {{element.mercedesMarcaId ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mModeloId">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> MODELO ID </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Modelo Id:</span>
+                        {{element.mercedesModeloId ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mVersionInternaSegmentacionId">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> SEGMENTACION ID </th> 
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Segmentacion Id:</span>
+                        {{element.mercedesVersionInternaSegmentacionId ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="dateTo">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> DATE TO </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Date to:</span>
+                        {{(element.dateTo | date: 'dd/MM/yyyy':'+0300') ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dateFrom">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> DATE FROM </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Date from:</span>
+                        {{(element.dateFrom | date: 'dd/MM/yyyy':'+0300') ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="descriptionShort">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> DESCRIPCIÓN BREVE </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Descripción breve:</span>
+                        {{element.descriptionShort ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="descriptionLong">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> DESCRIPCIÓN LARGA </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Descripción larga:</span>
+                        {{element.descriptionLong ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> ACCIONES </th>
+                    <td mat-cell *matCellDef="let element" class="flex flex-row gap-3 mt-3 gotham-book info">
+                        <button matTooltip="Editar {{element.name}}" matTooltipPosition="above"
+                            class="bg-blue-950 rounded-full h-6 w-6" (click)="createOrUpdate(element)">
+                            <mat-icon class="text-white text-center scale-75">edit</mat-icon>
+                        </button>
+                        <button matTooltip="Borrar {{element.name}}" matTooltipPosition="above"
+                            class=" bg-red-600 rounded-full h-6 w-6" (click)="confirmDelete(element)">
+                            <mat-icon class="text-white text-center scale-75">close</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns" class="titulos mat-header-row"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="height mat-row row-hover"></tr>
+                <tr *matNoDataRow>
+                    <td class="mat-cell" colspan="8">No se encontró el resultado: "{{input.value}}"</td>
+                </tr>
+            </mat-table>
+        </div>
+        <hr class="h-0.5 mt-2 w-[95%] border-[#757575ad] border-solid rounded-full self-center">
+        <mat-paginator hidePageSize="true" showFirstLastButtons="true" pageSize="8"
+            class="bg-[rgb(227,227,227)]"></mat-paginator>
+
+        <div class="flex justify-center items-center mt-4 mb-6">
+            <button
+                class="bg-[#294A71] hover:bg-[#376195] active:bg-[#15263A] rounded-full w-40 md:w-48 h-8 drop-shadow-xl disabled:bg-gray-500 disabled:hover:cursor-default"
+                (click)="createOrUpdate()" [disabled]="isLoading">
+                <p class="text-white pt-1.5 gotham-book">Nueva Versión Clave</p>
+            </button>
+        </div>
+    </div>
+</div>

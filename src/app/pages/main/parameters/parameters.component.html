@@ -1,0 +1,99 @@
+<div class="h-full w-full flex justify-center p-4">
+    <div class="bg-[rgb(227,227,227)] h-[36rem] sm:h-[32rem] w-[46rem] flex flex-col rounded-b-xl mt-14">
+        <mat-progress-bar *ngIf='isLoading' mode="indeterminate"></mat-progress-bar>
+        <div class="flex flex-row bg-[#E8E8E8] drop-shadow-lg">
+            <div
+                class="w-[100%] md:w-[80%] bg-[#000000] drop-shadow-lg h-12 items-center rounded-tr-full rounded-br-full flex justify-center">
+                <p class="large text-center pr-2 md:pr-14 pt-2 gotham-book text-white">Parámetros de seguridad</p>
+            </div>
+            <div class="w-full h-full flex justify-end">
+                <mat-icon class="scale-75 fixed flex self-start text-gray-500 cursor-pointer mt-2 mr-2"
+                    (click)="close()">close</mat-icon>
+            </div>
+        </div>
+        <form [formGroup]="formGroup">
+            <div class="w-full flex flex-col pl-2 sm:pl-0">
+                <h1
+                    class="text-black text-center sm:text-start gotham-medium underline underline-offset-1 sm:pl-4 pt-4 medium">
+                    Sesión</h1>
+                <div class="w-full flex flex-col items-center">
+                    <div class="grid grid-cols-2 gap-2">
+                        <p class="gotham-book pt-1 pr-2">Tiempo duración de la sesión</p>
+                        <div class="flex flex-row">
+                            <input type='number' min="1" max="60" matInput (keydown.space)="$event.preventDefault()"
+                                class="w-14 sm:w-20 h-8 pl-2 sm:pl-3 pr-2 rounded-full" formControlName="sessionTime">
+                            <mat-error class="error mt-7 ml-2 sm:ml-4" *ngIf="!formGroup.controls['sessionTime'].valid">
+                                max 60
+                            </mat-error>
+                            <p class="gotham-book pt-1 pl-2">Minutos</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mt-3">
+                        <div class="flex flex-col">
+                            <p class="gotham-book pt-1 sm:pr-2">Cantidad de intentos inicio de sesión</p>
+                            <p class="gotham-book sm:pr-2 smaller absolute pt-10 sm:pt-5 sm:pl-12">(Cantidad máximo de
+                                inicio de sesión
+                                10)</p>
+                        </div>
+                        <input type='number' min="1" max="10" matInput (keydown.space)="$event.preventDefault()"
+                            class="w-14 sm:w-20 h-8 pl-2 sm:pl-3 pr-2 rounded-full " formControlName="numberLogins">
+                        <mat-error class="error mt-7 sm:mt-8 ml-48 sm:ml-72"
+                            *ngIf="!formGroup.controls['numberLogins'].valid">
+                            max 10
+                        </mat-error>
+                    </div>
+                </div>
+                <h1
+                    class="text-black gotham-medium underline underline-offset-1 text-center sm:text-start sm:pl-4 pt-4 medium">
+                    Contraseñas</h1>
+                <div class="w-full flex flex-col items-center">
+                    <div class="grid grid-cols-2">
+                        <div class="flex flex-col pl-3 sm:pl-0">
+                            <p class="gotham-book pt-1 pr-2">Cantidad de caracteres</p>
+                            <p class="gotham-book smaller absolute pt-10 sm:pt-5 pr-10">(Mínimo 6, Máximo 20 caracteres)
+                            </p>
+                        </div>
+                        <div class="flex flex-row">
+                            <input type='number' min="6" max="20" matInput (keydown.space)="$event.preventDefault()"
+                                class="w-14 sm:w-20 h-8 pl-2 sm:pl-3 pr-2 rounded-full " formControlName="characterMin"
+                                (change)="onChange($event, true)">
+                            <mat-error class="error mt-8 ml-4"
+                                *ngIf="!formGroup.controls['characterMin'].valid || !formGroup.controls['characterMax'].valid">
+                                min 6
+                            </mat-error>
+                            <p class="gotham-book pt-1 pl-2 pr-2">a</p>
+                            <input type='number' min="6" max="20" matInput (keydown.space)="$event.preventDefault()"
+                                class="w-14 sm:w-20 h-8 pl-2 sm:pl-3 pr-2 rounded-full " formControlName="characterMax"
+                                (change)="onChange($event, false)">
+                            <mat-error class="error mt-8 ml-24 sm:ml-32"
+                                *ngIf="!formGroup.controls['characterMax'].valid || !formGroup.controls['characterMin'].valid">
+                                max 20
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 mt-3">
+                        <mat-checkbox formControlName="cbIncludeCapitalLetter">Al menos una mayúscula</mat-checkbox>
+                        <mat-checkbox formControlName="cbIncludeNumbers">Al menos un número</mat-checkbox>
+                        <div class="flex flex-row">
+                            <mat-checkbox formControlName="cbIncludeSpecialCharacters">Caracteres
+                                especiales</mat-checkbox>
+                            <p class="gotham-book smaller pt-3 pl-1">(Por ejemplo ?<>!@#$%&*)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-row justify-center items-center gap-3 md:mt-4">
+                    <button
+                        class="bg-[#941c1c] rounded-full w-24 md:w-36 h-8 drop-shadow-xl self-center"
+                        (click)="close()">
+                        <p class="text-white pt-1.5 gotham-book">Cancelar</p>
+                    </button>
+                    <button
+                        class="enabled:bg-[#294A71] enabled:hover:bg-[#376195] enabled:active:bg-[#15263A] rounded-full w-24 md:w-36 h-8 drop-shadow-xl disabled:bg-gray-500 disabled:hover:cursor-not-allowed"
+                        (click)="updateParameters()" [disabled]="!formGroup.valid">
+                        <p class="text-white pt-1.5 gotham-book">Guardar</p>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

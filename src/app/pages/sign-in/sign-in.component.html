@@ -1,0 +1,59 @@
+<div class="background">
+    <div class="flex flex-col justify-center items-center p-5 w-full h-full">
+        <div
+            class="bordered w-[22rem] sm:w-[25rem] h-[35rem] bg-gradient-to-tr from-[#414141c0] to-[#656565dd] flex flex-col justify-center items-center">
+            <img src="assets/images/logoMercedes.png" alt="Logo Mercedes Benz" class="scale-50 w-40">
+            <div class="mb-8">
+                <h1 class="text-white gotham-book">INICIO DE SESIÓN</h1>
+            </div>
+            <form [formGroup]="formGroup" class="flex flex-col gap-2">
+                <div class="flex flex-col justify-center items-center w-60">
+                    <mat-label class="text-[#ffffffc4] gotham-book">Usuario</mat-label>
+                    <div class="flex flex-row w-full h-10 bg-[#dcdcdc] rounded-full">
+                        <div class="flex w-full items-center justify-center -ml-16">
+                            <img src="./assets/images/icon.png" class="">
+                        </div>
+                        <input type="text" class="w-full h-full px-2 text-center outline-none bg-transparent -ml-20 z-0"
+                            formControlName="userName" required (keyup.enter)="signIn()"
+                            (keydown.space)="$event.preventDefault()">
+                        <div class="flex w-1/6 items-center justify-center">
+                        </div>
+                    </div>
+                    <div class="max-h-2 ">
+                        <p class="text-red-400 w-64 text-xs [text-shadow:_0_1px_0_rgb(0_0_0_/_40%)]"
+                            *ngIf="formGroup.controls['userName'].errors && (formGroup.controls['userName'].dirty || formGroup.controls['userName'].touched)">
+                            El usuario debe tener al menos 3 caracteres.</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-center items-center w-60 mt-2">
+                    <mat-label class="text-[#ffffffc5] gotham-book">Contraseña</mat-label>
+                    <div class="flex flex-row w-full h-10 bg-[#dcdcdc] rounded-full">
+                        <div class="flex w-full items-center justify-center">
+                            <img src="./assets/images/iconPass.png" class="ml-3">
+                        </div>
+                        <input [type]="hide ? 'text' : 'password'"
+                            class="w-72 h-full px-2 text-center outline-none bg-transparent" formControlName="password"
+                            (keyup.enter)="signIn()" maxlength="40" required>
+                        <div class="flex w-full items-center justify-center">
+                            <img [src]="hide ? 'assets/images/icon-watch.png' : 'assets/images/icon-hidden.png'"
+                                class="mr-3 hover:cursor-pointer" (click)="hide = !hide" matTooltip="Mostrar contraseña"
+                                matTooltipPosition="above" />
+                        </div>
+                    </div>
+                    <div class="max-h-2 text-center">
+                        <p class="text-red-400 w-72 text-xs [text-shadow:_0_1px_0_rgb(0_0_0_/_40%)]"
+                            *ngIf="formGroup.controls['password'].errors && (formGroup.controls['password'].dirty || formGroup.controls['password'].touched)">
+                            La contraseña debe tener al menos 6 caracteres.</p>
+                    </div>
+                </div>
+            </form>
+            <div class="flex justify-center mt-10 mb-14">
+                <button type="button"
+                    class="w-32 h-9 rounded-full shadow-lg  enabled:bg-[#294A71] text-white outline-none enabled:hover:bg-[#376195] cursor-pointer enabled:focus:shadow-lg transform enabled:active:bg-[#15263A] disabled:bg-gray-500 disabled:hover:cursor-default"
+                    [class.spinner]="loading" [disabled]="loading" [disabled]="!formGroup || formGroup.invalid"
+                    (click)="signIn()">{{ signButton }}</button>
+            </div>
+        </div>
+    </div>
+</div>

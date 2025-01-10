@@ -1,0 +1,193 @@
+<div
+    class="{{ fullScreen.isEnabled ? 'h-fit w-screen' : 'h-full w-full' }} flex flex-col items-center justify-center p-4 overflow-hidden">
+    <div
+        class="relative bg-[rgb(227,227,227)] {{ fullScreen.isEnabled ? 'h-fit w-full' : 'h-full md:w-11/12' }} flex flex-col rounded-b-xl mt-4">
+        <div *ngIf="!isXsOrSm" class="absolute flex justify-end w-full z-50 -mt-2 ml-2">
+            <button mat-icon-button
+                matTooltip="{{ fullScreen.isEnabled ? 'Salir de pantalla completa' : 'Pantalla completa' }}"
+                matTooltipPosition="above" (click)="toggleFullscreen()"><mat-icon>{{
+                    fullScreen.isEnabled ? 'fullscreen_exit' : 'fullscreen'}}</mat-icon></button>
+        </div>
+        <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+        <div class="flex flex-col md:flex-row w-full items-center bg-[#E8E8E8]">
+            <div class="flex flex-row w-full">
+                <div
+                    class="w-52 md:w-80 bg-[#000000] h-28 items-center rounded-tr-full rounded-br-full flex justify-center">
+                    <p class="large text-center pr-5 pl-2 pt-2 gotham-book text-white">Ventas especiales - Procesamiento de errores</p>
+                </div>
+                <div class="flex items-center flex-col md:flex-row ml-3 pt-1">
+                    <div class="relative flex flex-row mt-6  md:-mt-5 mr-5 md:mr-0">
+                        <input (keyup)="applyFilter($event)" #input
+                            class="gotham-book h-10 {{fullScreen.isEnabled ? 'md:w-72' : 'md:w-56'}} w-40 rounded-full pl-3 drop-shadow-xl pr-7 z-10">
+                        <div
+                            class="flex flex-row items-center -ml-6 bg-[#294A71] drop-shadow-xl h-10 rounded-full w-14 md:w-28 justify-center z-20">
+                            <mat-icon class="text-white">search</mat-icon>
+                            <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">Buscar</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="table-container {{ fullScreen.isEnabled ? 'max-h-[34rem]' : 'max-h-[550px]' }}">
+            <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 mt-3 md:mt-0 overflow-x-auto">
+                <ng-container matColumnDef="cuitOwner">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        CUIT Titular </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">CUIT Titular:</span>
+                        {{element.cuitOwner ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="owner">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Titular </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info whitespace-nowrap">
+                        <span class="mobile-label">Titular:</span>
+                        {{element.owner ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mercedesLegalEntity">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Persona Jurídica </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Persona Jurídica:</span>
+                        {{element.mercedesLegalEntity ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mercedesGovernmentalClassification">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Clasificación Gubernamental
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Clasificación Gubernamental:</span>
+                        {{element.mercedesGovernmentalClassification ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mercedesSubgovernmentalClassification">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Subclasificación Gubernamental
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Subclasificación Gubernamental:</span>
+                        {{element.mercedesSubgovernmentalClassification ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mercedesCuitClassification">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Clasificación - CUIT
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Clasificación - CUIT:</span>
+                        {{element.mercedesCuitClassification ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mercedesAperture1">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        APERTURA 1 (CUIT)
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">APERTURA 1 (CUIT):</span>
+                        {{element.mercedesAperture1 ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mercedesAperture2">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        APERTURA 2 (CUIT)
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">APERTURA 2 (CUIT):</span>
+                        {{element.mercedesAperture2 ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mercedesLogisticClassification">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Clasificación Logística
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Clasificación Logística:</span>
+                        {{element.mercedesLogisticClassification ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mercedesEstimatedTurnover">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Facturación Estimada
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Facturación Estimada:</span>
+                        {{element.mercedesEstimatedTurnover ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="socialContractDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Fecha de contrato social
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Fecha de contrato social:</span>
+                        {{element.socialContractDate ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="employeesInfo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Inf. Empleados
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Inf. Empleados:</span>
+                        {{element.employeesInfo ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="quantity">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Cantidad
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Cantidad:</span>
+                        {{element.quantity ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43] uppercase"> ACCIONES </th>
+                    <td mat-cell *matCellDef="let element"
+                        class="flex flex-row items-center gap-3 mt-3 gotham-book info">
+                        <button *ngIf="element.statePatenta.name == 'Error'" matTooltip="Corregir '{{element.codTrademark}}'"
+                            matTooltipPosition="above" class="bg-blue-950 rounded-full h-6 w-6"
+                            (click)="createOrUpdate(element)">
+                            <mat-icon class="text-white text-center scale-75">edit</mat-icon>
+                        </button>
+                        <button matTooltip="Borrar '{{element.codTrademark}}'" matTooltipPosition="above"
+                            class=" bg-red-600 rounded-full h-6 w-6" (click)="confirmDelete(element)">
+                            <mat-icon class="text-white text-center scale-75">close</mat-icon>
+                        </button>
+                    </td>
+                </ng-container> -->
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="titulos mat-header-row">
+                </tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="height mat-row row-hover"></tr>
+                <tr *matNoDataRow>
+                    <td class="mat-cell" colspan="5">No se encontró el resultado: "{{input.value}}"</td>
+                </tr>
+            </mat-table>
+        </div>
+        <hr class="h-0.5 mt-2 w-[95%] border-[#757575ad] border-solid rounded-full self-center">
+        <div class="w-[70%] md:w-full flex flex-col md:flex-row">
+            <div class="w-[150%] flex items-end md:justify-end">
+                <mat-paginator hidePageSize="true" showFirstLastButtons="true" [pageSize]="pageSize"
+                    class="bg-[rgb(227,227,227)] flex justify-end"></mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>

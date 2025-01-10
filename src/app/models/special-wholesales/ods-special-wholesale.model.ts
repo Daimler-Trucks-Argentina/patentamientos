@@ -1,0 +1,70 @@
+import { ApertureOne } from '../apertures-one/aperture-one.model';
+import { ApertureTwo } from '../apertures-two/aperture-two.model';
+import { Base } from '../base.model';
+import { CuitClassification } from '../cuit-classifications/cuit-classification.model';
+import { EstimatedTurnover } from '../estimated-turnovers/estimated-turnover.model';
+import { File } from '../files/file.model';
+import { GovernmentalClassification } from '../governmental-classifications/governmental-classification.model';
+import { LegalEntity } from '../legal-entities/legal-entity.model';
+import { LogisticClassification } from '../logistic-classifications/logistic-classification.model';
+import { SubgovernmentalClassification } from '../subgovernmental-classifications/subgovernmental-classification.model';
+
+export class OdsSpecialWholesale extends Base {
+  autoId: number | null;
+  cuitOwner: string;
+  owner: string;
+  mercedesLegalEntity: string;
+  legalEntityId: string;
+  legalEntity?: LegalEntity | null;
+  mercedesGovernmentalClassification: string;
+  governmentalClassificationId: string;
+  governmentalClassification?: GovernmentalClassification | null;
+  mercedesSubgovernmentalClassification: string;
+  subgovernmentalClassification?: SubgovernmentalClassification | null;
+  mercedesCuitClassification: string;
+  cuitClassificationId: string;
+  cuitClassification?: CuitClassification | null;
+  aperture1: string;
+  apertureOneId: string;
+  apertureOne?: ApertureOne | null;
+  aperture2: string;
+  apertureTwoId: string;
+  apertureTwo?: ApertureTwo | null;
+  mercedesLogisticClassification: string;
+  logisticClassificationId: string;
+  logisticClassification?: LogisticClassification | null;
+  mercedesEstimatedTurnover: string;
+  estimatedTurnoverId: string;
+  estimatedTurnover?: EstimatedTurnover | null;
+  socialContractDate: string;
+  employeesInfo: string;
+  quantity: number;
+  fileId: string;
+  file?: File | null;
+
+  constructor() {
+    super();
+    this.autoId = 0;
+    this.cuitOwner = '';
+    this.owner = '';
+    this.mercedesLegalEntity = '';
+    this.legalEntityId = '';
+    this.mercedesGovernmentalClassification = '';
+    this.governmentalClassificationId = '';
+    this.mercedesSubgovernmentalClassification = '';
+    this.mercedesCuitClassification = '';
+    this.cuitClassificationId = '';
+    this.aperture1 = '';
+    this.apertureOneId = '';
+    this.aperture2 = '';
+    this.apertureTwoId = '';
+    this.mercedesLogisticClassification = '';
+    this.logisticClassificationId = '';
+    this.mercedesEstimatedTurnover = '';
+    this.estimatedTurnoverId = '';
+    this.socialContractDate = '';
+    this.employeesInfo = '';
+    this.quantity = 1;
+    this.fileId = '';
+  }
+}

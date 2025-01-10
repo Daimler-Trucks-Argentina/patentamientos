@@ -1,0 +1,420 @@
+<mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+<div class="w-full h-full flex items-center justify-center bg-[rgb(227,227,227)]">
+    <div class="bg-[rgb(227,227,227)] h-full w-full flex flex-col rounded-b-xl">
+        <div class="flex flex-row bg-[#E8E8E8] drop-shadow-lg">
+            <div
+                class="w-full bg-[#000000] drop-shadow-lg h-12 items-center rounded-tr-full rounded-br-full flex justify-center">
+                <p class="large text-center pt-2 gotham-book text-white">{{ actionMode == ActionMode.create ? 'Crear' :
+                    'Editar'}} Segmentación</p>
+            </div>
+            <div class="w-full h-full flex flex-row justify-center self-center gap-5 ml-8 md:pl-10">
+                <button mat-raised-button color="secondary" (click)="copyDto()"
+                    class="{{isXsOrSm ? 'w-2' : '' }}"><mat-icon>content_copy</mat-icon>
+                    {{isXsOrSm ? '' : 'Copiar' }}</button>
+                <button mat-raised-button color="primary" (click)="pasteDto()"
+                    class="{{isXsOrSm ? 'w-2' : '' }}"><mat-icon>content_paste</mat-icon>
+                    {{isXsOrSm ? '' : 'Pegar' }}</button>
+            </div>
+            <div class="w-full h-full flex justify-end">
+                <mat-icon class="scale-75 fixed flex self-start text-gray-500 cursor-pointer mt-2 mr-2"
+                    mat-dialog-close>close</mat-icon>
+            </div>
+        </div>
+        <form [formGroup]="formGroup"
+            class="bg-[rgb(227,227,227)] flex flex-col justify-center items-center gap-2 mt-8">
+            <div class="flex flex-row h-full flex-wrap items-center justify-center gap-x-6 w-full">
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>Versión Interna:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="internalVersions" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" formControlName="internalVersionId" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>Categoría:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="categories" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" formControlName="categoryId"
+                            (selectionChange)="filterSegments($event)" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>Segmento:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="filteredSegments" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" formControlName="segmentId" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div> 
+                <div class="flex flex-col items-center w-64">
+                    <mat-label>Fecha de Alta:</mat-label>
+                    <mat-form-field>
+                        <input matInput [matDatepicker]="dp1" formControlName="dischargeDate"
+                            class="disabled:cursor-not-allowed" maxlength="10">
+                        <mat-datepicker-toggle matIconSuffix [for]="dp1"></mat-datepicker-toggle>
+                        <mat-datepicker #dp1></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <!-- <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('description')?.enabled">
+                    <mat-label>Descripción Larga:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <input matInput formControlName="description" class="disabled:cursor-not-allowed">
+                    </mat-form-field>
+                </div> -->
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('altBodyst')?.enabled">
+                    <mat-label>Alt Bodyst:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="altbodyst" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="altBodyst" [searchComparison]="searchComparisonFn">
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('altCateg')?.enabled">
+                    <mat-label>Alt Categ:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="altcateg" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" formControlName="altCateg" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('altSegm')?.enabled">
+                    <mat-label>Supersegmento:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="altsegm" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" formControlName="altSegm" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('aMGCompSet')?.enabled">
+                    <mat-label>AMG CompSet:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="aMGCompSet" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" formControlName="aMGCompSet" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('apertura1')?.enabled">
+                    <mat-label>Apertura 1:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="apertura1" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="apertura1" [searchComparison]="searchComparisonFn">
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('apertura2')?.enabled">
+                    <mat-label>MBPC Premium/Luxury:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="apertura2" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="apertura2" [searchComparison]="searchComparisonFn">
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('apertura3')?.enabled">
+                    <mat-label>Apertura 3:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="apertura3" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="apertura3" [searchComparison]="searchComparisonFn">
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('apertura4')?.enabled">
+                    <mat-label>Apertura 4:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="apertura4" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="apertura4" [searchComparison]="searchComparisonFn">
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <!-- <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('bodyStyle')?.enabled">
+                    <mat-label>Body Style:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <input matInput formControlName="bodyStyle" class="disabled:cursor-not-allowed">
+                    </mat-form-field>
+                </div> -->
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('bodyStyleId')?.enabled">
+                    <mat-label>Body Style:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="bodyStyles" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" formControlName="bodyStyleId" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('cabinaCF')?.enabled">
+                    <mat-label>Cabina C/F:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="cabinaCF" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="cabinaCF" [searchComparison]="searchComparisonFn">
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('cabinaSD')?.enabled">
+                    <mat-label>Cabina:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="cabinasSD" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="cabinaSD" [searchComparison]="searchComparisonFn">
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('engineCapacity')?.enabled">
+                    <mat-label>Cilindrada (cm3):</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="enginecapacitys" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="engineCapacity" [searchComparison]="searchComparisonFn">
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('cJDCompetitive')?.enabled">
+                    <mat-label>CJD competitive:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="cjdcompetitives" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="cJDCompetitive" [searchComparison]="searchComparisonFn">
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('fuel')?.enabled">
+                    <mat-label>Combustible:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="fueltypes" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="fuel" [searchComparison]="searchComparisonFn">
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('competitiveCJD')?.enabled">
+                    <mat-label>Competitive CJD:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="competitivecjd" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="competitiveCJD" [searchComparison]="searchComparisonFn">
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div> 
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('mercedesConfiguration')?.enabled">
+                    <mat-label>Carrocería:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="mercedesConfiguration" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" formControlName="mercedesConfiguration" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <!-- <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('bodyworkId')?.enabled">
+                    <mat-label>Carrocería:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="bodyworks" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" formControlName="bodyworkId">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div> -->
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('wheelbase')?.enabled">
+                    <mat-label>Distancia entre Ejes:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="wheelbases" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" formControlName="wheelbase" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('axleBase')?.enabled">
+                    <mat-label>Dist. entre Ejes:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="axleBases" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="axleBase" [searchComparison]="searchComparisonFn">
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('group')?.enabled">
+                    <mat-label>Grupo(6):</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="group" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="group" [searchComparison]="searchComparisonFn">
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('gears')?.enabled">
+                    <mat-label>Marchas:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="gears" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="gears" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('mCGTotalMkt')?.enabled">
+                    <mat-label>MBPC Total Market:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="mCGTotalMkts" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="mCGTotalMkt" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('motorDT')?.enabled">
+                    <mat-label>Motor D/T:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="motorsDT" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="motorDT" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('nI')?.enabled">
+                    <mat-label>N/I:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="nI" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="nI" [searchComparison]="searchComparisonFn">
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('rule')?.enabled">
+                    <mat-label>Norma:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64"> 
+                        <ngx-mat-select clientSide [options]="rules" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="rule" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('source')?.enabled">
+                    <mat-label>Origen:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="sources" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="source" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <!-- <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('pBT')?.enabled">
+                    <mat-label>Subsegmento:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="axleBases" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="pBT">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div> -->
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('subsegmentId')?.enabled">
+                    <mat-label>Subsegmento:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="subsegments" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" formControlName="subsegmentId" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('pBT_TN')?.enabled">
+                    <mat-label>PBT (TN):</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="pbtTn" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="pBT_TN" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <!-- <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('power')?.enabled">
+                    <mat-label>Potencia:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <input matInput formControlName="power" class="disabled:cursor-not-allowed">
+                    </mat-form-field>
+                </div> -->
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('powerId')?.enabled">
+                    <mat-label>Potencia:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="powers" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" formControlName="powerId" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('doors')?.enabled">
+                    <mat-label>Puertas:</mat-label>
+                <mat-form-field class="w-64">
+                    <ngx-mat-select clientSide [options]="doors" [multiple]="false" [hasSearchBox]="true"
+                    [optionLabel]="'codName'" [optionValue]="'id'" formControlName="doors" [searchComparison]="searchComparisonFn">
+                </ngx-mat-select>
+                </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('relevMB')?.enabled">
+                    <mat-label>MBC Segment:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="relevmb" [multiple]="false" [hasSearchBox]="true"
+                    [optionLabel]="'codName'" [optionValue]="'id'" formControlName="relevMB" [searchComparison]="searchComparisonFn">
+                </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('sSegm')?.enabled">
+                    <mat-label>SSegm(12):</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="ssegm" [multiple]="false" [hasSearchBox]="true"
+                    [optionLabel]="'codName'" [optionValue]="'id'" formControlName="sSegm" [searchComparison]="searchComparisonFn">
+                </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <!-- <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('traction')?.enabled">
+                    <mat-label>Tracción:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <input matInput formControlName="traction" class="disabled:cursor-not-allowed">
+                    </mat-form-field>
+                </div> -->
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('tractionId')?.enabled">
+                    <mat-label>Tracción:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="tractions" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" formControlName="tractionId" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <!-- <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('usage')?.enabled">
+                    <mat-label>Uso:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <input matInput formControlName="usage" class="disabled:cursor-not-allowed">
+                    </mat-form-field>
+                </div> -->
+                <div class="flex flex-col justify-center items-center" *ngIf="formGroup.get('usageId')?.enabled">
+                    <mat-label>Uso:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="usages" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" formControlName="usageId" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center"
+                    *ngIf="formGroup.get('segmentationAux1')?.enabled">
+                    <mat-label>Potencia II:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="segmentationaux1" [multiple]="false" [hasSearchBox]="true"
+                        [optionLabel]="'codName'" [optionValue]="'id'" formControlName="segmentationAux1" [searchComparison]="searchComparisonFn">
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center"
+                    *ngIf="formGroup.get('segmentationAux2')?.enabled">
+                    <mat-label>Segmentacion Aux. 2:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <input matInput formControlName="segmentationAux2" class="disabled:cursor-not-allowed">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center"
+                    *ngIf="formGroup.get('segmentationAux3')?.enabled">
+                    <mat-label>Segmentacion Aux. 3:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <input matInput formControlName="segmentationAux3" class="disabled:cursor-not-allowed">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center"
+                    *ngIf="formGroup.get('segmentationAux4')?.enabled">
+                    <mat-label>Segmentacion Aux. 4:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <input matInput formControlName="segmentationAux4" class="disabled:cursor-not-allowed">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center"
+                    *ngIf="formGroup.get('segmentationAux5')?.enabled">
+                    <mat-label>Segmentacion Aux. 5:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <input matInput formControlName="segmentationAux5" class="disabled:cursor-not-allowed">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="flex flex-row justify-center items-center gap-3 mt-5 mb-5 bg-[rgb(227,227,227)]">
+                <button type="button"
+                    class="w-24 h-10 px-4 py-3 bg-[#941c1c] rounded-md text-white outline-none hover:bg-[#cc4c4c] cursor-pointer focus:shadow-lg transform active:bg-[#AA0A0A]"
+                    (click)="close()">Cancelar</button>
+                <button type="button" 
+                    class="w-24 h-10 px-4 py-3 enabled:bg-[#294a71] rounded-md text-white outline-none enabled:hover:bg-[#376195] cursor-pointer enabled:focus:shadow-lg transform enabled:active:bg-[#15263a] disabled:bg-gray-500 disabled:hover:cursor-default"
+                    [class.spinner]="loading" 
+                    (click)="save()">{{ accept }}</button>
+            </div>
+        </form>
+    </div>
+</div>

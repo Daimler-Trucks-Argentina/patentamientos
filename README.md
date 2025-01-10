@@ -1,1 +1,2 @@
-# patentamientos-
+# PATENTAMIENTOS
+Proyecto base de patentamientos

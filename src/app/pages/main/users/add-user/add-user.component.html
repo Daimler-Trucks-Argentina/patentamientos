@@ -1,0 +1,140 @@
+<div class="h-full w-full flex items-center justify-center p-4">
+    <div class="bg-[rgb(227,227,227)] h-[52rem] md:h-[34rem] w-[25rem] md:w-[50rem] flex flex-col rounded-b-xl mt-10">
+        <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+        <div class="flex flex-row bg-[#E8E8E8] drop-shadow-lg">
+            <div
+                class="w-[65%] bg-[#000000] drop-shadow-lg h-12 items-center rounded-tr-full rounded-br-full flex justify-center">
+                <p class="!text-lg text-center pr-4 md:pr-28 pt-2 gotham-book text-white">{{ actionMode == ActionMode.create ?
+                    "Crear" : 'Editar' }} usuario</p>
+            </div>
+            <div class="w-full h-full flex justify-end">
+                <mat-icon class="scale-75 absolute flex self-start text-gray-500 cursor-pointer mt-2 mr-2"
+                    (click)="close()">close</mat-icon>
+            </div>
+        </div>
+        <div class="flex flex-col w-full mt-7">
+            <form [formGroup]="formGroup">
+                <div class="flex flex-col justify-center items-center">
+                    <div class="flex flex-col md:flex-row md:gap-20">
+                        <div>
+                            <p class="!text-sm text-[#152A43] gotham-book">DNI*</p>
+                            <input type="text" formControlName="dni" placeholder="DNI"
+                                class="bg-[#fff] gotham-book h-8 w-80 rounded-full pl-3 -mt-4 pr-3">
+                            <mat-error class="absolute text-xs"
+                                *ngIf="!formGroup.controls['dni'].valid && (formGroup.controls['dni'].dirty || formGroup.controls['dni'].touched)">
+                                *Máximo de 16 caracteres</mat-error>
+                        </div>
+                        <div class="mt-3 md:-mt-0">
+                            <p class="!text-sm text-[#152A43] gotham-book">Email*</p>
+                            <input type="text" formControlName="mail" placeholder="Email"
+                                class="bg-[#fff] gotham-book h-8 w-80 rounded-full pl-3 -mt-4 pr-3">
+                            <mat-error class="absolute text-xs"
+                                *ngIf="!formGroup.controls['mail'].valid && (formGroup.controls['mail'].dirty || formGroup.controls['mail'].touched)">
+                                *Ingrese un email válido</mat-error>
+                        </div>
+                    </div>
+                    <div class="flex flex-col md:flex-row md:mt-4 gap-5 md:gap-20">
+                        <div class="mt-3 md:-mt-0">
+                            <p class="!text-sm text-[#152A43] gotham-book">Nombre*</p>
+                            <input type="text" formControlName="name" placeholder="Nombre"
+                                class="bg-[#fff] gotham-book h-8 w-80 rounded-full pl-3 -mt-4 pr-3">
+                            <mat-error class="absolute text-xs"
+                                *ngIf="!formGroup.controls['name'].valid && (formGroup.controls['name'].dirty || formGroup.controls['name'].touched)">
+                                *Máximo de 15 caracteres</mat-error>
+                        </div>
+                        <div class="-mt-1 md:-mt-0">
+                            <p class="!text-sm text-[#152A43] gotham-book">Apellido*</p>
+                            <input type="text" formControlName="lastName" placeholder="Apellido"
+                                class="bg-[#fff] gotham-book h-8 w-80 rounded-full pl-3 -mt-4 pr-3">
+                            <mat-error class="absolute text-xs"
+                                *ngIf="!formGroup.controls['lastName'].valid && (formGroup.controls['lastName'].dirty || formGroup.controls['lastName'].touched)">
+                                *Máximo de 25 caracteres</mat-error>
+                        </div>
+                    </div>
+                </div>
+                <hr class="h-2 w-[91%] border-[#757575] border-solid ml-4 md:ml-8 mt-5 flex justify-center self-center">
+                <div class="flex flex-row justify-center md:justify-start mt-2">
+                    <div class="md:ml-10">
+                        <p class="!text-sm text-[#152A43] gotham-book">Rol*</p>
+                        <mat-form-field appearance="fill" class="gotham-book drop-shadow-4xl w-80 h-14 max-h-14">
+                            <mat-select disableRipple placeholder="Seleccionar rol" formControlName="role" class="pl-3">
+                                <mat-option *ngFor="let rol of roles" [value]="rol.id">
+                                    <mat-icon matPrefix>work</mat-icon>
+                                    <p class="pt-2">{{rol.name}}</p>
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-error class="absolute text-xs -mt-5"
+                            *ngIf="!formGroup.controls['role'].valid && (formGroup.controls['role'].dirty || formGroup.controls['role'].touched)">
+                            *Seleccione un rol</mat-error>
+                    </div>
+                </div>
+                <hr class="h-2 w-[91%] border-[#757575] border-solid ml-4 md:ml-8 mt-4 flex justify-center self-center">
+                <div class="flex flex-col md:flex-row items-center justify-center">
+                    <div class="mt-4 md:mr-5">
+                        <p class="!text-sm text-[#152A43] gotham-book">Usuario*</p>
+                        <div class="flex w-full items-center justify-start ml-2 md:justify-center md:-ml-[4.5rem]">
+                            <img src="./assets/images/icon.png" class="z-0 absolute mt-5 mr-11 scale-75">
+                        </div>
+                        <input type="text" formControlName="username" placeholder="Usuario"
+                            [class.disabled]="actionMode === ActionMode.update"
+                            class="bg-[#fff] gotham-book h-8 w-80 md:w-56 rounded-full pl-8 -mt-4 pr-3">
+                        <mat-error class="absolute text-xs"
+                            *ngIf="!formGroup.controls['username'].valid && (formGroup.controls['username'].dirty || formGroup.controls['username'].touched)">
+                            *Máximo de 40 caracteres</mat-error>
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex flex-row justify-start items-center gap-x-2">
+                            <p class="!text-sm text-[#152A43] gotham-book">Contraseña*</p>
+                            <mat-icon #tooltip="matTooltip" fontIcon="info" [matTooltip]="passwordTooltip"
+                                [matTooltipPosition]="'right'" class="cursor-pointer text-base -mt-3"></mat-icon>
+                        </div>
+                        <div class="flex w-full items-center justify-start ml-2 md:justify-center md:-ml-[4.5rem]">
+                            <img src="./assets/images/iconPass.png" class="z-0 absolute mt-5 mr-11 scale-75">
+                        </div>
+                        <input [type]="hide ? 'text' : 'password'" formControlName="password" placeholder="Contraseña"
+                            [class.disabled]="actionMode === ActionMode.update"
+                            class="bg-[#fff] gotham-book h-8 w-80 md:w-56 rounded-full px-8 -mt-4">
+                        <div class="flex w-full items-center justify-center">
+                            <img [src]="hide ? 'assets/images/icon-watch.png' : 'assets/images/icon-hidden.png'"
+                                class="z-0 absolute mb-8 ml-72 md:ml-48 scale-75 hover:cursor-pointer"
+                                (click)="hide = !hide" matTooltip="Mostrar contraseña" matTooltipPosition="above"
+                                [class.disabled]="actionMode === ActionMode.update" />
+                        </div>
+                        <mat-error class="absolute text-xs"
+                            *ngIf="!formGroup.controls['password'].valid && (formGroup.controls['password'].dirty || formGroup.controls['password'].touched)">
+                            *La contraseña no cumple con los requisitos</mat-error>
+                    </div>
+                    <div class="mt-4 md:ml-5">
+                        <p class="!text-sm text-[#152A43] gotham-book">Repetir contraseña*</p>
+                        <div class="flex w-full items-center justify-start ml-2 md:justify-center md:-ml-[4.5rem]">
+                            <img src="./assets/images/iconPass.png" class="z-0 absolute mt-5 mr-11 scale-75">
+                        </div>
+                        <input [type]="show ? 'text' : 'password'" formControlName="confirmPass"
+                            placeholder="Repetir contraseña" [class.disabled]="actionMode === ActionMode.update"
+                            class="bg-[#fff] gotham-book h-8 w-80 md:w-56 rounded-full px-8 -mt-4">
+                        <div class="flex w-full items-center justify-center">
+                            <img [src]="show ? 'assets/images/icon-watch.png' : 'assets/images/icon-hidden.png'"
+                                class="z-0 absolute mb-8 ml-72 md:ml-48 scale-75 hover:cursor-pointer"
+                                (click)="show = !show" matTooltip="Mostrar contraseña" matTooltipPosition="above"
+                                [class.disabled]="actionMode === ActionMode.update" />
+                        </div>
+                        <mat-error class="absolute text-xs md:ml-2"
+                            *ngIf="!formGroup.controls['confirmPass'].valid && (formGroup.controls['confirmPass'].dirty || formGroup.controls['confirmPass'].touched)">
+                            *Las contraseñas no coinciden</mat-error>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="flex flex-row justify-center items-center mt-11 mb-6">
+            <button class="bg-[#941c1c] rounded-full w-36 h-8 drop-shadow-xl mr-4" (click)="close()">
+                <p class="text-white pt-1.5 gotham-book">Cancelar</p>
+            </button>
+            <button
+                class="enabled:bg-[#294A71] enabled:hover:bg-[#376195] enabled:active:bg-[#15263A] rounded-full w-36 h-8 drop-shadow-xl ml-4 disabled:bg-gray-500 disabled:hover:cursor-default"
+                (click)="save()" [disabled]="!formGroup.valid">
+                <p class="text-white pt-1.5 gotham-book">Guardar</p>
+            </button>
+        </div>
+    </div>
+</div>

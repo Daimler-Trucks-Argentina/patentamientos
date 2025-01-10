@@ -1,0 +1,95 @@
+<div class="w-full h-screen md:h-full flex items-center justify-center bg-[rgb(227,227,227)]">
+    <div class="bg-[rgb(227,227,227)] h-full w-full flex flex-col rounded-b-xl">
+        <div class="flex flex-row bg-[#E8E8E8] drop-shadow-lg">
+            <div
+                class="w-64 bg-[#000000] drop-shadow-lg h-12 items-center rounded-tr-full rounded-br-full flex justify-center">
+                <p class="large text-center pt-2 gotham-book text-white">{{ actionMode == ActionMode.create ? 'Crear' :
+                    'Editar'}} TMMV</p>
+            </div>
+            <div class="w-full h-full flex justify-end">
+                <mat-icon class="scale-75 fixed flex self-start text-gray-500 cursor-pointer mt-2 mr-2"
+                    mat-dialog-close>close</mat-icon>
+            </div>
+        </div>
+        <form [formGroup]="formGroup" class="flex flex-col justify-center items-center gap-2 mt-8">
+            <div class="flex flex-row flex-wrap items-center justify-center gap-x-6 w-full">
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>Terminal:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="terminals" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" (selectionChange)="filterBrands($event)"
+                            formControlName="terminalId" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>Marca:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="filteredBrands" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" (selectionChange)="filterModels($event)"
+                            formControlName="marcaId" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>Modelo:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="filteredCarModels" [multiple]="false"
+                            [hasSearchBox]="true" [optionLabel]="'codName'" [optionValue]="'id'"
+                            formControlName="carModelId" (selectionChange)="filterVersions($event)" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                        <mat-error class="w-64">Modelo es requerido.</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>Versión Patentamiento:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="filteredPatentingVersions" [multiple]="false"
+                        [hasSearchBox]="true" [optionLabel]="'codName'" [optionValue]="'id'"
+                        formControlName="versionPatentamiento" (selectionChange)="setPatentingVersion($event)" [searchComparison]="searchComparisonFn">
+                        <div class="flex items-center justify-end p-4" ngxMatSelectFooter>
+                            <button color="primary" mat-raised-button (click)="createPatentingVersion()">Crear
+                                Versión Patentamiento</button>
+                        </div>
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>Versión Wholesale:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <ngx-mat-select clientSide [options]="filteredWholesaleVersions" [multiple]="false"
+                        [hasSearchBox]="true" [optionLabel]="'codName'" [optionValue]="'id'"
+                        formControlName="versionWs" (selectionChange)="setWholesaleVersion($event)" [searchComparison]="searchComparisonFn">
+                        <div class="flex items-center justify-end p-4" ngxMatSelectFooter>
+                            <button color="primary" mat-raised-button (click)="createWholesaleVersion()">Crear
+                                Versión Wholesale</button>
+                        </div>
+                    </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>Versión Interna:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="filteredCatInternalVersions" [multiple]="false"
+                            [hasSearchBox]="true" [optionLabel]="'codName'" [optionValue]="'id'"
+                            formControlName="versionInterna" (selectionChange)="setInternalVersion($event)" [searchComparison]="searchComparisonFn"> 
+                            <div class="flex items-center justify-end p-4" ngxMatSelectFooter>
+                                <button color="primary" mat-raised-button (click)="createInternalVersion()">Crear
+                                    Versión Interna</button>
+                            </div>
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+        <div class="flex flex-row justify-center items-center gap-3 mt-5">
+            <button type="button"
+                class="w-24 h-10 px-4 py-3 bg-[#941c1c] rounded-md text-white outline-none hover:bg-[#cc4c4c] cursor-pointer focus:shadow-lg transform active:bg-[#AA0A0A]"
+                mat-dialog-close>Cancelar</button>
+            <button type="button"
+                class="w-24 h-10 px-4 py-3 enabled:bg-[#294a71] rounded-md text-white outline-none enabled:hover:bg-[#376195] cursor-pointer enabled:focus:shadow-lg transform enabled:active:bg-[#15263a] disabled:bg-gray-500 disabled:hover:cursor-default"
+                [class.spinner]="loading" [disabled]="loading" [disabled]="!formGroup || formGroup.get('terminalId')?.invalid || formGroup.get('marcaId')?.invalid ||  formGroup.get('carModelId')?.invalid ||  formGroup.get('versionInterna')?.invalid || (formGroup.get('versionPatentamiento')?.invalid && formGroup.get('versionWs')?.invalid)"
+                (click)="save()">{{ accept }}</button>
+        </div>
+    </div>
+</div>

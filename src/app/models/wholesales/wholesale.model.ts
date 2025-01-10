@@ -1,0 +1,78 @@
+import { Base } from '../base.model';
+
+export class Wholesale extends Base {
+  AutoId: number;
+  FileId: string;
+  YearMonth: string;
+  CodBrand: string;
+  Brand: string;
+  CodModel: string;
+  Model: string;
+  CodTrademark: string;
+  Trademark: string;
+  DoorsQty: string;
+  Engine: string;
+  MotorType: string;
+  FuelType: string;
+  Power: string;
+  PowerUnit: string;
+  VehicleType: string;
+  Traction: string;
+  GearsQty: string;
+  TransmissionType: string;
+  AxleQty: string;
+  Weight: string;
+  LoadCapacity: string;
+  Category: string;
+  Origin: string;
+  InitialStock: string;
+  Import_ProdMonth: string;
+  Import_ProdAccum: string;
+  MonthlySale: string;
+  MonthlyAccum: string;
+  ExportMonthly: string;
+  ExportAccum: string;
+  SavingSystemMonthly: string;
+  SavingSystemAccum: string;
+  FinalStock: string;
+  NoOkStock: string;
+
+  constructor() {
+    super();
+    this.AutoId = 0;
+    this.FileId = '';
+    this.YearMonth = '';
+    this.CodBrand = '';
+    this.Brand = '';
+    this.CodModel = '';
+    this.Model = '';
+    this.CodTrademark = '';
+    this.Trademark = '';
+    this.DoorsQty = '';
+    this.Engine = '';
+    this.MotorType = '';
+    this.FuelType = '';
+    this.Power = '';
+    this.PowerUnit = '';
+    this.VehicleType = '';
+    this.Traction = '';
+    this.GearsQty = '';
+    this.TransmissionType = '';
+    this.AxleQty = '';
+    this.Weight = '';
+    this.LoadCapacity = '';
+    this.Category = '';
+    this.Origin = '';
+    this.InitialStock = '';
+    this.Import_ProdMonth = '';
+    this.Import_ProdAccum = '';
+    this.MonthlySale = '';
+    this.MonthlyAccum = '';
+    this.ExportMonthly = '';
+    this.ExportAccum = '';
+    this.SavingSystemMonthly = '';
+    this.SavingSystemAccum = '';
+    this.FinalStock = '';
+    this.NoOkStock = '';
+  }
+}

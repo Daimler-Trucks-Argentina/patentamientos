@@ -1,0 +1,42 @@
+<div class="w-full h-full flex items-center justify-center bg-[rgb(227,227,227)]">
+    <div class="bg-[rgb(227,227,227)] h-full w-full flex flex-col rounded-b-xl">
+        <div class="flex flex-row bg-[#E8E8E8] drop-shadow-lg">
+            <div
+                class="w-64 bg-[#000000] drop-shadow-lg h-12 items-center rounded-tr-full rounded-br-full flex justify-center">
+                <p class="large text-center pt-2 gotham-book text-white">"{{data.file.name}}"</p>
+            </div>
+            <div class="w-full h-full flex justify-end">
+                <mat-icon class="scale-75 fixed flex self-start text-gray-500 cursor-pointer mt-2 mr-2"
+                    mat-dialog-close>close</mat-icon>
+            </div>
+        </div>
+        <div class="flex items-center ml-8 m-4">
+            <input (keyup)="applyFilter($event)" #input
+                class="gotham-book h-8 w-40 md:w-60 rounded-full pl-3 drop-shadow-xl pr-7">
+            <div
+                class="flex flex-row items-center -ml-6 bg-[#294A71] drop-shadow-xl h-8 rounded-full w-10 md:w-28 justify-center z-0">
+                <mat-icon class="text-white md:-ml-5">search</mat-icon>
+                <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">Buscar</p>
+            </div>
+        </div>
+        <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+        <div class="table-container !overflow-x-auto">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mt-3 md:mt-0">
+                <ng-container *ngFor="let displayedColumn of displayedColumns" [matColumnDef]="displayedColumn">
+                    <th mat-header-cell *matHeaderCellDef> {{ displayedColumn | uppercase }} </th>
+                    <td mat-cell *matCellDef="let element">
+                        <span class="mobile-label">{{ displayedColumn | uppercase }}:</span> {{ element[displayedColumn]
+                        }}
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns" class="titulos mat-header-row"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="height mat-row row-hover"></tr>
+                <tr *matNoDataRow>
+                    <td class="mat-cell" colspan="7">No se encontró el resultado: "{{input.value}}"</td>
+                </tr>
+            </table>
+        </div>
+        <mat-paginator hidePageSize="true" showFirstLastButtons="true" pageSize="5"
+            class="bg-[rgb(227,227,227)]"></mat-paginator>
+    </div>
+</div>

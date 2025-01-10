@@ -1,0 +1,12 @@
+<div class="flex flex-row w-full h-20 items-center justify-between px-3 bg-transparent">
+    <div class="flex h-full items-center">
+        <div
+          class="cursor-pointer bg-[#000000] z-10 rounded-full w-10 h-10 justify-center items-center flex absolute left-6 top-5"
+          (click)="drawer?.toggle()" *ngIf="drawer && drawer.mode == 'over' || !drawer?.opened">
+          <mat-icon class="text-white text-center">list</mat-icon>
+        </div>
+      </div>
+    <div class='flex flex-row p-4 w-full hover:drop-shadow-2xl'>
+        <img src="/assets/images/mercedes-benz-white-logo.png" class="w-96 pt-4 h-28 scale-50">
+    </div>
+</div>

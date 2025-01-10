@@ -1,0 +1,29 @@
+.large {
+    font-size: large !important;
+}
+
+.noShadow {
+    box-shadow: none !important;
+}
+
+.mat-expansion-panel-spacing {
+    margin: 0;
+}
+
+::ng-deep .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background,
+.mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background,
+.mdc-checkbox .mdc-checkbox__native-control[data-indeterminate=true]:enabled~.mdc-checkbox__background {
+    border-color: #3081AB !important;
+    background: rgba(48, 129, 171, 1) !important;
+}
+
+.scrl {
+    overflow-y: scroll;
+}
+
+::ng-deep {
+    .mat-expansion-indicator::before,
+    .mat-expansion-indicator::after {
+        border-color: black !important;
+    }
+}

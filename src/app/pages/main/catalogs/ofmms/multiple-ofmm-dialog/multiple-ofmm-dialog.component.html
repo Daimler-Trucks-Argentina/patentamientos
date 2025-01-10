@@ -1,0 +1,238 @@
+<!-- <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar> -->
+<div class="w-full h-screen md:h-full flex items-center justify-center bg-[rgb(227,227,227)]">
+    <div class="bg-[rgb(227,227,227)] h-full w-full flex flex-col rounded-b-xl">
+        <div class="flex flex-row bg-[#E8E8E8] drop-shadow-lg">
+            <div
+                class="w-64 bg-[#000000] drop-shadow-lg h-12 items-center rounded-tr-full rounded-br-full flex justify-center">
+                <p class="large text-center pt-2 gotham-book text-white">Crear multiples OFMM</p>
+            </div>
+            <div class="w-full h-full flex justify-end">
+                <mat-icon class="scale-75 fixed flex self-start text-gray-500 cursor-pointer mt-2 mr-2"
+                    mat-dialog-close>close</mat-icon>
+            </div>
+        </div>
+        <form [formGroup]="formGroup"
+            class="bg-[rgb(227,227,227)] flex flex-col justify-center items-center gap-2 mt-8">
+            <div class="w-full max-h-[34rem]">
+                <div class="table-responsive">
+                    <mat-table #table [dataSource]="dataSource">
+                        <ng-container matColumnDef="zofmm">
+                            <mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> OFMM
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i = index" class="gotham-book"
+                                [formGroup]="element">
+                                <mat-form-field [matTooltip]="element.value.zofmm" matTooltipPosition="above"
+                                    matTooltipShowDelay="300" disabled>
+                                    <input matInput formControlName="zofmm" placeholder="OFMM"
+                                        [value]="element.value.zofmm">
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <!-- SI SE QUIERE DESHABILITAR EL INPUT SE AGREGA AL <input>: class="cursor-not-allowed" -->
+
+                        <ng-container matColumnDef="validoDesde">
+                            <mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> Válido desde
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i = index" class="gotham-book"
+                                [formGroup]="element">
+                                <mat-form-field>
+                                    <input matInput [matDatepicker]="dp1" [min]="minDate" formControlName="validoDesde"
+                                        (dateInput)="addEvent('input', $event)"
+                                        (dateChange)="addEvent('change', $event)">
+                                    <mat-datepicker-toggle matIconSuffix [for]="dp1"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp1></mat-datepicker>
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="validoHasta">
+                            <mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> Válido hasta
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i = index" class="gotham-book"
+                                [formGroup]="element">
+                                <mat-form-field>
+                                    <input matInput [matDatepicker]="dp2" [min]="minDate" formControlName="validoHasta"
+                                        (dateInput)="addEvent('input', $event)"
+                                        (dateChange)="addEvent('change', $event)">
+                                    <mat-datepicker-toggle matIconSuffix [for]="dp2"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp2></mat-datepicker>
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="fabricaPat">
+                            <mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> Fábrica Pat.
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i = index" class="gotham-book"
+                                [formGroup]="element">
+                                <mat-form-field [matTooltip]="element.value.fabricaPat" matTooltipPosition="above"
+                                    matTooltipShowDelay="300">
+                                    <input matInput formControlName="fabricaPat" placeholder="Fábrica Pat."
+                                        [value]="element.value.fabricaPat">
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="marcaPat">
+                            <mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> Marca Pat.
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i = index" class="gotham-book"
+                                [formGroup]="element">
+                                <mat-form-field [matTooltip]="element.value.marcaPat" matTooltipPosition="above"
+                                    matTooltipShowDelay="300">
+                                    <input matInput formControlName="marcaPat" placeholder="Marca Pat."
+                                        [value]="element.value.marcaPat">
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="modelopat">
+                            <mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> Modelo Pat.
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i = index" class="gotham-book"
+                                [formGroup]="element">
+                                <mat-form-field [matTooltip]="element.value.modelopat" matTooltipPosition="above"
+                                    matTooltipShowDelay="300">
+                                    <input matInput formControlName="modelopat" placeholder="Modelo Pat."
+                                        [value]="element.value.modelopat">
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="descripcion1">
+                            <mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> Descripción 1 OFMM
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i = index" class="gotham-book"
+                                [formGroup]="element">
+                                <mat-form-field [matTooltip]="element.value.descripcion1" matTooltipPosition="above"
+                                    matTooltipShowDelay="300">
+                                    <input matInput readonly="readonly" formControlName="descripcion1"
+                                        placeholder="Descripción 1 OFMM" [value]="element.value.descripcion1"
+                                        class="cursor-not-allowed">
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="descripcion2">
+                            <mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> Descripción 2 OFMM
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i = index" class="gotham-book"
+                                [formGroup]="element">
+                                <mat-form-field [matTooltip]="element.value.descripcion2" matTooltipPosition="above"
+                                    matTooltipShowDelay="300">
+                                    <input matInput readonly="readonly" formControlName="descripcion2"
+                                        placeholder="Descripción 2 OFMM" [value]="element.value.descripcion2"
+                                        class="cursor-not-allowed">
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="tipoDeTexto">
+                            <mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> Tipo de Texto
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i = index" class="gotham-book"
+                                [formGroup]="element">
+                                <mat-form-field [matTooltip]="element.value.tipoDeTexto" matTooltipPosition="above"
+                                    matTooltipShowDelay="300">
+                                    <input matInput readonly="readonly" formControlName="tipoDeTexto"
+                                        placeholder="Tipo de Texto" [value]="element.value.tipoDeTexto"
+                                        class="cursor-not-allowed">
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="terminalId">
+                            <mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> Terminal
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i = index" class="gotham-book"
+                                [formGroup]="element">
+                                <mat-form-field class="w-64">
+                                    <ngx-mat-select clientSide [options]="terminals" [multiple]="false"
+                                        [hasSearchBox]="true" [optionLabel]="'codName'" [optionValue]="'id'"
+                                        (selectionChange)="filterBrands($event, i)" formControlName="terminalId"
+                                        [searchComparison]="searchComparisonFn">
+                                    </ngx-mat-select>
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="marcaId">
+                            <mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> Marca
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i = index" class="gotham-book"
+                                [formGroup]="element">
+                                <mat-form-field class="w-64">
+                                    <ngx-mat-select clientSide [options]="filteredBrands[i]" [multiple]="false"
+                                        [hasSearchBox]="true" [optionLabel]="'codName'" [optionValue]="'id'"
+                                        (selectionChange)="filterModels($event, i)" formControlName="marcaId"
+                                        [searchComparison]="searchComparisonFn">
+                                    </ngx-mat-select>
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="modeloId">
+                            <mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> Modelo
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i = index" class="gotham-book"
+                                [formGroup]="element">
+                                <mat-form-field class="w-64">
+                                    <ngx-mat-select clientSide [options]="filteredCarModels[i]" [multiple]="false"
+                                        [hasSearchBox]="true" [optionLabel]="'codName'" [optionValue]="'id'"
+                                        (selectionChange)="filterVerPats($event, i)" formControlName="modeloId"
+                                        [searchComparison]="searchComparisonFn">
+                                    </ngx-mat-select>
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="versionPatentamiento">
+                            <mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> Versión Patentamiento
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i = index" class="gotham-book"
+                                [formGroup]="element">
+                                <mat-form-field class="w-64">
+                                    <ngx-mat-select clientSide [options]="filteredPatentingVersions[i]"
+                                        [multiple]="false" [hasSearchBox]="true" [optionLabel]="'codName'"
+                                        [optionValue]="'id'" (selectionChange)="fillVerPat($event, i)"
+                                        formControlName="versionPatentamiento" [searchComparison]="searchComparisonFn">
+                                    </ngx-mat-select>
+                                </mat-form-field>
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="acciones">
+                            <mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> Acciones
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element; let i=index"
+                                class="flex flex-row items-center gap-3 gotham-book">
+                                <!-- <button matTooltip="Guardar {{element.value.zofmm}}" matTooltipPosition="above"
+                                    class="bg-blue-950 rounded-full h-6 w-6" (click)="giveMeInfo(element)">
+                                    <mat-icon class="text-white text-center scale-75">save</mat-icon>
+                                </button> -->
+                                <button matTooltip="Borrar {{element.value.zofmm}}" matTooltipPosition="above"
+                                    class=" bg-red-600 rounded-full h-6 w-6" (click)="deleteRow(i)">
+                                    <mat-icon class="text-white text-center scale-75">close</mat-icon>
+                                </button>
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                    </mat-table>
+                </div>
+                <div class="flex flex-row justify-center items-center gap-3 mt-5 mb-5 bg-[rgb(227,227,227)]">
+                    <button type="button"
+                        class="w-24 h-10 px-4 py-3 mt-5 mb-5 bg-[#941c1c] rounded-md text-white outline-none hover:bg-[#cc4c4c] cursor-pointer focus:shadow-lg transform active:bg-[#AA0A0A]"
+                        mat-dialog-close>Cancelar</button>
+                    <button type="button"
+                        class="w-24 h-10 px-4 py-3 mt-5 mb-5 enabled:bg-[#294a71] rounded-md text-white outline-none enabled:hover:bg-[#376195] cursor-pointer enabled:focus:shadow-lg transform enabled:active:bg-[#15263a] disabled:bg-gray-500 disabled:hover:cursor-default"
+                        [class.spinner]="loading" [disabled]="loading" (click)="save()">{{ accept }}</button>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

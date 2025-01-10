@@ -1,0 +1,72 @@
+th.mat-column-select {
+  padding-left: unset !important;
+}
+
+td.mat-column-select {
+  width: 30px !important;
+  max-width: 30px !important;
+  padding-left: 7px !important;
+}
+
+th.mat-column-coa {
+  padding-left: 0 !important;
+}
+
+td.mat-column-coa,
+td.mat-column-cross_coa {
+  width: 100px !important;
+  max-width: 100px !important;
+}
+
+td.mat-column-dc {
+  width: 75px !important;
+  max-width: 75px !important;
+}
+
+td.mat-column-currency {
+  width: 75px !important;
+  max-width: 75px !important;
+}
+
+td.mat-column-amount,
+td.mat-column-local_amount {
+  width: 15% !important;
+  max-width: 15% !important;
+}
+
+td.mat-column-edit {
+  width: 55px !important;
+  max-width: 55px !important;
+}
+
+.table-responsive {
+  display: block !important;
+  width: 100% !important;
+  overflow-x: auto !important;
+}
+
+mat-table {
+ width: 1200px !important;
+ max-width: 1200px !important;
+ margin-bottom: 1rem !important;
+ display: table !important;
+ border-collapse: collapse !important;
+ margin: 0px !important;
+}
+
+mat-row,
+mat-header-row {
+  display: table-row !important;
+}
+mat-cell,
+mat-header-cell {
+  word-wrap: initial !important;
+  display: table-cell !important;
+  padding: 0px 5px !important;
+  line-break: unset !important;
+  width: auto !important;
+  height: 50px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  vertical-align: middle !important;
+}

@@ -1,0 +1,131 @@
+<mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+<div class="w-full h-screen md:h-full flex items-center justify-center bg-[rgb(227,227,227)]">
+    <div class="bg-[rgb(227,227,227)] h-full w-full flex flex-col rounded-b-xl">
+        <div class="flex flex-row bg-[#E8E8E8] drop-shadow-lg">
+            <div
+                class="w-64 bg-[#000000] drop-shadow-lg h-12 items-center rounded-tr-full rounded-br-full flex justify-center">
+                <p class="large text-center pt-2 gotham-book text-white">{{ actionMode == ActionMode.create ? 'Crear' :
+                    'Editar'}} OFMM</p>
+            </div>
+            <div class="w-full h-full flex justify-end">
+                <mat-icon class="scale-75 fixed flex self-start text-gray-500 cursor-pointer mt-2 mr-2"
+                    mat-dialog-close>close</mat-icon>
+            </div>
+        </div>
+
+
+
+
+        <form [formGroup]="formGroup" class="bg-[rgb(227,227,227)] flex flex-col justify-center items-center gap-2 mt-8">
+            <div class="flex flex-row flex-wrap items-center justify-center gap-x-6 w-full">
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>OFMM:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <input matInput formControlName="zofmm" class="disabled:cursor-not-allowed">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col items-center w-64">
+                    <mat-label>Válido desde:</mat-label>
+                    <mat-form-field>
+                        <input matInput [matDatepicker]="dp1" [min]="minDate" formControlName="validoDesde"
+                            (dateChange)="enableForm()" (dateInput)="addEvent('input', $event)"
+                            (dateChange)="addEvent('change', $event)" class="disabled:cursor-not-allowed">
+                        <mat-datepicker-toggle matIconSuffix [for]="dp1"></mat-datepicker-toggle>
+                        <mat-datepicker #dp1></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col items-center w-64">
+                    <mat-label>Valido hasta:</mat-label>
+                    <mat-form-field>
+                        <input matInput [matDatepicker]="dp2" [min]="minDate" formControlName="validoHasta"
+                            (dateChange)="enableForm()" (dateInput)="addEvent('input', $event)"
+                            (dateChange)="addEvent('change', $event)" class="disabled:cursor-not-allowed">
+                        <mat-datepicker-toggle matIconSuffix [for]="dp2"></mat-datepicker-toggle>
+                        <mat-datepicker #dp2></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="hidden disabled:flex flex-col justify-center items-center">
+                    <mat-label>Fábrica Pat.:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <input matInput formControlName="fabricaPat" class="disabled:cursor-not-allowed">
+                    </mat-form-field>
+                </div>
+                <div class="hidden disabled:flex flex-col justify-center items-center">
+                    <mat-label>Marca Pat.:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <input matInput formControlName="marcaPat" class="disabled:cursor-not-allowed">
+                    </mat-form-field>
+                </div>
+                <div class="hidden disabled:flex flex-col justify-center items-center">
+                    <mat-label>Modelo Pat.:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <input matInput formControlName="modelopat" class="disabled:cursor-not-allowed">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>Descripción 1 OFMM:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <input matInput formControlName="descripcion1" class="disabled:cursor-not-allowed">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>Descripción 2 OFMM:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <input matInput formControlName="descripcion2" class="disabled:cursor-not-allowed">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>Tipo de Texto:</mat-label>
+                    <mat-form-field appearance="fill" class="w-64">
+                        <input matInput formControlName="tipoDeTexto" class="disabled:cursor-not-allowed">
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>Terminal:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="terminals" [multiple]="false" [hasSearchBox]="true"
+                            [optionLabel]="'codName'" [optionValue]="'id'" (selectionChange)="filterBrands($event)"
+                            formControlName="terminalId" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>Marca:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="filteredBrands" [multiple]="false"
+                            [hasSearchBox]="true" [optionLabel]="'codName'" [optionValue]="'id'"
+                            (selectionChange)="filterModels($event)" formControlName="marcaId" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>Modelo:</mat-label>
+                    <mat-form-field class="w-64">
+                        <ngx-mat-select clientSide [options]="filteredCarModels" [multiple]="false"
+                            [hasSearchBox]="true" [optionLabel]="'codName'" [optionValue]="'id'"
+                            (selectionChange)="filterVerPats($event)" formControlName="modeloId" [searchComparison]="searchComparisonFn">
+                        </ngx-mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                    <mat-label>Version Patentamiento:</mat-label> 
+                        <mat-form-field   class="w-64">
+                            <ngx-mat-select clientSide [options]="filteredPatentingVersions" [multiple]="false"
+                                [hasSearchBox]="true" [optionLabel]="'codName'" [optionValue]="'id'"
+                                (selectionChange)="fillVerPat($event)" formControlName="versionPatentamiento" [searchComparison]="searchComparisonFn">
+                            </ngx-mat-select>
+                        </mat-form-field> 
+                </div> 
+            </div>
+            <div class="flex flex-row flex-wrap items-center justify-center gap-x-6 w-full">
+                <button type="button"
+                    class="w-24 h-10 px-4 py-3 bg-[#941c1c] rounded-md text-white outline-none hover:bg-[#cc4c4c] cursor-pointer focus:shadow-lg transform active:bg-[#AA0A0A]"
+                    mat-dialog-close>Cancelar</button>
+                <button type="button"
+                    class="w-24 h-10 px-4 py-3 enabled:bg-[#294a71] rounded-md text-white outline-none enabled:hover:bg-[#376195] cursor-pointer enabled:focus:shadow-lg transform enabled:active:bg-[#15263a] disabled:bg-gray-500 disabled:hover:cursor-default"
+                    [class.spinner]="loading" [disabled]="loading" [disabled]="!formGroup || formGroup.invalid"
+                    (click)="save()">{{ accept }}</button>
+            </div>
+        </form>
+    </div>
+</div>

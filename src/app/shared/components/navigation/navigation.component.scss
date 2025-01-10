@@ -1,0 +1,38 @@
+.name {
+  margin-top: -10px !important;
+}
+
+.small {
+  font-size: small !important;
+}
+
+// .gradient {
+//   background: #65656579;
+//   transition: background-color 1s;
+// }
+
+// .gradient:hover,
+// .gradient:focus,
+// .gradient:active {
+//   background: linear-gradient(90deg, #424242, transparent) #645f60;
+// }
+
+// .nav-item-active {
+//   color: white;
+// }
+
+.gradient {
+  background: #65656579;
+  transition: background-color 1s;
+}
+
+.gradient:hover,
+.gradient:focus,
+.gradient:active {
+  background: linear-gradient(90deg, #424242, transparent) #645f60;
+}
+
+.nav-item-active {
+  background: linear-gradient(90deg, #424242, transparent) #645f60;
+  color: white !important;
+}

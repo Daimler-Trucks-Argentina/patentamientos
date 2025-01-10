@@ -1,0 +1,165 @@
+<div class="h-full w-full flex flex-col items-center justify-center p-4">
+    <div class="bg-[rgb(227,227,227)] h-full w-full md:w-11/12 flex flex-col rounded-b-xl mt-4">
+        <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+        <div class="flex flex-row bg-[#E8E8E8]">
+            <div class="w-80 bg-[#000000] h-20 items-center rounded-tr-full rounded-br-full flex justify-center">
+                <p class="large text-center pr-5 pl-2 pt-2 gotham-book text-white">Registros</p>
+            </div>
+            <div class="flex items-center ml-12">
+                <input (keyup)="applyFilter($event)" #input
+                    class="gotham-book h-8 w-40 md:w-60 rounded-full pl-3 drop-shadow-xl pr-7">
+                <div
+                    class="flex flex-row items-center -ml-6 bg-[#294A71] drop-shadow-xl h-8 rounded-full w-10 md:w-28 justify-center z-0">
+                    <mat-icon class="text-white md:-ml-5">search</mat-icon>
+                    <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">Buscar</p>
+                </div>
+            </div>
+            <div class="flex justify-end items-center w-full px-8">
+                <input type="file" accept=".xls, .xlsx, .csv"  class="hidden" (change)="importFile($event)" #fileUpload>
+                <button class="bg-[#294A71] flex items-center text-white text-sm h-9 px-4 py-2 border rounded-full scale-90 ml-3
+                    hover:bg-[#3b69a1] 
+                    disabled:bg-[#404750]
+                    active:bg-[#1f2327]"
+                    (click)="fileUpload.click()"><mat-icon class="scale-90 mr-2">upload_file</mat-icon> Importar
+                    archivo</button>
+            </div>
+        </div>
+
+
+        <div class="table-container">
+            <mat-table [dataSource]="dataSource" class="mat-elevation-z8 mt-3 md:mt-0">
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> NOMBRE </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Nombre:</span>
+                        {{element.name ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> DESCRIPCIÓN </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Descripción:</span>
+                        {{element.description ?? '-'}}
+                    </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="registry_number">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> NRO. DE REGISTRO </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Nro. de Registro:</span>
+                        {{element.registryNumber ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="registry_province">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> PROVINCIA </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Provincia:</span>
+                        {{element.registryProvince ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="registry_department">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> DEPARTAMENTO </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Departamento:</span>
+                        {{element.registryDepartment ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="registry_location">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> LOCALIDAD </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Localidad:</span>
+                        {{element.registryLocation ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="car_dealer">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> CONCESIONARIO ZONA AUTO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Concesionario Zona Auto:</span>
+                        {{element.autoZoneDealer ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="truck_dealer">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> DESCRIPCIÓN ZONA AUTO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Descripción Zona Auto:</span>
+                        {{element.autoZoneDescription ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="van_dealer">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> CONCESIONARIO ZONA CAMIÓN
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Concesionario Zona Camión</span>
+                        {{element.truckZoneDealer ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="car_description">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> DESCRIPCIÓN ZONA CAMIÓN
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Descripción Zona Camión:</span>
+                        {{element.truckZoneDescription ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="truck_description">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> CONCESIONARIO ZONA VAN
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Concesionario Zona Van:</span>
+                        {{element.vanZoneDealer ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="van_description">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> DESCRIPCIÓN ZONA VAN </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Descripción Zona Van:</span>
+                        {{element.vanZoneDescription ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> ACCIONES </th>
+                    <td mat-cell *matCellDef="let element" class="flex flex-row gap-3 mt-3 gotham-book info">
+                        <button matTooltip="Editar {{element.name}}" matTooltipPosition="above"
+                            class="bg-blue-950 rounded-full h-6 w-6" (click)="createOrUpdate(element)">
+                            <mat-icon class="text-white text-center scale-75">edit</mat-icon>
+                        </button>
+                        <button matTooltip="Borrar {{element.name}}" matTooltipPosition="above"
+                            class=" bg-red-600 rounded-full h-6 w-6" (click)="confirmDelete(element)">
+                            <mat-icon class="text-white text-center scale-75">close</mat-icon>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns" class="titulos mat-header-row"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="height mat-row row-hover"></tr>
+                <tr *matNoDataRow>
+                    <td class="mat-cell" colspan="8">No se encontró el resultado: "{{input.value}}"</td>
+                </tr>
+            </mat-table>
+        </div>
+        <hr class="h-0.5 mt-2 w-[95%] border-[#757575ad] border-solid rounded-full self-center">
+        <mat-paginator hidePageSize="true" showFirstLastButtons="true" pageSize="8"
+            class="bg-[rgb(227,227,227)]"></mat-paginator>
+
+        <div class="flex justify-center items-center mt-4 mb-6">
+            <button
+                class="bg-[#294A71] hover:bg-[#376195] active:bg-[#15263A] rounded-full w-40 md:w-48 h-8 drop-shadow-xl disabled:bg-gray-500 disabled:hover:cursor-default"
+                (click)="createOrUpdate()" [disabled]="isLoading">
+                <p class="text-white pt-1.5 gotham-book">Nuevo Registro</p>
+            </button>
+        </div>
+    </div>
+</div>
