@@ -58,6 +58,7 @@ export class TmmvsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   displayedColumns: string[] = [
+    'acciones',
     'zTerminal',
     'descripcionTerminal',
     'zMarca',
@@ -70,7 +71,7 @@ export class TmmvsComponent implements OnInit {
     'descripcionVerWs',
     'versionInterna',
     'descripcionVerInt',
-    'acciones',
+    
   ];
   dataSource = new MatTableDataSource<any>();
 

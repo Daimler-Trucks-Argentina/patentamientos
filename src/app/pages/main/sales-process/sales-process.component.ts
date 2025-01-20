@@ -50,6 +50,8 @@ export class SalesProcessComponent implements OnInit {
   pageSize: number = 8;
   code: any = { value: '' };
   displayedColumns: string[] = [
+    'acciones',
+    'estado',
     'yearMonth',
     'codBrand',
     'Brand',
@@ -83,8 +85,7 @@ export class SalesProcessComponent implements OnInit {
     'savingSystemAccum',
     'finalStock',
     'noOkStock',
-    'estado',
-    'acciones',
+    
   ];
   dataSource = new MatTableDataSource<any>();
 
