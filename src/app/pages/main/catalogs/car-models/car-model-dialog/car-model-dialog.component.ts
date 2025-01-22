@@ -15,6 +15,7 @@ import { ActionMode } from 'src/app/models/action-mode.enum';
 import { Brand } from 'src/app/models/brands/brand.model';
 import { CarModelCreateUpdateDto } from 'src/app/models/car-models/car-model-create-update.dto';
 import { CarModel } from 'src/app/models/car-models/car-model.model';
+import { PatentingVersion } from 'src/app/models/patenting-versions/patenting-version.model';
 import { Terminal } from 'src/app/models/terminals/terminal.model';
 import { CarModelService } from 'src/app/services/car-models/car-model.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -47,6 +48,7 @@ export class CarModelDialogComponent {
   brands: Brand[] = [];
   filteredBrands: Brand[] = [];
   terminalId: string = '';
+  filteredPatentingVersions: PatentingVersion[] = [];
 
   constructor(
     private dialogRef: MatDialogRef<CarModelDialogComponent>,
@@ -211,9 +213,11 @@ export class CarModelDialogComponent {
 
   filterCarModels(event: NgxMatSelectionChangeEvent) {
     this.filteredCarModels = [];
+    this.filteredPatentingVersions = [];
     const brand = this.brands.find((b) => event.value == b.id);
     this.filteredCarModels = this.carModels.filter(
-      (cm) => brand?.mercedesMarcaId == cm.mercedesMarcaId
+      (cm) => brand?.mercedesMarcaId == cm.mercedesMarcaId &&
+      brand?.mercedesTerminalId == cm.mercedesTerminalId
     );
   }
 }
