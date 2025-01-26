@@ -50,6 +50,7 @@ export class OfmmsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   displayedColumns: string[] = [
+    'acciones',
     'ZOFMM',
     'ValidoDesde',
     'ValidoHasta',
@@ -63,7 +64,6 @@ export class OfmmsComponent implements OnInit {
     'Marca',
     'Modelo',
     'VersionPatentamiento',
-    'acciones',
   ];
   dataSource = new MatTableDataSource<any>();
 

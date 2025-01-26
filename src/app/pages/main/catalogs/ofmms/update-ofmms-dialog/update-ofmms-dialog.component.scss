@@ -34,3 +34,7 @@ mat-header-cell {
   background-color: #a8a8a8 !important;
   height: 45px !important;
 }
+
+::ng-deep .ngx-mat-select-panel {
+  background-color: white;
+}
