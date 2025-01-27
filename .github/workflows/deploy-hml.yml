@@ -1,0 +1,46 @@
+name: Build and deploy Node.js app to Azure Web App - emplacamentos-argentina-hml
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: emplacamentos-argentina-hml
+  AZURE_WEBAPP_PACKAGE_PATH: 'dist/lch.mercedesbenz.web'
+  NODE_VERSION: '20.x'
+
+jobs:
+  build-and-deploy-hml:
+    name: Build and Deploy Hml
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@main
+
+    - name: Use Node.js ${{ env.NODE_VERSION }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: npm install, build, and test
+      run: |
+        # Build and test the project, then
+        # deploy to Azure Web App.
+        npm install
+        npm run build-hml --if-present
+        # npm run test --if-present
+
+    - name: Upload artifact for deployment job
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.AZURE_WEBAPP_NAME }}
+        path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+    - name: 'Deploy to Azure WebApp'
+      uses: azure/webapps-deploy@v3
+      with: 
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
