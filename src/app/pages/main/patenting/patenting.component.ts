@@ -106,6 +106,7 @@ export class PatentingComponent implements OnInit, AfterViewInit {
     // 'fabrica',
   ];
   displayedColumnsNoFullScreen: string[] = [
+    'acciones',
     'fecha_inscripcion',
     'fecha_corte',
     'patente',
@@ -117,7 +118,6 @@ export class PatentingComponent implements OnInit, AfterViewInit {
     'texto_2',
     'tipotexto',
     'estado',
-    'acciones',
     // 'marca',
     // 'modelo',
     // 'fabrica',

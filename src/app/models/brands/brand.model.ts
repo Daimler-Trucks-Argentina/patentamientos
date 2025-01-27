@@ -6,6 +6,7 @@ export class Brand extends Base {
   name: string;
   description?: string;
   mercedesTerminalId?: string;
+  mercedesModeloId?: string;
   mercedesMarcaId?: string;
   terminalId: string;
   terminal?: Terminal | null;
