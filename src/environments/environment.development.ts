@@ -1,5 +1,8 @@
+import packageJson from '../../package.json';
+
 export const environment = {
   production: false,
+  version: packageJson.version,
   localStorageItemName: 'LchMercedesBenzDev',
   api: {
     main: 'https://localhost:7070/api/',
