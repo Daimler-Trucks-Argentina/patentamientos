@@ -14,6 +14,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { SweetAlert2Helper } from 'src/app/core/helpers/sweet-alert-2.helper';
 import { User } from 'src/app/models/users/user.model';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-navigation',
@@ -29,6 +30,7 @@ export class NavigationComponent implements OnInit {
   isXsOrSm = false;
   formGroup: FormGroup;
   filteredNavigation?: Observable<Navigation[]>;
+  environment = environment;
   user: User;
 
   constructor(

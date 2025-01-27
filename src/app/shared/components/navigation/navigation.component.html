@@ -1,43 +1,76 @@
 <div class="flex-col flex w-full h-full px-2 sm:px-4 overflow-hidden menu">
   <div class="flex flex-row w-full h-20 items-center justify-between border-b">
     <span class="gotham-light text-[24px] text-white">Menú</span>
-    <mat-icon class="text-white mt-1.5 pr-10 cursor-pointer" (click)="drawer?.toggle()">list</mat-icon>
+    <mat-icon
+      class="text-white mt-1.5 pr-10 cursor-pointer"
+      (click)="drawer?.toggle()"
+      >list</mat-icon
+    >
   </div>
   <div class="flex flex-1 w-full overflow-hidden">
-    <div class="flex flex-col w-full h-full overflow-x-hidden overflow-y-auto pr-2">
-      <hr class="h-0.5 w-56 border-[#fff] border-solid rounded-full z-0">
+    <div
+      class="flex flex-col w-full h-full overflow-x-hidden overflow-y-auto pr-2"
+    >
+      <hr class="h-0.5 w-56 border-[#fff] border-solid rounded-full z-0" />
       <div class="flex flex-col w-full items-center gap-4 py-4 border-b">
-        <img src="./assets/images/user.png" class="w-20">
+        <img src="./assets/images/user.png" class="w-20" />
         <div class="flex flex-col items-center justify-center">
-          <span class="gotham-book text-sm text-[#A8A8A8] uppercase">Usuario</span>
+          <span class="gotham-book text-sm text-[#A8A8A8] uppercase"
+            >Usuario</span
+          >
           <div class="flex flex-row">
-            <span class="gotham-light text-sm text-white">{{displayName}}</span>
-            <mat-icon class="scale-50 text-white cursor-pointer -mt-1" matTooltip="Editar perfil"
-              (click)="editProfile()">edit</mat-icon>
+            <span class="gotham-light text-sm text-white">{{
+              displayName
+            }}</span>
+            <mat-icon
+              class="scale-50 text-white cursor-pointer -mt-1"
+              matTooltip="Editar perfil"
+              (click)="editProfile()"
+              >edit</mat-icon
+            >
           </div>
         </div>
-        <hr class="h-0.5 w-56 border-[#fff] border-solid rounded-full">
-
+        <hr class="h-0.5 w-56 border-[#fff] border-solid rounded-full" />
       </div>
       <div class="flex flex-col w-full items-center pt-4">
         <ng-container *ngFor="let item of filteredNavigation | async">
           <div class="flex flex-col w-full gap-y-1 mb-1">
-            <div class="flex flex-row place-content-between items-center w-full h-10 px-3 gradient cursor-pointer"
-              (click)="onNavigationItemClick(item)">
-              <span class="small text-white gotham-light pl-2">{{item.title}}</span>
-              <mat-icon class="text-white w-4" [ngClass]="{'rotate-90': item.collapsed === false}"
-                fontIcon="chevron_right" *ngIf="item.type === 'collapsable'"></mat-icon>
+            <div
+              class="flex flex-row place-content-between items-center w-full h-10 px-3 gradient cursor-pointer"
+              (click)="onNavigationItemClick(item)"
+            >
+              <span class="small text-white gotham-light pl-2">{{
+                item.title
+              }}</span>
+              <mat-icon
+                class="text-white w-4"
+                [ngClass]="{ 'rotate-90': item.collapsed === false }"
+                fontIcon="chevron_right"
+                *ngIf="item.type === 'collapsable'"
+              ></mat-icon>
             </div>
-            <div fxLayout="column" class="flex-col flex w-full gap-y-1" *ngIf="!item.collapsed" [@fadeIn]
-              (click)="toggle()">
+            <div
+              fxLayout="column"
+              class="flex-col flex w-full gap-y-1"
+              *ngIf="!item.collapsed"
+              [@fadeIn]
+              (click)="toggle()"
+            >
               <ng-container *ngFor="let child of item.children">
                 <div
                   class="flex-row flex place-content-between items-center w-full h-10 pl-7 pr-3 py-2 cursor-pointer last:mb-4"
-                  routerLink="{{child.url}}" routerLinkActive="nav-item-active">
-                  <span matTooltip="{{child.title}}" matTooltipPosition="above" matTooltipShowDelay="500"
+                  routerLink="{{ child.url }}"
+                  routerLinkActive="nav-item-active"
+                >
+                  <span
+                    matTooltip="{{ child.title }}"
+                    matTooltipPosition="above"
+                    matTooltipShowDelay="500"
                     [matTooltipDisabled]="child.title.length < 20"
-                    class="gotham-light text-[#ffffff93] cursor-pointer whitespace-nowrap hover:text-white w-full h-full">{{child.title
-                    | slice:0:20 }}{{ child.title.length > 20 ? '...' : '' }}</span>
+                    class="gotham-light text-[#ffffff93] cursor-pointer whitespace-nowrap hover:text-white w-full h-full"
+                    >{{ child.title | slice : 0 : 20
+                    }}{{ child.title.length > 20 ? "..." : "" }}</span
+                  >
                 </div>
               </ng-container>
             </div>
@@ -47,7 +80,17 @@
     </div>
   </div>
   <div class="flex flex-row items-center justify-end w-full h-12">
-    <div class="flex-row flex items-center justify-between h-full cursor-pointer gap-x-0.5" (click)="signOut()">
+    <div
+      class="flex-row flex items-center justify-between h-full cursor-pointer gap-x-0.5"
+    >
+      <span class="text-white text-sm">Version {{ environment.version }}</span>
+    </div>
+  </div>
+  <div class="flex flex-row items-center justify-end w-full h-12">
+    <div
+      class="flex-row flex items-center justify-between h-full cursor-pointer gap-x-0.5"
+      (click)="signOut()"
+    >
       <span class="text-white text-sm">Salir</span>
       <mat-icon class="text-base text-center text-white">logout</mat-icon>
     </div>

@@ -1,5 +1,8 @@
+import packageJson from '../../package.json';
+
 export const environment = {
   production: true,
+  version: packageJson.version,
   localStorageItemName: 'LchMercedesBenzStag',
   api: {
     main: 'https://api-emplacamentos-argentina-hml.azurewebsites.net/api/',
