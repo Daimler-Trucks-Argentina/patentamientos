@@ -13,6 +13,7 @@ import { Brand } from 'src/app/models/brands/brand.model';
 import { CarModel } from 'src/app/models/car-models/car-model.model';
 import { GradoCreateDto } from 'src/app/models/grados/grado-create.dto';
 import { Grado } from 'src/app/models/grados/grado.model';
+import { PatentingVersion } from 'src/app/models/patenting-versions/patenting-version.model';
 import { Terminal } from 'src/app/models/terminals/terminal.model';
 import { WholesaleVersion } from 'src/app/models/wholesale-versions/wholesale-version.model';
 import { OdsWholesale } from 'src/app/models/wholesales/ods-wholesale.model';
@@ -58,6 +59,7 @@ export class GradoDialogComponent {
   terminalId: string = '';
   isLoading = false;
   wholesale: OdsWholesale = new OdsWholesale();
+  filteredPatentingVersions: PatentingVersion[] = [];
 
   constructor(
     private dialogRef: MatDialogRef<GradoDialogComponent>,
@@ -251,14 +253,15 @@ export class GradoDialogComponent {
       grade: rawValue.grade,
       dateTo: rawValue.dateTo,
       dateFrom: rawValue.dateFrom,
-      mercedesTerminalId: terminal?.mercedesTerminalId!,
-      mercedesMarcaId: brand?.mercedesMarcaId!,
-      mercedesModeloId: carModel?.mercedesModeloId!,
-      carModelId: rawValue.carModelId,
+      mercedesTerminalId: terminal?.mercedesTerminalId! || this.carModel.mercedesTerminalId!,
+      mercedesMarcaId: brand?.mercedesMarcaId! || this.carModel.mercedesMarcaId!,
+      mercedesModeloId: carModel?.mercedesModeloId! || this.carModel.mercedesModeloId!,
+      carModelId: typeof rawValue.carModelId === 'string' ? rawValue.carModelId : rawValue.carModelId?.id,
       versionWs: rawValue.versionWs,
       dischargeDate: rawValue.dischargeDate,
     };
     console.log('createDto', createDto);
+    console.log('CAR MODEL', this.carModel);
     if (this.actionMode === ActionMode.create) {
       this.create(createDto);
     }
@@ -318,12 +321,15 @@ export class GradoDialogComponent {
 
   filterModels(event: NgxMatSelectionChangeEvent) {
     this.filteredCarModels = [];
+    this.filteredPatentingVersions = [];
     this.brandId = event.value as string;
     const brand = this.brands.find((b) => event.value == b.id);
     this.filteredCarModels = this.carModels.filter(
-      (cm) => brand?.mercedesMarcaId == cm.mercedesMarcaId
+      (cm) => brand?.mercedesMarcaId == cm.mercedesMarcaId &&
+      brand?.mercedesTerminalId == cm.mercedesTerminalId
     );
-    this.formGroup.get('carModelId')?.setValue(null);
+    this.formGroup.get('modeloId')?.setValue(null);
+    this.formGroup.get('versionPatentamiento')?.setValue(null);
   }
 
   filterVersionWs(event: NgxMatSelectionChangeEvent) {

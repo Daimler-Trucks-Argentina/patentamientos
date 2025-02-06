@@ -281,10 +281,11 @@ export class UpdateOfmmsDialogComponent implements OnInit, AfterViewChecked {
 
   filterModels(event: NgxMatSelectionChangeEvent, index: number) {
     this.filteredCarModels[index] = [];
-    this.brandId = event.value as string;
+    this.filteredPatentingVersions = [];
     const brand = this.brands.find((b) => event.value == b.id);
     this.filteredCarModels[index] = this.carModels.filter(
-      (cm) => brand?.mercedesMarcaId == cm.mercedesMarcaId
+      (cm) => brand?.mercedesMarcaId == cm.mercedesMarcaId &&
+      brand?.mercedesTerminalId == cm.mercedesTerminalId
     );
     this.formGroup.get(['ofmmForm', index, 'modeloId'])?.setValue(null);
     this.formGroup

@@ -29,6 +29,7 @@ export class RegSecsComponent implements OnInit {
   fileName = '';
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   displayedColumns: string[] = [
+    'acciones',
     'name',
     // 'description',
     'registry_number',
@@ -41,7 +42,6 @@ export class RegSecsComponent implements OnInit {
     'car_description',
     'truck_description',
     'van_description',
-    'acciones',
   ];
   dataSource = new MatTableDataSource<any>();
 
