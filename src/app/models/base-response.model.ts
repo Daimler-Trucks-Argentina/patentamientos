@@ -4,6 +4,9 @@ export class BaseResponse<T> {
   stackTrace: string | null;
   result: T | null;
   results: T[];
+  pageSize? : number | undefined
+  pageNumber? : number |undefined
+  totalItems? : number |undefined
 
   constructor() {
     this.statusCode = null;

@@ -370,7 +370,11 @@
                 errorsQty > 1 ? 'encontraron' : 'encontró' }}
                 {{errorsQty}} {{ errorsQty > 1 ? 'errores' : 'error' }}.</p>
             <div class="w-[150%] flex items-end md:justify-end">
-                    <mat-paginator [pageSizeOptions]="[5, 10, dataSource.data.length]"  showFirstLastButtons 
+                    <mat-paginator 
+                    [length]="totalItems"
+                    [pageSize]="pageSize"
+                    [pageSizeOptions]="[5, 10, 20]"
+                    (page)="onPageChange($event)"  showFirstLastButtons 
                     class="bg-[rgb(227,227,227)] flex justify-end"></mat-paginator>
             </div>
         </div>

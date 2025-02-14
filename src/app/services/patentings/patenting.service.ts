@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { BaseResponse } from 'src/app/models/base-response.model';
 import { PatentingCreateUpdateDto } from 'src/app/models/patentings/patenting-create-update.dto';
 import { Patenting } from 'src/app/models/patentings/patenting.model';
 import { BaseService } from '../base.service';
+import { QueryParamsPatentings } from './patentings.model';
 
 @Injectable()
 export class PatentingService extends BaseService<Patenting> {
@@ -148,6 +149,22 @@ export class PatentingService extends BaseService<Patenting> {
     );
   }
 
+  public getPatentingsByFilter(
+    dateFrom: string | null,
+    dateTo: string,
+    lastDischarge: boolean,
+    errorType: string | null,
+    fileId: string | null,
+    pageNumber: number | undefined,
+    pageSize: number | undefined
+  ): Observable<any> {
+    // Construcción de la URL con query params
+    const url: string = `${this.controller}/patentings-filtered?dateFrom=${dateFrom ?? ''}&dateTo=${dateTo}&lastDischarge=${lastDischarge}&errorType=${errorType ?? ''}&fileId=${fileId ?? ''}&pageNumber=${pageNumber}&pageSize=${pageSize}`;
+    return this.HttpClient.get(url)
+  }
+  
+  
+
   public getLastFilePatenting(): Observable<any[]> {
     const url: string = `${this.controller}/get-last-patenting`;
     return this.HttpClient.get<BaseResponse<any>>(url).pipe(
@@ -169,8 +186,8 @@ export class PatentingService extends BaseService<Patenting> {
       map((response) => {
         let entities: any[] = [];
         if (response.statusCode === 200) {
-          console.log('Response', response);
-          entities = response.result;
+          console.log('Response RULES', response);
+          entities = response.results;
         }
         this.setEntities(entities);
         return entities;
