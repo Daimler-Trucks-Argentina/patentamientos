@@ -7,6 +7,7 @@ import { SalesProcessComponent } from './sales-process/sales-process.component';
 import { SpecialSalesProcessComponent } from './special-sales-process/special-sales-process.component'; 
 import { ExtractionsReportingComponent } from './catalogs/reportings/extractions-reporting/extractions-reporting.component';
 import { PatentingsReportingComponent } from './catalogs/reportings/patentings-reporting/patentings-reporting.component';
+import { CompleteReportsComponent } from './complete-reports/complete-reports.component';
 
 
 const routes: Routes = [
@@ -88,13 +89,18 @@ const routes: Routes = [
         redirectTo: '/pages/main/file-list',
         pathMatch: 'full',
       },
-      {
+     /* {
         path: 'reporting/extractions',
         component: ExtractionsReportingComponent,
       },
+
       {
         path: 'reporting/patentings',
         component: PatentingsReportingComponent,
+      },*/
+      {
+        path: 'complete-reports',
+        component: CompleteReportsComponent,
       },
     ],
   },

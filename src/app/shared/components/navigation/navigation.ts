@@ -204,7 +204,7 @@ export const navigation: Navigation[] = [
     permission: '00000000-0000-0000-0000-000000000001',
     url: '/pages/main/reporting',
     children: [
-      {
+      /*{
         id: 'patentings',
         title: 'Mercado',
         type: 'item',
@@ -216,6 +216,13 @@ export const navigation: Navigation[] = [
         title: 'Extracciones',
         type: 'item',
         url: '/pages/main/reporting/extractions',
+        permission: '00000000-0000-0000-0000-000000000001',
+      },*/
+      {
+        id: 'complete-reports',
+        title: 'Reporte Completo',
+        type: 'item',
+        url: '/pages/main/complete-reports',
         permission: '00000000-0000-0000-0000-000000000001',
       },
     ],

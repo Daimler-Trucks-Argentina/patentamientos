@@ -124,7 +124,7 @@ export class PatentingViewDialogComponent implements OnInit {
       ]) => {
         console.log(`${this.TAG} > getData > rules`, rules);
         console.log('PatentingId', patentingData);
-        this.dataError = rules;
+        this.dataError = rules ?? [];
 
         // Agrupar y contar errores
         const errorMap: { [key: string]: { regla: string; count: number } } = {};

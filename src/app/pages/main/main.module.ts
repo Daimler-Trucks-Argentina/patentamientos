@@ -22,6 +22,7 @@ import { TmmvService } from 'src/app/services/tmmvs/tmmv.service';
 import { PatentingsReportingComponent } from './catalogs/reportings/patentings-reporting/patentings-reporting.component';
 import { ExtractionsReportingComponent } from './catalogs/reportings/extractions-reporting/extractions-reporting.component';
 import { PatentingVersionService } from 'src/app/services/patenting-versions/patenting-version.service';
+import { CompleteReportsComponent } from './complete-reports/complete-reports.component';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { PatentingVersionService } from 'src/app/services/patenting-versions/pat
     SalesProcessViewDialogComponent,
     SpecialSalesProcessComponent,    
     ExtractionsReportingComponent,
-    PatentingsReportingComponent
+    PatentingsReportingComponent,
+    CompleteReportsComponent
   ],
   imports: [
     SharedModule,
