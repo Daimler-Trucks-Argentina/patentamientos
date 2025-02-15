@@ -1,69 +1,144 @@
-<div class="{{ fullScreen.isEnabled ? 'h-fit w-screen' : 'h-full w-full' }} flex flex-col items-center justify-center p-4">
-    <div class="relative bg-[rgb(227,227,227)] {{ fullScreen.isEnabled ? 'h-fit w-full' : 'h-full md:w-11/12' }} flex flex-col rounded-b-xl mt-4">
-        <div *ngIf="!isXsOrSm" class="absolute flex justify-end w-full z-50 -mt-2 ml-2">
-            <button mat-icon-button
-                matTooltip="{{ fullScreen.isEnabled ? 'Salir de pantalla completa' : 'Pantalla completa' }}"
-                matTooltipPosition="above" (click)="toggleFullscreen()"><mat-icon>{{
-                    fullScreen.isEnabled ? 'fullscreen_exit' : 'fullscreen'}}</mat-icon></button>
+<div
+  class="{{
+    fullScreen.isEnabled ? 'h-fit w-screen' : 'h-full w-full'
+  }} flex flex-col items-center justify-center p-4"
+>
+  <div
+    class="relative bg-[rgb(227,227,227)] {{
+      fullScreen.isEnabled ? 'h-fit w-full' : 'h-full md:w-11/12'
+    }} flex flex-col rounded-b-xl mt-4"
+  >
+    <div
+      *ngIf="!isXsOrSm"
+      class="absolute flex justify-end w-full z-50 -mt-2 ml-2"
+    >
+      <button
+        mat-icon-button
+        matTooltip="{{
+          fullScreen.isEnabled
+            ? 'Salir de pantalla completa'
+            : 'Pantalla completa'
+        }}"
+        matTooltipPosition="above"
+        (click)="toggleFullscreen()"
+      >
+        <mat-icon>{{
+          fullScreen.isEnabled ? "fullscreen_exit" : "fullscreen"
+        }}</mat-icon>
+      </button>
+    </div>
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+    <div class="flex flex-row bg-[#E8E8E8]">
+      <div
+        class="w-52 bg-[#000000] h-20 items-center rounded-tr-full rounded-br-full flex justify-center"
+      >
+        <p class="large text-center pr-5 pl-2 pt-2 gotham-book text-white">
+          Segmentación
+        </p>
+      </div>
+      <div class="flex items-center ml-12">
+        <input
+          (keyup)="applyFilter($event)"
+          #input
+          class="gotham-book h-8 {{
+            fullScreen.isEnabled ? 'md:w-72' : 'md:w-60'
+          }} w-40 rounded-full pl-3 drop-shadow-xl pr-7"
+        />
+        <div
+          class="flex flex-row items-center -ml-6 bg-[#294A71] drop-shadow-xl h-8 rounded-full w-10 md:w-28 justify-center z-0"
+        >
+          <mat-icon class="text-white md:-ml-5">search</mat-icon>
+          <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">
+            Buscar
+          </p>
         </div>
-        <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
-        <div class="flex flex-row bg-[#E8E8E8]">
-            <div class="w-52 bg-[#000000] h-20 items-center rounded-tr-full rounded-br-full flex justify-center">
-                <p class="large text-center pr-5 pl-2 pt-2 gotham-book text-white">Segmentación</p>
-            </div>
-            <div class="flex items-center ml-12">
-                <input (keyup)="applyFilter($event)" #input
-                    class="gotham-book h-8 {{fullScreen.isEnabled ? 'md:w-72' : 'md:w-60'}} w-40 rounded-full pl-3 drop-shadow-xl pr-7">
-                <div
-                    class="flex flex-row items-center -ml-6 bg-[#294A71] drop-shadow-xl h-8 rounded-full w-10 md:w-28 justify-center z-0">
-                    <mat-icon class="text-white md:-ml-5">search</mat-icon>
-                    <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">Buscar</p>
-                </div>
-            </div>
-        </div>
+      </div>
+    </div>
 
-        <div class="table-container {{ fullScreen.isEnabled ? 'max-h-[34rem]' : 'max-h-[400px]' }}">
-            <mat-table [dataSource]="dataSource" class="mat-elevation-z8 mt-3 md:mt-0">
+    <div
+      class="table-container {{
+        fullScreen.isEnabled ? 'max-h-[34rem]' : 'max-h-[400px]'
+      }}"
+    >
+      <mat-table
+        [dataSource]="dataSource"
+        class="mat-elevation-z8 mt-3 md:mt-0"
+      >
+        <ng-container matColumnDef="acciones">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            ACCIONES
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="flex flex-row gap-3 mt-3 gotham-book info"
+          >
+            <button
+              matTooltip="Editar {{ element.name }}"
+              matTooltipPosition="above"
+              class="bg-blue-950 rounded-full h-6 w-6"
+              (click)="createOrUpdate(element)"
+            >
+              <mat-icon class="text-white text-center scale-75">edit</mat-icon>
+            </button>
+            <button
+              matTooltip="Borrar {{ element.name }}"
+              matTooltipPosition="above"
+              class="bg-red-600 rounded-full h-6 w-6"
+              (click)="confirmDelete(element)"
+            >
+              <mat-icon class="text-white text-center scale-75">close</mat-icon>
+            </button>
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="acciones">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> ACCIONES </th>
-                    <td mat-cell *matCellDef="let element" class="flex flex-row gap-3 mt-3 gotham-book info">
-                        <button matTooltip="Editar {{element.name}}" matTooltipPosition="above"
-                            class="bg-blue-950 rounded-full h-6 w-6" (click)="createOrUpdate(element)">
-                            <mat-icon class="text-white text-center scale-75">edit</mat-icon>
-                        </button>
-                        <button matTooltip="Borrar {{element.name}}" matTooltipPosition="above"
-                            class=" bg-red-600 rounded-full h-6 w-6" (click)="confirmDelete(element)">
-                            <mat-icon class="text-white text-center scale-75">close</mat-icon>
-                        </button>
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="mercedesVersionInternaId">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            VERSIÓN INTERNA ID
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Versión Interna Id:</span>
+            {{ element.mercedesVersionInternaId ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="mercedesVersionInternaId">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> VERSIÓN INTERNA ID </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Versión Interna Id:</span>
-                        {{element.mercedesVersionInternaId ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="mercedesCategoria">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            CATEGORÍA
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Categoría Id:</span>
+            {{ element.category.description ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="mercedesCategoria">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> CATEGORÍA </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Categoría Id:</span>
-                        {{element.category.description ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="mercedesSegmento">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            SEGMENTO
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Segmento Id:</span>
+            {{ element.segment.descriptionLong ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="mercedesSegmento">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> SEGMENTO </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Segmento Id:</span>
-                        {{element.segment.descriptionLong ?? '-'}}
-                    </td>
-                </ng-container>
-
-                <!-- <ng-container matColumnDef="dischargeDate">
+        <!-- <ng-container matColumnDef="dischargeDate">
                     <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> FECHA DE ALTA
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
@@ -72,355 +147,753 @@
                     </td>
                 </ng-container> -->
 
-                <ng-container matColumnDef="dateFrom">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> VALIDO DESDE
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Valido Desde:</span>
-                        {{(element.cat_InternalVersion.dateFrom | date:'dd/MM/yyyy':'+0300') ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="dateFrom">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            VALIDO DESDE
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Valido Desde:</span>
+            {{
+              (element.cat_InternalVersion.dateFrom
+                | date : "dd/MM/yyyy" : "+0300") ?? "-"
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="dateTo">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> VALIDO HASTA
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Valido Hasta:</span>
-                        {{(element.cat_InternalVersion.dateTo | date:'dd/MM/yyyy':'+0300') ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="dateTo">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            VALIDO HASTA
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Valido Hasta:</span>
+            {{
+              (element.cat_InternalVersion.dateTo
+                | date : "dd/MM/yyyy" : "+0300") ?? "-"
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="description">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> DESCRIPCIÓN VI </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Descripción larga:</span>
-                        {{element.cat_InternalVersion.description ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="description">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            DESCRIPCIÓN VI
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Descripción larga:</span>
+            {{ element.cat_InternalVersion.description ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="altBodyst">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> ALT BODYST </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Alt Bodyst:</span>
-                        {{ element.altBodyst.mercedesAltBodyst === '999' ? '-' : element.altBodyst.description }}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="altBodyst">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            ALT BODYST
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Alt Bodyst:</span>
+            {{
+              element.altBodyst.mercedesAltBodyst === "999"
+                ? "-"
+                : element.altBodyst.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="altCateg">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> ALT CATEG </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Alt Categ:</span>
-                        {{element.altCateg.mercedesAltCateg === '999' ? '-':element.altCateg.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="altCateg">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            ALT CATEG
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Alt Categ:</span>
+            {{
+              element.altCateg.mercedesAltCateg === "999"
+                ? "-"
+                : element.altCateg.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="altSegm">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> ALT SEGM </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Alt Segm:</span>
-                        {{element.altSegm.mercedesAltSegm === '999' ? '-':element.altSegm.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="altSegm">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            ALT SEGM
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Alt Segm:</span>
+            {{
+              element.altSegm.mercedesAltSegm === "999"
+                ? "-"
+                : element.altSegm.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="aMGCompSet">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> AMG COMPSET </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">AMG CompSet:</span>
-                        {{element.aMGCompSet ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="aMGCompSet">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            AMG COMPSET
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">AMG CompSet:</span>
+            {{ element.aMGCompSet ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="apertura1">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> APERTURA 1 </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Apertura 1:</span>
-                        {{element.apertura1.mercedesApertureOne === '999' ? '-':element.apertura1.descriptionShort}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="apertura1">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            APERTURA 1
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Apertura 1:</span>
+            {{
+              element.apertura1.mercedesApertureOne === "999"
+                ? "-"
+                : element.apertura1.descriptionShort
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="apertura2">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> APERTURA 2 </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Apertura 2:</span>
-                        {{element.apertura2.mercedesApertureTwo === '999' ? '-':element.apertura2.descriptionShort}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="apertura2">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            APERTURA 2
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Apertura 2:</span>
+            {{
+              element.apertura2.mercedesApertureTwo === "999"
+                ? "-"
+                : element.apertura2.descriptionShort
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="apertura3">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> APERTURA 3 </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Apertura 3:</span>
-                        {{element.apertura3.mercedesApertureThree === '999' ? '-':element.apertura3.descriptionShort}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="apertura3">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            APERTURA 3
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Apertura 3:</span>
+            {{
+              element.apertura3.mercedesApertureThree === "999"
+                ? "-"
+                : element.apertura3.descriptionShort
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="apertura4">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> APERTURA 4 </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Apertura 4:</span>
-                        {{element.apertura4.mercedesApertureFour === '999' ? '-':element.apertura4.descriptionShort}}
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="bodyStyle">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> BODY STYLE </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Body Style:</span>
-                        {{element.bodyStyle.mercedesBodyStyle === '999' ? '-' : element.bodyStyle.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="apertura4">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            APERTURA 4
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Apertura 4:</span>
+            {{
+              element.apertura4.mercedesApertureFour === "999"
+                ? "-"
+                : element.apertura4.descriptionShort
+            }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="bodyStyle">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            BODY STYLE
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Body Style:</span>
+            {{
+              element.bodyStyle.mercedesBodyStyle === "999"
+                ? "-"
+                : element.bodyStyle.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="cabinaCF">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> CABINA C/F </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Cabina C/F:</span>
-                        {{element.cabinaCF.mercedesCabinCF === '999' ? '-':element.cabinaCF.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="cabinaCF">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            CABINA C/F
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Cabina C/F:</span>
+            {{
+              element.cabinaCF.mercedesCabinCF === "999"
+                ? "-"
+                : element.cabinaCF.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="cabinaSD">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> CABINA S/D </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Cabina S/D:</span>
-                        {{element.cabinaSD.mercedesCabinSD === '999' ? '-':element.cabinaSD.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="cabinaSD">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            CABINA S/D
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Cabina S/D:</span>
+            {{
+              element.cabinaSD.mercedesCabinSD === "999"
+                ? "-"
+                : element.cabinaSD.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="engineCapacity">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> CILINDRADA (CM3) </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Cilindrada (cm3):</span>
-                        {{element.engineCapacity.mercedesEngineCapacity === '999' ? '-':element.engineCapacity.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="engineCapacity">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            CILINDRADA (CM3)
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Cilindrada (cm3):</span>
+            {{
+              element.engineCapacity.mercedesEngineCapacity === "999"
+                ? "-"
+                : element.engineCapacity.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="cJDCompetitive">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> CJD COMPETITIVE </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">CJD competitive:</span>
-                        {{element.cjdCompetitive && element.cjdCompetitive.mercedesCJDCompetitive === '999' ? '-' : element.cjdCompetitive ? element.cjdCompetitive.description : ''}}
+        <ng-container matColumnDef="cJDCompetitive">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            CJD COMPETITIVE
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">CJD competitive:</span>
+            {{
+              element.cjdCompetitive &&
+              element.cjdCompetitive.mercedesCJDCompetitive === "999"
+                ? "-"
+                : element.cjdCompetitive
+                ? element.cjdCompetitive.description
+                : ""
+            }}
+          </td>
+        </ng-container>
 
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="fuel">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            COMBUSTIBLE
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Combustible:</span>
+            {{
+              element.fuelType.mercedesFuelType === "999"
+                ? "-"
+                : element.fuelType.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="fuel">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> COMBUSTIBLE </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Combustible:</span>
-                        {{element.fuelType.mercedesFuelType === '999' ? '-':element.fuelType.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="competitiveCJD">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            COMPETITIVE CJD
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Competitive CJD:</span>
+            {{
+              element.competitiveCJD.mercedesCompetitiveCJD === "999"
+                ? "-"
+                : element.competitiveCJD.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="competitiveCJD">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> COMPETITIVE CJD </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Competitive CJD:</span>
-                        {{element.competitiveCJD.mercedesCompetitiveCJD === '999' ? '-':element.competitiveCJD.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="configuration">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            CARROCERIA
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Carrocería:</span>
+            {{
+              element.mercedesConfiguration.mercedesConfiguration === "999"
+                ? "-"
+                : element.mercedesConfiguration.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="configuration">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> CARROCERIA </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Carrocería:</span>
-                        {{element.mercedesConfiguration.mercedesConfiguration === '999' ? '-':element.mercedesConfiguration.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="wheelbase">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            DISTANCIA ENTRE EJES
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Distancia entre Ejes:</span>
+            {{
+              element.wheelBase.mercedesWheelBase === "999"
+                ? "-"
+                : element.wheelBase.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="wheelbase">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> DISTANCIA ENTRE EJES </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Distancia entre Ejes:</span>
-                        {{element.wheelBase.mercedesWheelBase === '999' ? '-':element.wheelBase.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="axleBase">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            DIST. ENTRE EJES
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Dist. entre Ejes:</span>
+            {{
+              element.axleBase.mercedesAxleBase === "999"
+                ? "-"
+                : element.axleBase.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="axleBase">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> DIST. ENTRE EJES </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Dist. entre Ejes:</span>
-                        {{element.axleBase.mercedesAxleBase === '999' ? '-':element.axleBase.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="group">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            GRUPO(6)
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Grupo(6):</span>
+            {{
+              element.group.mercedesGroup === "999"
+                ? "-"
+                : element.group.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="group">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> GRUPO(6) </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Grupo(6):</span>
-                        {{element.group.mercedesGroup === '999' ? '-':element.group.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="gears">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            MARCHAS
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Marchas:</span>
+            {{
+              element.gears.mercedesGear === "999"
+                ? "-"
+                : element.gears.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="gears">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> MARCHAS </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Marchas:</span>
-                        {{element.gears.mercedesGear === '999' ? '-':element.gears.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="mCGTotalMkt">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            MCG TOTAL MKT
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">MCG Total Mkt:</span>
+            {{
+              element.mcgTotalMkt.mercedesMCGTotalMkt === "999"
+                ? "-"
+                : element.mcgTotalMkt.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="mCGTotalMkt">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> MCG TOTAL MKT </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">MCG Total Mkt:</span>
-                        {{element.mcgTotalMkt.mercedesMCGTotalMkt === '999' ? '-':element.mcgTotalMkt.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="motorDT">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            MOTOR D/T
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Motor D/T:</span>
+            {{
+              element.motorDT.mercedesMotorDT === "999"
+                ? "-"
+                : element.motorDT.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="motorDT">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> MOTOR D/T </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Motor D/T:</span>
-                        {{element.motorDT.mercedesMotorDT === '999' ? '-':element.motorDT.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="nI">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            N/I
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">N/I:</span>
+            {{ element.ni.mercedesNI === "999" ? "-" : element.ni.description }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="nI">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> N/I </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">N/I:</span>
-                        {{element.ni.mercedesNI === '999' ? '-':element.ni.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="rule">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            NORMA
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Norma:</span>
+            {{
+              element.catRule.mercedesCatRule === "999"
+                ? "-"
+                : element.catRule.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="rule">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> NORMA </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Norma:</span>
-                        {{element.catRule.mercedesCatRule === '999' ? '-':element.catRule.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="source">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            ORIGEN
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Origen:</span>
+            {{
+              element.source.mercedesSource === "999"
+                ? "-"
+                : element.source.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="source">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> ORIGEN </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Origen:</span>
-                        {{element.source.mercedesSource === '999' ? '-':element.source.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="pBT">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            PBT
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">PBT:</span>
+            {{
+              element.mercedesPBT && element.mercedesPBT.mercedesPBT === "999"
+                ? "-"
+                : element.mercedesPBT
+                ? element.mercedesPBT.description
+                : ""
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="pBT">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> PBT </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">PBT:</span>
-                        {{element.mercedesPBT && element.mercedesPBT.mercedesPBT === '999' ? '-' : element.mercedesPBT ? element.mercedesPBT.description : ''}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="pBT_TN">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            PBT_TN
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">PBT (TN):</span>
+            {{
+              element.pbT_TN.mercedesPBTTN === "999"
+                ? "-"
+                : element.pbT_TN.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="pBT_TN">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> PBT_TN </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">PBT (TN):</span>
-                        {{element.pbT_TN.mercedesPBTTN ==='999' ? '-':element.pbT_TN.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="power">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            POTENCIA
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Potencia:</span>
+            {{
+              element.power.mercedesPower === "999"
+                ? "-"
+                : element.power.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="power">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> POTENCIA </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Potencia:</span>
-                        {{element.power.mercedesPower === '999' ? '-' : element.power.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="doors">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            PUERTAS
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Puertas:</span>
+            {{
+              element.doors.mercedesDoor === "999"
+                ? "-"
+                : element.doors.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="doors">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> PUERTAS </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Puertas:</span>
-                        {{element.doors.mercedesDoor === '999' ? '-':element.doors.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="relevMB">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            RELEV MB
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Relev MB:</span>
+            {{
+              element.relevMB.mercedesRelevMB === "999"
+                ? "-"
+                : element.relevMB.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="relevMB">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> RELEV MB </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Relev MB:</span>
-                        {{element.relevMB.mercedesRelevMB === '999' ? '-':element.relevMB.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="sSegm">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            SSEGM(12)
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">SSegm(12):</span>
+            {{
+              element.sSegm.mercedesSSegm === "999"
+                ? "-"
+                : element.sSegm.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="sSegm">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> SSEGM(12) </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">SSegm(12):</span>
-                        {{element.sSegm.mercedesSSegm === '999' ? '-':element.sSegm.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="traction">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            TRACCIÓN
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Tracción:</span>
+            {{
+              element.traction.mercedesTraction === "999"
+                ? "-"
+                : element.traction.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="traction">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> TRACCIÓN </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Tracción:</span>
-                        {{element.traction.mercedesTraction === '999' ? '-' : element.traction.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="usage">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            USO
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Uso:</span>
+            {{
+              element.usage.mercedesUsage === "999"
+                ? "-"
+                : element.usage.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="usage">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> USO </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Uso:</span>
-                        {{element.usage.mercedesUsage === '999' ? '-' : element.usage.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="segmentationAux1">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            SEGMENTACIÓN AUX. 1
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Segmentacion Aux. 1:</span>
+            {{
+              element.segmentationAux1.mercedesSegmentationAux1 === "999"
+                ? "-"
+                : element.segmentationAux1.description
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="segmentationAux1">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> SEGMENTACIÓN AUX. 1 </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Segmentacion Aux. 1:</span>
-                        {{element.segmentationAux1.mercedesSegmentationAux1 === '999' ? '-':element.segmentationAux1.description}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="segmentationAux2">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            SEGMENTACIÓN AUX. 2
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Segmentacion Aux. 2:</span>
+            {{ element.segmentationAux2 ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="segmentationAux2">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> SEGMENTACIÓN AUX. 2 </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Segmentacion Aux. 2:</span>
-                        {{element.segmentationAux2 ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="segmentationAux3">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            SEGMENTACIÓN AUX. 3
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Segmentacion Aux. 3:</span>
+            {{ element.segmentationAux3 ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="segmentationAux3">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> SEGMENTACIÓN AUX. 3 </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Segmentacion Aux. 3:</span>
-                        {{element.segmentationAux3 ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="segmentationAux4">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            SEGMENTACIÓN AUX. 4
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Segmentacion Aux. 4:</span>
+            {{ element.segmentationAux4 ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="segmentationAux4">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> SEGMENTACIÓN AUX. 4 </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Segmentacion Aux. 4:</span>
-                        {{element.segmentationAux4 ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="segmentationAux5">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            SEGMENTACIÓN AUX. 5
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Segmentacion Aux. 5:</span>
+            {{ element.segmentationAux5 ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="segmentationAux5">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> SEGMENTACIÓN AUX. 5 </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Segmentacion Aux. 5:</span>
-                        {{element.segmentationAux5 ?? '-'}}
-                    </td>
-                </ng-container>
-
-                
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns" class="titulos mat-header-row"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="height mat-row row-hover"></tr>
-                <tr *matNoDataRow>
-                    <td class="mat-cell" colspan="8">No se encontró el resultado: "{{input.value}}"</td>
-                </tr>
-            </mat-table>
-        </div>
-        <hr class="h-0.5 mt-2 w-[95%] border-[#757575ad] border-solid rounded-full self-center">
-        <mat-paginator hidePageSize="true" showFirstLastButtons="true" [pageSize]="pageSize"
-            class="bg-[rgb(227,227,227)]"></mat-paginator>
-
-        <div class="flex justify-center items-center mt-4 mb-6">
-            <button
-                class="bg-[#294A71] hover:bg-[#376195] active:bg-[#15263A] rounded-full w-48 md:w-72 h-12 md:h-8 drop-shadow-xl disabled:bg-gray-500 disabled:hover:cursor-default"
-                (click)="createOrUpdate()" [disabled]="isLoading">
-                <p class="text-white pt-1.5 gotham-book">Nueva Segmentación</p>
-            </button>
-        </div>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns"
+          class="titulos mat-header-row"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          class="height mat-row row-hover"
+        ></tr>
+        <tr *matNoDataRow>
+          <td class="mat-cell" colspan="8">
+            No se encontró el resultado: "{{ input.value }}"
+          </td>
+        </tr>
+      </mat-table>
     </div>
+    <hr
+      class="h-0.5 mt-2 w-[95%] border-[#757575ad] border-solid rounded-full self-center"
+    />
+    <mat-paginator
+      hidePageSize="true"
+      showFirstLastButtons="true"
+      [pageSize]="pageSize"
+      class="bg-[rgb(227,227,227)]"
+    ></mat-paginator>
+
+    <div class="flex justify-center items-center mt-4 mb-6">
+      <button
+        class="bg-[#294A71] hover:bg-[#376195] active:bg-[#15263A] rounded-full w-48 md:w-72 h-12 md:h-8 drop-shadow-xl disabled:bg-gray-500 disabled:hover:cursor-default"
+        (click)="createOrUpdate()"
+        [disabled]="isLoading"
+      >
+        <p class="text-white pt-1.5 gotham-book">Nueva Segmentación</p>
+      </button>
+    </div>
+  </div>
 </div>

@@ -1,77 +1,130 @@
 <div
-    class="{{ fullScreen.isEnabled ? 'h-fit w-screen' : 'h-full w-full' }} flex flex-col items-center justify-center p-4 overflow-hidden">
+  class="{{
+    fullScreen.isEnabled ? 'h-fit w-screen' : 'h-full w-full'
+  }} flex flex-col items-center justify-center p-4 overflow-hidden"
+>
+  <div
+    class="bg-[rgb(227,227,227)] h-full w-full flex flex-col rounded-b-xl mt-4"
+  >
     <div
-        class="relative bg-[rgb(227,227,227)] {{ fullScreen.isEnabled ? 'h-fit w-full' : 'h-auto w-[30rem] md:w-[95rem]' }} flex flex-col rounded-b-xl mt-4">
-        <div *ngIf="!isXsOrSm" class="absolute flex justify-end w-full z-50 -mt-2 ml-2">
-            <button mat-icon-button
-                matTooltip="{{ fullScreen.isEnabled ? 'Salir de pantalla completa' : 'Pantalla completa' }}"
-                matTooltipPosition="above" (click)="toggleFullscreen()"><mat-icon>{{
-                    fullScreen.isEnabled ? 'fullscreen_exit' : 'fullscreen'}}</mat-icon></button>
+      *ngIf="!isXsOrSm"
+      class="absolute flex justify-end w-full z-50 -mt-2 ml-2"
+    >
+      <button
+        mat-icon-button
+        matTooltip="{{
+          fullScreen.isEnabled
+            ? 'Salir de pantalla completa'
+            : 'Pantalla completa'
+        }}"
+        matTooltipPosition="above"
+        (click)="toggleFullscreen()"
+      >
+        <mat-icon>{{
+          fullScreen.isEnabled ? "fullscreen_exit" : "fullscreen"
+        }}</mat-icon>
+      </button>
+    </div>
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+    <div class="flex flex-col md:flex-row w-full items-center bg-[#E8E8E8]">
+      <div class="flex flex-row w-full">
+        <div
+          class="w-52 md:w-96 bg-[#000000] h-28 items-center rounded-tr-full rounded-br-full flex justify-center"
+        >
+          <p class="large text-center pr-5 pl-2 pt-2 gotham-book text-white">
+            Dominios - Procesamiento de errores
+          </p>
         </div>
-        <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
-        <div class="flex flex-col md:flex-row w-full items-center bg-[#E8E8E8]">
-            <div class="flex flex-row w-full">
-                <div
-                    class="w-52 md:w-96 bg-[#000000] h-28 items-center rounded-tr-full rounded-br-full flex justify-center">
-                    <p class="large text-center pr-5 pl-2 pt-2 gotham-book text-white">Dominios - Procesamiento de
-                        errores</p>
-                </div>
-                <div class="flex w-full items-center flex-col md:flex-row ml-3 pt-5">
-                    <div class="relative flex flex-row mt-6  md:-mt-5 mr-5 md:mr-0">
-                        <input (keyup)="applyFilter($event)" #input
-                            class="gotham-book h-10 {{fullScreen.isEnabled ? 'md:w-72' : 'md:w-56'}} w-40 rounded-full pl-3 drop-shadow-xl pr-7 z-10">
-                        <mat-form-field class="absolute z-0 w-40 {{fullScreen.isEnabled ? 'md:w-72' : 'md:w-56'}} h-16">
-                            <ngx-mat-select clientSide [options]="options" [multiple]="true" [hasSearchBox]="false"
-                                [optionLabel]="'name'" [optionValue]="'id'"
-                                (selectionChange)="filterPatentingBySearchSelect($event, input.value)"
-                                panelClass="pat-select" class="h-10">
-                            </ngx-mat-select>
-                        </mat-form-field>
-                        <div
-                            class="flex flex-row items-center -ml-6 bg-[#294A71] drop-shadow-xl h-10 rounded-full w-14 md:w-28 justify-center z-20">
-                            <mat-icon class="text-white">search</mat-icon>
-                            <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">Buscar</p>
-                            <mat-icon class="text-white cursor-pointer" (click)="openFilter()">expand_more</mat-icon>
-                        </div>
+        <div class="flex w-full items-center flex-col md:flex-row ml-3 pt-5">
+          <div class="relative flex flex-row mt-6 md:-mt-5 mr-5 md:mr-0">
+            <input
+              (keyup)="applyFilter($event)"
+              #input
+              class="gotham-book h-10 {{
+                fullScreen.isEnabled ? 'md:w-72' : 'md:w-56'
+              }} w-40 rounded-full pl-3 drop-shadow-xl pr-7 z-10"
+            />
+            <mat-form-field
+              class="absolute z-0 w-40 {{
+                fullScreen.isEnabled ? 'md:w-72' : 'md:w-56'
+              }} h-16"
+            >
+              <ngx-mat-select
+                clientSide
+                [options]="options"
+                [multiple]="true"
+                [hasSearchBox]="false"
+                [optionLabel]="'name'"
+                [optionValue]="'id'"
+                (selectionChange)="
+                  filterPatentingBySearchSelect($event, input.value)
+                "
+                panelClass="pat-select"
+                class="h-10"
+              >
+              </ngx-mat-select>
+            </mat-form-field>
+            <div
+              class="flex flex-row items-center -ml-6 bg-[#294A71] drop-shadow-xl h-10 rounded-full w-14 md:w-28 justify-center z-20"
+            >
+              <mat-icon class="text-white">search</mat-icon>
+              <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">
+                Buscar
+              </p>
+              <mat-icon class="text-white cursor-pointer" (click)="openFilter()"
+                >expand_more</mat-icon
+              >
+            </div>
+          </div>
 
-                    </div>
-
-
-                    <div class="w-full flex justify-center md:justify-end mb-2 md:mb-0 flex-row gap-4 md:pl-4 pt-7 md:pt-0 pr-5 md:pr-5">
-                        <div *ngIf="!isXsOrSm" class="-mt-5">
-                            <button [disabled]="selection.selected.length <= 1"
-                                class="bg-[#294A71] hover:bg-[#3b69a1] text-white w-auto h-10 p-3 text-sm border rounded-full disabled:bg-[#404750] active:bg-[#1f2327] scale-90"
-                                (click)="createMultipleOfmms()">
-                                <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">Crear
-                                    múltiples
-                                    OFMMs</p>
-                            </button>
-                        </div>
-                        <button
-                            class="flex flex-row items-center {{ showFilter ? 'bg-[#1e4c83]' : 'bg-[#294A71]' }}
+          <div
+            class="w-full flex justify-center md:justify-end mb-2 md:mb-0 flex-row gap-4 md:pl-4 pt-7 md:pt-0 pr-5 md:pr-5"
+          >
+            <div *ngIf="!isXsOrSm" class="-mt-5">
+              <button
+                [disabled]="selection.selected.length <= 1"
+                class="bg-[#294A71] hover:bg-[#3b69a1] text-white w-auto h-10 p-3 text-sm border rounded-full disabled:bg-[#404750] active:bg-[#1f2327] scale-90"
+                (click)="createMultipleOfmms()"
+              >
+                <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">
+                  Crear múltiples OFMMs
+                </p>
+              </button>
+            </div>
+            <button
+              class="flex flex-row items-center {{
+                showFilter ? 'bg-[#1e4c83]' : 'bg-[#294A71]'
+              }}
                                     drop-shadow-xl -mt-5 h-10 p-3 rounded-full
                                     w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
-                            [disabled]="isLoading" (click)="toggleFilter()">
-                            <mat-icon class="text-white">tune</mat-icon>
-                            <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">Filtrar</p>
-                        </button>
+              [disabled]="isLoading"
+              (click)="toggleFilter()"
+            >
+              <mat-icon class="text-white">tune</mat-icon>
+              <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">
+                Filtrar
+              </p>
+            </button>
 
-                        <button *ngIf="!fileId"
-                            class="flex flex-row items-center bg-[#294A71]
-                                    drop-shadow-xl -mt-5 h-10 p-3 rounded-full
-                                    w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
-                            [disabled]="isLoading" (click)="getAllPatentings()">
-                            <mat-icon class="text-white">toc</mat-icon>
-                            <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">Ver todos</p>
-                        </button>
-                    </div>
+            <button
+              *ngIf="!fileId"
+              class="flex flex-row items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
+              [disabled]="isLoading"
+              (click)="getAllPatentings()"
+            >
+              <mat-icon class="text-white">toc</mat-icon>
+              <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">
+                Ver todos
+              </p>
+            </button>
+          </div>
 
-                    <!-- <mat-checkbox color="warn" class="ml-3" (change)="showOnlyErrors(showErrors)" [(ngModel)]="showErrors">
+          <!-- <mat-checkbox color="warn" class="ml-3" (change)="showOnlyErrors(showErrors)" [(ngModel)]="showErrors">
                     <p class="gotham-book pt-2.5">Mostrar solo errores</p>
                 </mat-checkbox> -->
-                </div>
-            </div>
-            <!-- <form class="flex items-center justify-center w-full flex-row pt-6 md:-mt-5 gap-2 z-10" [formGroup]="form">
+        </div>
+      </div>
+      <!-- <form class="flex items-center justify-center w-full flex-row pt-6 md:-mt-5 gap-2 z-10" [formGroup]="form">
                 <mat-form-field class="w-32 {{fullScreen.isEnabled ? 'md:w-64' : 'md:w-40'}} h-14">
                     <input matInput readonly [matDatepicker]="fromDate" placeholder="Desde" formControlName="fromDate">
                     <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
@@ -95,68 +148,101 @@
                     <mat-icon class="text-white">clear_all</mat-icon>
                 </div>
             </form> -->
-        </div>
-        <div class="w-full">
-            <mat-accordion class="w-full">
-                <mat-expansion-panel class="bg-[rgb(227,227,227)]">
-                    <div class='flex justify-center items-center flex-col md:flex-row'>
-                        <form class="flex items-center justify-center w-full flex-col md:flex-row gap-x-2 mt-2 -mb-6"
-                            [formGroup]="form">
-                            <div class="flex flex-row gap-x-6 md:gap-x-2">
-                                <mat-form-field class="w-36 md:w-48 h-14">
-                                    <input matInput readonly [matDatepicker]="fromDate" placeholder="Desde"
-                                        formControlName="fromDate">
-                                    <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
-                                    <mat-datepicker #fromDate></mat-datepicker>
-                                </mat-form-field>
+    </div>
+    <div class="w-full">
+      <mat-accordion class="w-full">
+        <mat-expansion-panel class="bg-[rgb(227,227,227)]">
+          <div class="flex justify-center items-center flex-col md:flex-row">
+            <form
+              class="flex items-center justify-center w-full flex-col md:flex-row gap-x-2 mt-2 -mb-6"
+              [formGroup]="form"
+            >
+              <div class="flex flex-row gap-x-6 md:gap-x-2">
+                <mat-form-field class="w-36 md:w-48 h-14">
+                  <input
+                    matInput
+                    readonly
+                    [matDatepicker]="fromDate"
+                    placeholder="Desde"
+                    formControlName="fromDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="fromDate"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #fromDate></mat-datepicker>
+                </mat-form-field>
 
-                                <mat-form-field class="w-36 md:w-48 h-14">
-                                    <input matInput readonly [matDatepicker]="toDate" [min]="form.value.fromDate"
-                                        placeholder="Hasta" formControlName="toDate">
-                                    <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
-                                    <mat-datepicker #toDate></mat-datepicker>
-                                </mat-form-field>
-                            </div>
-                            <div class="flex flex-row gap-x-4 md:gap-x-2">
-                                <mat-form-field class="h-14">
-                                    <mat-select (selectionChange)="filterByCode($event)" placeholder="Filtrar por error"
-                                        floatlLabel="never">
-                                        <mat-option value="all" [disabled]="isLoading">Todos</mat-option>
-                                        <mat-option *ngFor='let rule of rules' [value]="rule.code">({{rule.code}})
-                                            {{rule.name}}</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                                <mat-checkbox *ngIf="!fileId" color="warn" (change)="toggleLastDischarge($event)"
-                                    class="-mt-3 md:-mt-1">
-                                    <p class="gotham-book pt-2.5">Últ. carga</p>
-                                </mat-checkbox>
-                            </div>
-                            <div class="ml-3 mt-2 md:mt-0 mb-3 md:mb-0">
-                                <button
-                                    class="flex items-center bg-[#294A71]
-                                        drop-shadow-xl -mt-5 h-10 p-3 rounded-full
-                                        w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
-                                    (click)="filterPatentings()" [disabled]="isLoading">
-                                    <mat-icon class="text-white">search</mat-icon>
-                                    <p class="gotham-book text-white pt-2.5 pl-1 md:inline">Buscar</p>
-                                </button>
-                            </div>
-                            <div class="ml-3 mt-2 md:mt-0 mb-3 md:mb-0">
-                                <button
-                                    class="flex items-center bg-[#294A71]
-                                        drop-shadow-xl -mt-5 h-10 p-3 rounded-full
-                                        w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
-                                    (click)="resetFiltering()" [disabled]="isLoading">
-                                    <mat-icon class="text-white">remove_circle</mat-icon>
-                                    <p class="gotham-book text-white pt-2.5 pl-1 md:inline">Limpiar filtros</p>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </mat-expansion-panel>
-            </mat-accordion>
-        </div>
-        <!-- <div
+                <mat-form-field class="w-36 md:w-48 h-14">
+                  <input
+                    matInput
+                    readonly
+                    [matDatepicker]="toDate"
+                    [min]="form.value.fromDate"
+                    placeholder="Hasta"
+                    formControlName="toDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="toDate"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #toDate></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="flex flex-row gap-x-4 md:gap-x-2">
+                <mat-form-field class="h-14">
+                  <mat-select
+                    (selectionChange)="filterByCode($event)"
+                    placeholder="Filtrar por error"
+                    floatlLabel="never"
+                  >
+                    <mat-option value="all" [disabled]="isLoading"
+                      >Todos</mat-option
+                    >
+                    <mat-option *ngFor="let rule of rules" [value]="rule.code"
+                      >({{ rule.code }}) {{ rule.name }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+                <mat-checkbox
+                  *ngIf="!fileId"
+                  color="warn"
+                  (change)="toggleLastDischarge($event)"
+                  class="-mt-3 md:-mt-1"
+                >
+                  <p class="gotham-book pt-2.5">Últ. carga</p>
+                </mat-checkbox>
+              </div>
+              <div class="ml-3 mt-2 md:mt-0 mb-3 md:mb-0">
+                <button
+                  class="flex items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
+                  (click)="filterPatentings()"
+                  [disabled]="isLoading"
+                >
+                  <mat-icon class="text-white">search</mat-icon>
+                  <p class="gotham-book text-white pt-2.5 pl-1 md:inline">
+                    Buscar
+                  </p>
+                </button>
+              </div>
+              <div class="ml-3 mt-2 md:mt-0 mb-3 md:mb-0">
+                <button
+                  class="flex items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
+                  (click)="resetFiltering()"
+                  [disabled]="isLoading"
+                >
+                  <mat-icon class="text-white">remove_circle</mat-icon>
+                  <p class="gotham-book text-white pt-2.5 pl-1 md:inline">
+                    Limpiar filtros
+                  </p>
+                </button>
+              </div>
+            </form>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+    <!-- <div
             class="absolute flex self-end {{fullScreen.isEnabled ? 'pt-20 md:mt-8 md:pt-9 ml-2' : 'mt-3 md:-mt-1 pt-20'}} z-0">
             <div *ngIf="!isXsOrSm" class="{{fullScreen.isEnabled ? 'mt-1' : ''}}">
                 <button [disabled]="selection.selected.length <= 1"
@@ -177,210 +263,386 @@
                 <p class="gotham-book pt-2.5">Últ. carga</p>
             </mat-checkbox>
         </div> -->
-        <div class="table-container {{ fullScreen.isEnabled ? 'max-h-[34rem]' : 'max-h-[450px]' }}">
-            <mat-table [dataSource]="dataSource" matSort matSortActive="errores" [matSortDirection]="sortDirection"
-                class="mat-elevation-z8 mt-3 md:mt-0 overflow-x-auto {{ dataSource.data.length == 0 ? 'table !table-fixed w-full' : '' }}">
-                <ng-container matColumnDef="fecha_inscripcion">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43]"> FECHA DE
-                        INSCRIPCIÓN </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Fecha de Inscripción:</span>
-                        {{(element.fechInsc | date:'dd/MM/yyyy':'+0300') ?? '-'}}
-                    </td>
-                </ng-container>
+    <div
+      class="table-container {{
+        fullScreen.isEnabled ? 'max-h-[34rem]' : 'max-h-[450px]'
+      }}"
+    >
+      <mat-table
+        [dataSource]="dataSource"
+        matSort
+        matSortActive="errores"
+        [matSortDirection]="sortDirection"
+        class="mat-elevation-z8 mt-3 md:mt-0 overflow-x-auto {{
+          dataSource.data.length == 0 ? 'table !table-fixed w-full' : ''
+        }}"
+      >
+        <ng-container matColumnDef="fecha_inscripcion">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="gotham-bold text-[#152A43]"
+          >
+            FECHA DE INSCRIPCIÓN
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Fecha de Inscripción:</span>
+            {{ (element.fechInsc | date : "dd/MM/yyyy" : "+0300") ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="fecha_corte">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43]"> FECHA DE
-                        CORTE </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Fecha de Corte:</span>
-                        {{ (element.closure.fechaCorte | date:'MM.yyyy': '+0300') ?? '-' }}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="fecha_corte">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="gotham-bold text-[#152A43]"
+          >
+            FECHA DE CORTE
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Fecha de Corte:</span>
+            {{
+              (element.closure.fechaCorte | date : "MM.yyyy" : "+0300") ?? "-"
+            }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="ofmm">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43]"> OFMM </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">OFMM:</span>
-                        {{element.ofmm ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="ofmm">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="gotham-bold text-[#152A43]"
+          >
+            OFMM
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">OFMM:</span>
+            {{ element.ofmm ?? "-" }}
+          </td>
+        </ng-container>
 
-             
+        <ng-container matColumnDef="texto_1">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="gotham-bold text-[#152A43]"
+          >
+            FABRICA
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Fabrica:</span>
+            <!-- {{element.texto1OFMM ?? '-'}} -->
+            {{ element.fabrica_D ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="texto_1">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43]"> FABRICA </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Fabrica:</span>
-                        <!-- {{element.texto1OFMM ?? '-'}} -->
-                        {{element.fabrica_D ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="marca_D">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="gotham-bold text-[#152A43]"
+          >
+            MARCA
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Marca:</span>
+            {{ element.marca_D ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="marca_D">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43]"> MARCA </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Marca:</span> 
-                        {{element.marca_D ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="texto_2">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="gotham-bold text-[#152A43]"
+          >
+            MODELO
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Modelo:</span>
+            <!-- {{element.texto2OFMM ?? '-'}} -->
+            {{ element.modelo_D ?? "-" }}
+          </td>
+        </ng-container>
 
+        <ng-container matColumnDef="tipotexto">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="gotham-bold text-[#152A43]"
+          >
+            TIPO
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Tipo:</span>
+            <!-- {{element.tipoTextoOFMM ?? '-'}} -->
+            {{ element.tipo_D ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="texto_2">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43]"> MODELO </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Modelo:</span>
-                        <!-- {{element.texto2OFMM ?? '-'}} -->
-                        {{element.modelo_D ?? '-'}}
-                    </td>
-                </ng-container>
- 
+        <ng-container matColumnDef="fmm_tmm">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="gotham-bold text-[#152A43]"
+          >
+            FMM_TMM
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">FMM_TMM:</span>
+            {{ element.fmM_MTM ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="tipotexto">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43]"> TIPO </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Tipo:</span>
-                        <!-- {{element.tipoTextoOFMM ?? '-'}} -->
-                        {{element.tipo_D ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="origen">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="gotham-bold text-[#152A43]"
+          >
+            ORIGEN
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Origen:</span>
+            {{ element.origen ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="fmm_tmm">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43]"> FMM_TMM
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">FMM_TMM:</span>
-                        {{element.fmM_MTM ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="marca">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="gotham-bold text-[#152A43]"
+          >
+            MARCA
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Marca:</span>
+            {{ element.carModel.brand.name ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="origen">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43]"> ORIGEN
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Origen:</span>
-                        {{element.origen ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="modelo">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="gotham-bold text-[#152A43]"
+          >
+            MODELO
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Modelo:</span>
+            {{ element.carModel.name ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="marca">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43]"> MARCA
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Marca:</span>
-                        {{element.carModel.brand.name ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="patente">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="gotham-bold text-[#152A43]"
+          >
+            DOMINIO
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Dominio:</span>
+            {{ element.plate ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="modelo">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43]"> MODELO
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Modelo:</span>
-                        {{element.carModel.name ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="chasis">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="gotham-bold text-[#152A43]"
+          >
+            CHASIS
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Chasis:</span>
+            {{ element.chasis ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="patente">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43]"> DOMINIO
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Dominio:</span>
-                        {{element.plate ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="motor">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="gotham-bold text-[#152A43]"
+          >
+            MOTOR
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Motor:</span>
+            {{ element.motor ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="chasis">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43]"> CHASIS
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Chasis:</span>
-                        {{element.chasis ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="fabrica">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="gotham-bold text-[#152A43]"
+          >
+            FÁBRICA
+          </th>
+          <td mat-cell *matCellDef="let element" class="gotham-book info">
+            <span class="mobile-label">Fábrica:</span>
+            {{ element.factory.name ?? "-" }}
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="motor">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43]"> MOTOR
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Motor:</span>
-                        {{element.motor ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="estado">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header="errores"
+            class="gotham-bold text-[#152A43]"
+          >
+            ESTADO
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="gotham-bold info"
+            [ngStyle]="
+              element.statePatenta.name == 'Error'
+                ? { color: 'red' }
+                : { color: 'green' }
+            "
+          >
+            <span class="mobile-label">ESTADO:</span>
+            {{ element.statePatenta.name == "Error" ? "ERROR" : "OK" }}
+            {{ element.errores ?? "" }}
+            <span *ngIf="fullScreen.isEnabled"
+              ><br />
+              {{ element.errorName ?? "" }}</span
+            >
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="fabrica">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43]"> FÁBRICA
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Fábrica:</span>
-                        {{element.factory.name ?? '-'}}
-                    </td>
-                </ng-container>
+        <ng-container matColumnDef="acciones">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            class="gotham-bold text-[#152A43]"
+          >
+            ACCIONES
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="flex flex-row items-center gap-3 mt-3 gotham-book info"
+          >
+            <button
+              *ngIf="element.statePatenta.name == 'Error'"
+              matTooltip="Corregir '{{ element.plate }}'"
+              matTooltipPosition="above"
+              class="bg-blue-950 rounded-full h-6 w-6"
+              (click)="createOrUpdate(element.id)"
+            >
+              <mat-icon class="text-white text-center scale-75">edit</mat-icon>
+            </button>
+            <button
+              matTooltip="Borrar '{{ element.plate }}'"
+              matTooltipPosition="above"
+              class="bg-red-600 rounded-full h-6 w-6"
+              (click)="confirmDelete(element)"
+            >
+              <mat-icon class="text-white text-center scale-75">close</mat-icon>
+            </button>
+            <mat-checkbox
+              matTooltip="Seleccionar '{{
+                element.ofmm
+              }}' para crear múltiples OFMMs"
+              matTooltipPosition="above"
+              matTooltipShowDelay="300"
+              *ngIf="element.errores === '01'"
+              color="warn"
+              (click)="$event.stopPropagation()"
+              (change)="$event ? selection.toggle(element) : null"
+              [checked]="selection.isSelected(element)"
+            ></mat-checkbox>
+          </td>
+        </ng-container>
 
-                <ng-container matColumnDef="estado">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header="errores" class="gotham-bold text-[#152A43]">
-                        ESTADO
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-bold info"
-                        [ngStyle]="element.statePatenta.name == 'Error' ? {'color':'red'} : {'color': 'green'}">
-                        <span class="mobile-label">ESTADO:</span>
-                        {{element.statePatenta.name == 'Error' ? 'ERROR' : 'OK'}} {{element.errores ?? ''}} <span
-                            *ngIf="fullScreen.isEnabled"><br /> {{ element.errorName ?? ''}}</span>
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="acciones">
-                    <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43]"> ACCIONES </th>
-                    <td mat-cell *matCellDef="let element"
-                        class="flex flex-row items-center gap-3 mt-3 gotham-book info">
-                        <button *ngIf="element.statePatenta.name == 'Error'" matTooltip="Corregir '{{element.plate}}'"
-                            matTooltipPosition="above" class="bg-blue-950 rounded-full h-6 w-6"
-                            (click)="createOrUpdate(element.id)">
-                            <mat-icon class="text-white text-center scale-75">edit</mat-icon>
-                        </button>
-                        <button matTooltip="Borrar '{{element.plate}}'" matTooltipPosition="above"
-                            class=" bg-red-600 rounded-full h-6 w-6" (click)="confirmDelete(element)">
-                            <mat-icon class="text-white text-center scale-75">close</mat-icon>
-                        </button>
-                        <mat-checkbox matTooltip="Seleccionar '{{element.ofmm}}' para crear múltiples OFMMs"
-                            matTooltipPosition="above" matTooltipShowDelay="300" *ngIf="element.errores === '01'"
-                            color="warn" (click)="$event.stopPropagation()"
-                            (change)="$event ? selection.toggle(element) : null"
-                            [checked]="selection.isSelected(element)"></mat-checkbox>
-                    </td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="titulos mat-header-row">
-                </tr>
-                <tr mat-row
-                    *matRowDef="let row; columns: fullScreen.isEnabled ? displayedColumnsFullScreen : displayedColumns;"
-                    class="height mat-row row-hover"></tr>
-                <tr *matNoDataRow>
-                    <td class="mat-cell" colspan="5" *ngIf="dataSource.filter.length > 0" class="pl-5">No se encontró el
-                        resultado con: "{{input.value}}"</td>
-                    <td class="mat-cell" colspan="5"
-                        *ngIf="dataSource.data.length === 0 && dataSource.filter.length === 0" class="pl-5">No existen
-                        resultados.</td>
-                </tr>
-            </mat-table>
-        </div>
-        <hr class="h-0.5 mt-2 w-[95%] border-[#757575ad] border-solid rounded-full self-center">
-        <div class="w-[70%] md:w-full flex flex-col md:flex-row">
-            <p class="w-full gotham-book flex items-center justify-start pl-5 md:pl-10" *ngIf="errorsQty >= 1">Se {{
-                errorsQty > 1 ? 'encontraron' : 'encontró' }}
-                {{errorsQty}} {{ errorsQty > 1 ? 'errores' : 'error' }}.</p>
-            <div class="w-[150%] flex items-end md:justify-end">
-                    <mat-paginator 
-                    [length]="totalItems"
-                    [pageSize]="pageSize"
-                    [pageSizeOptions]="[5, 10, 20]"
-                    (page)="onPageChange($event)"  showFirstLastButtons 
-                    class="bg-[rgb(227,227,227)] flex justify-end"></mat-paginator>
-            </div>
-        </div>
-        <!-- <button mat-raised-button (click)="createMultipleOfmms()">CREAR MULTIPLES OFMM</button>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true"
+          class="titulos mat-header-row"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="
+            let row;
+            columns: fullScreen.isEnabled
+              ? displayedColumnsFullScreen
+              : displayedColumns
+          "
+          class="height mat-row row-hover"
+        ></tr>
+        <tr *matNoDataRow>
+          <td
+            class="mat-cell"
+            colspan="5"
+            *ngIf="dataSource.filter.length > 0"
+            class="pl-5"
+          >
+            No se encontró el resultado con: "{{ input.value }}"
+          </td>
+          <td
+            class="mat-cell"
+            colspan="5"
+            *ngIf="
+              dataSource.data.length === 0 && dataSource.filter.length === 0
+            "
+            class="pl-5"
+          >
+            No existen resultados.
+          </td>
+        </tr>
+      </mat-table>
+    </div>
+    <hr
+      class="h-0.5 mt-2 w-[95%] border-[#757575ad] border-solid rounded-full self-center"
+    />
+    <div class="w-[70%] md:w-full flex flex-col md:flex-row">
+      <p
+        class="w-full gotham-book flex items-center justify-start pl-5 md:pl-10"
+        *ngIf="errorsQty >= 1"
+      >
+        Se {{ errorsQty > 1 ? "encontraron" : "encontró" }} {{ errorsQty }}
+        {{ errorsQty > 1 ? "errores" : "error" }}.
+      </p>
+      <div class="w-[150%] flex items-end md:justify-end">
+        <mat-paginator
+          [length]="totalItems"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="[5, 10, 20]"
+          (page)="onPageChange($event)"
+          showFirstLastButtons
+          class="bg-[rgb(227,227,227)] flex justify-end"
+        ></mat-paginator>
+      </div>
+    </div>
+    <!-- <button mat-raised-button (click)="createMultipleOfmms()">CREAR MULTIPLES OFMM</button>
         <div>
             <button mat-raised-button (click)="logSelection()">Console Log Selected</button>
         </div> -->
-    </div>
+  </div>
 </div>
