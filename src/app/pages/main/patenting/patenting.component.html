@@ -110,7 +110,7 @@
               *ngIf="!fileId"
               class="flex flex-row items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
               [disabled]="isLoading"
-              (click)="getAllPatentings()"
+              (click)="filterPatentings()"
             >
               <mat-icon class="text-white">toc</mat-icon>
               <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">
@@ -208,7 +208,7 @@
                     placeholder="Filtrar por error"
                     floatlLabel="never"
                   >
-                    <mat-option value="all" [disabled]="isLoading"
+                    <mat-option value="" [disabled]="isLoading"
                       >Todos</mat-option
                     >
                     <mat-option *ngFor="let rule of rules" [value]="rule.code"
@@ -645,7 +645,7 @@
         <mat-paginator
           [length]="totalItems"
           [pageSize]="pageSize"
-          [pageSizeOptions]="[50, 100, 500, 1000]"
+          [pageSizeOptions]="pageSizeOptions"
           (page)="onPageChange($event)"
           showFirstLastButtons
           class="bg-[rgb(227,227,227)] flex justify-end"

@@ -5,13 +5,13 @@ import {
   BreakpointState,
 } from '@angular/cdk/layout';
 import { DatePipe } from '@angular/common';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, NgModule, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { MatOption } from '@angular/material/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionPanel } from '@angular/material/expansion';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -37,12 +37,14 @@ import { MultipleOfmmDialogComponent } from '../catalogs/ofmms/multiple-ofmm-dia
 import { PatentingViewDialogComponent } from './patenting-view-dialog/patenting-view-dialog.component';
 import { PatentingVersionService } from 'src/app/services/patenting-versions/patenting-version.service';
 import { utils, WorkBook, WorkSheet, write, writeFileXLSX } from 'xlsx';
+import { CustomPaginatorIntl } from 'src/app/shared/components/paginator/custom-paginator-intl';
 
 @Component({
   selector: 'app-patenting',
   templateUrl: './patenting.component.html',
   styleUrls: ['./patenting.component.scss'],
 })
+
 export class PatentingComponent implements OnInit, AfterViewInit {
   TAG = PatentingComponent.name;
   private unsubscribeAll: Subject<any>;
@@ -74,7 +76,8 @@ export class PatentingComponent implements OnInit, AfterViewInit {
     isEnabled: false,
     isFullscreen: false,
   };
-  pageSize: number = 50;
+  pageSizeOptions: number[] = [50, 100, 500, 1000];
+  pageSize: number = this.pageSizeOptions[0];
   pageNumber: number = 1;
   totalItems?: number;
   code: any = { value: '' };
@@ -143,7 +146,8 @@ export class PatentingComponent implements OnInit, AfterViewInit {
     private terminalService: TerminalService,
     private brandService: BrandService,
     private carModelService: CarModelService,
-    private patentingVersionService: PatentingVersionService
+    private patentingVersionService: PatentingVersionService,
+    private paginatorIntl: MatPaginatorIntl
   ) {
     this.displayedColumns = this.displayedColumnsNoFullScreen;
     this.unsubscribeAll = new Subject();
@@ -189,7 +193,9 @@ export class PatentingComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.paginator._intl = new CustomPaginatorIntl();
     this.paginator._intl.itemsPerPageLabel = 'Registros:';
+    this.paginator._intl.changes.next();
     this.paginator.page.subscribe((event: PageEvent) => {
       console.log('Evento de paginación:', event);
       this.pageNumber = event.pageIndex + 1;
@@ -210,10 +216,9 @@ export class PatentingComponent implements OnInit, AfterViewInit {
       next: ([patentings, rules]) => {
         this.rules = rules;
         this.patentings = patentings;
-        this.totalItems = patentings.length; // Total de elementos
+        this.totalItems = patentings.length;
         this.dataSource = new MatTableDataSource<any>(this.patentings);
 
-        // Calcular las páginas
         this.paginator.length = this.totalItems;
         this.paginator.pageSize = this.pageSize;
 
@@ -244,38 +249,6 @@ export class PatentingComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getAllPatentings(): void {
-    this.isLoading = true;
-    const $combineLatest = combineLatest([
-      this._patentingService.getAllPatentings(),
-    ]);
-    $combineLatest.pipe(takeUntil(this.unsubscribeAll)).subscribe({
-      next: ([patentings]) => {
-        console.log(`${this.TAG} > getData > patentings`, patentings);
-        patentings.forEach((p) => {
-          p.fechInsc = new Date(p.fechInsc);
-        });
-        this.patentings = patentings;
-        this.dataSource = new MatTableDataSource<any>(this.patentings);
-        const filtered = this.patentings.filter(
-          (res) => res.statePatenta.name == 'Error'
-        );
-        this.errorsQty = filtered.length;
-        if (this.code.value) {
-          this.filterByCode(this.code);
-        }
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.isLoading = false;
-        console.error(`Patentings > getData > error`, err);
-        const error = ErrorHelper.getErrorMessage(err);
-        this.sweetAlert.error('¡Ha ocurrido un error!', error, null, true);
-      },
-    });
-  }
-
-  
   downloadXLS(): void {
     this.isLoading = true;
     const dates = this.form.getRawValue();
@@ -286,12 +259,11 @@ export class PatentingComponent implements OnInit, AfterViewInit {
     const fileId: string = this.fileId ?? '';
 
     this._patentingService
-      .getPatentingsByFilter(dateFrom, dateTo, lastDischarge, errorType, fileId, 1, 10000000)
+      .getPatentingsByFilter(dateFrom, dateTo, lastDischarge, errorType, fileId, this.pageNumber, this.pageSize)
       .subscribe({
         next: (response) => {
           console.log('Datos recibidos:', response.results);
 
-          // Validar que hay datos
           if (!response.results || response.results.length === 0) {
             console.warn('No hay datos para exportar.');
             this.isLoading = false;
@@ -299,23 +271,19 @@ export class PatentingComponent implements OnInit, AfterViewInit {
             return;
           }
 
-          // Convertir datos a un formato plano
           const cleanedData = response.results.map(this.flattenData);
 
           console.log('Datos transformados:', cleanedData);
 
-          // Crear hoja de cálculo con encabezados definidos
           const worksheet: WorkSheet = utils.json_to_sheet(cleanedData, {
             header: Object.keys(cleanedData[0])
           });
 
-          // Crear el libro de Excel
           const workbook: WorkBook = {
             Sheets: { patentamientos: worksheet },
             SheetNames: ['patentamientos']
           };
 
-          // Escribir el buffer de Excel
           const excelBuffer: any = write(workbook, {
             bookType: 'xlsx',
             type: 'array'
@@ -323,7 +291,6 @@ export class PatentingComponent implements OnInit, AfterViewInit {
 
           console.log('Buffer generado:', excelBuffer);
 
-          // Guardar el archivo Excel
           this.saveAsExcelFile(excelBuffer, 'patentamientos');
           this.isLoading = false;
         },
@@ -357,22 +324,18 @@ export class PatentingComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // Función que aplana los objetos
   flattenData(item: any): any {
     const flattened: any = {};
 
-    // Aplanar propiedades directas
     for (const key in item) {
       if (item.hasOwnProperty(key)) {
         if (typeof item[key] === 'object' && item[key] !== null) {
-          // Si es un objeto anidado, aplanarlo
           for (const nestedKey in item[key]) {
             if (item[key].hasOwnProperty(nestedKey)) {
               flattened[`${key}_${nestedKey}`] = item[key][nestedKey];
             }
           }
         } else {
-          // Si no es un objeto, lo dejamos tal cual
           flattened[key] = item[key];
         }
       }
@@ -380,7 +343,6 @@ export class PatentingComponent implements OnInit, AfterViewInit {
 
     return flattened;
   }
-
 
 
   createOrUpdate(patentingId?: string) {
@@ -495,14 +457,14 @@ export class PatentingComponent implements OnInit, AfterViewInit {
       this.fullScreen.isEnabled = true;
       if (!screenfull.isFullscreen) screenfull.toggle();
       this.displayedColumns = this.displayedColumnsFullScreen;
-      this.fileId ? this.getDataByFileId(this.fileId) : this.getAllPatentings();
+      this.fileId ? this.getDataByFileId(this.fileId) : this.filterPatentings();
       this.pageSize = 20;
       this.authService.onDrawerOpenedEmitter.emit(false);
       this.authService.onHeaderEmitter.emit(false);
     } else {
       this.fullScreen.isEnabled = false;
       this.displayedColumns = this.displayedColumnsNoFullScreen;
-      this.fileId ? this.getDataByFileId(this.fileId) : this.getAllPatentings();
+      this.fileId ? this.getDataByFileId(this.fileId) : this.filterPatentings();
       this.pageSize = 5;
       this.authService.onDrawerOpenedEmitter.emit(true);
       this.authService.onHeaderEmitter.emit(true);
@@ -611,7 +573,7 @@ export class PatentingComponent implements OnInit, AfterViewInit {
       : '';
     const dateTo: string = dates.toDate
       ? new Date(dates.toDate!).toISOString()
-      : new Date().toISOString();
+      : '';
     const lastDischarge: boolean = this.lastDischarge;
     const errorType: string = this.code.value;
     const fileId: string = this.fileId ?? '';
@@ -651,6 +613,7 @@ export class PatentingComponent implements OnInit, AfterViewInit {
   }
 
   onPageChange(event: PageEvent): void {
+    this.pageSize = event.pageSize;
     this.pageNumber = event.pageIndex + 1;
     this.filterPatentings(this.pageNumber);
   }

@@ -26,6 +26,7 @@ import { getSpanishPaginatorIntl } from './core/helpers/custom-paginator.helper'
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { ReportService } from './services/reports/reports.service';
 import { WholesaleVersionService } from './services/wholesale-versions/wholesale-version.service';
+import { CustomPaginatorIntl } from './shared/components/paginator/custom-paginator-intl';
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,6 +38,7 @@ import { WholesaleVersionService } from './services/wholesale-versions/wholesale
     MatDialogModule,
   ],
   providers: [
+    { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl },
     { provide: HTTP_INTERCEPTORS, useClass: MainHttpInterceptor, multi: true },
     {
       provide: HTTP_INTERCEPTORS,
