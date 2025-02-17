@@ -36,6 +36,7 @@ import { TerminalService } from 'src/app/services/terminals/terminal.service';
 import { MultipleOfmmDialogComponent } from '../catalogs/ofmms/multiple-ofmm-dialog/multiple-ofmm-dialog.component';
 import { PatentingViewDialogComponent } from './patenting-view-dialog/patenting-view-dialog.component';
 import { PatentingVersionService } from 'src/app/services/patenting-versions/patenting-version.service';
+import { utils, WorkBook, WorkSheet, write, writeFileXLSX } from 'xlsx';
 
 @Component({
   selector: 'app-patenting',
@@ -67,15 +68,15 @@ export class PatentingComponent implements OnInit, AfterViewInit {
   @ViewChild(MatExpansionPanel) expansionPanel!: MatExpansionPanel;
   @ViewChild(MatSelect) matSelect!: MatSelect;
   @ViewChild(MatCheckbox) matCheckbox!: MatCheckbox;
-  
+
   sortDirection: SortDirection = 'asc';
   fullScreen = {
     isEnabled: false,
     isFullscreen: false,
   };
-  pageSize: number = 10;
-  pageNumber: number = 1
-  totalItems?: number 
+  pageSize: number = 50;
+  pageNumber: number = 1;
+  totalItems?: number;
   code: any = { value: '' };
   lastDischarge: boolean = false;
   form = new FormGroup({
@@ -184,7 +185,7 @@ export class PatentingComponent implements OnInit, AfterViewInit {
       });
     this.defaultFilterPredicate = this.dataSource.filterPredicate;
     this.getRules();
-    this.filterPatentings()
+    this.filterPatentings();
   }
 
   ngAfterViewInit() {
@@ -192,13 +193,12 @@ export class PatentingComponent implements OnInit, AfterViewInit {
     this.paginator.page.subscribe((event: PageEvent) => {
       console.log('Evento de paginación:', event);
       this.pageNumber = event.pageIndex + 1;
-      console.log(this.pageNumber)
+      console.log(this.pageNumber);
       this.pageSize = event.pageSize;
-      
+
       this.filterPatentings();
     });
   }
-  
 
   getDataByFileId(fileId: string): void {
     this.isLoading = true;
@@ -210,13 +210,13 @@ export class PatentingComponent implements OnInit, AfterViewInit {
       next: ([patentings, rules]) => {
         this.rules = rules;
         this.patentings = patentings;
-        this.totalItems = patentings.length;  // Total de elementos
+        this.totalItems = patentings.length; // Total de elementos
         this.dataSource = new MatTableDataSource<any>(this.patentings);
-  
+
         // Calcular las páginas
         this.paginator.length = this.totalItems;
         this.paginator.pageSize = this.pageSize;
-  
+
         this.isLoading = false;
       },
       error: (err) => {
@@ -227,7 +227,6 @@ export class PatentingComponent implements OnInit, AfterViewInit {
       },
     });
   }
-  
 
   getRules(): void {
     const $combineLatest = combineLatest([this.ruleService.getAll()]);
@@ -276,6 +275,114 @@ export class PatentingComponent implements OnInit, AfterViewInit {
     });
   }
 
+  
+  downloadXLS(): void {
+    this.isLoading = true;
+    const dates = this.form.getRawValue();
+    const dateFrom: string = dates.fromDate ? new Date(dates.fromDate!).toISOString() : '';
+    const dateTo: string = dates.toDate ? new Date(dates.toDate!).toISOString() : new Date().toISOString();
+    const lastDischarge: boolean = this.lastDischarge;
+    const errorType: string = this.code.value;
+    const fileId: string = this.fileId ?? '';
+
+    this._patentingService
+      .getPatentingsByFilter(dateFrom, dateTo, lastDischarge, errorType, fileId, 1, 10000000)
+      .subscribe({
+        next: (response) => {
+          console.log('Datos recibidos:', response.results);
+
+          // Validar que hay datos
+          if (!response.results || response.results.length === 0) {
+            console.warn('No hay datos para exportar.');
+            this.isLoading = false;
+            this.sweetAlert.warning('Atención', 'No hay datos para exportar.', null, true);
+            return;
+          }
+
+          // Convertir datos a un formato plano
+          const cleanedData = response.results.map(this.flattenData);
+
+          console.log('Datos transformados:', cleanedData);
+
+          // Crear hoja de cálculo con encabezados definidos
+          const worksheet: WorkSheet = utils.json_to_sheet(cleanedData, {
+            header: Object.keys(cleanedData[0])
+          });
+
+          // Crear el libro de Excel
+          const workbook: WorkBook = {
+            Sheets: { patentamientos: worksheet },
+            SheetNames: ['patentamientos']
+          };
+
+          // Escribir el buffer de Excel
+          const excelBuffer: any = write(workbook, {
+            bookType: 'xlsx',
+            type: 'array'
+          });
+
+          console.log('Buffer generado:', excelBuffer);
+
+          // Guardar el archivo Excel
+          this.saveAsExcelFile(excelBuffer, 'patentamientos');
+          this.isLoading = false;
+        },
+        error: (err) => {
+          this.isLoading = false;
+          const error = ErrorHelper.getErrorMessage(err);
+          this.sweetAlert.error('Ha ocurrido un error!', error, null, true);
+        },
+      });
+  }
+
+  saveAsExcelFile(buffer: any, fileName: string): void {
+    try {
+      const data: Blob = new Blob([buffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      });
+
+      const url: string = window.URL.createObjectURL(data);
+      const a: HTMLAnchorElement = document.createElement('a');
+      a.href = url;
+      a.download = `${fileName}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      console.log(`Archivo ${fileName}.xlsx guardado con éxito.`);
+    } catch (error) {
+      console.error('Error al guardar el archivo:', error);
+      this.sweetAlert.error('Error', 'No se pudo descargar el archivo.', null, true);
+    }
+  }
+
+  // Función que aplana los objetos
+  flattenData(item: any): any {
+    const flattened: any = {};
+
+    // Aplanar propiedades directas
+    for (const key in item) {
+      if (item.hasOwnProperty(key)) {
+        if (typeof item[key] === 'object' && item[key] !== null) {
+          // Si es un objeto anidado, aplanarlo
+          for (const nestedKey in item[key]) {
+            if (item[key].hasOwnProperty(nestedKey)) {
+              flattened[`${key}_${nestedKey}`] = item[key][nestedKey];
+            }
+          }
+        } else {
+          // Si no es un objeto, lo dejamos tal cual
+          flattened[key] = item[key];
+        }
+      }
+    }
+
+    return flattened;
+  }
+
+
+
   createOrUpdate(patentingId?: string) {
     const dialogRef = this.dialog.open(PatentingViewDialogComponent, {
       width: this.isXsOrSm ? '90%' : '60%',
@@ -289,11 +396,9 @@ export class PatentingComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter(event: Event) {
-  const filterValue = (event.target as HTMLInputElement).value;
-  this.dataSource.filter = filterValue.trim().toLowerCase();
-  
-}
-
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 
   resetTable() {
     this.dataSource.data = this.patentings;
@@ -336,7 +441,6 @@ export class PatentingComponent implements OnInit, AfterViewInit {
       },
     });
   }
-
 
   filterPatentingBySearchSelect(
     option: NgxMatSelectionChangeEvent,
@@ -511,40 +615,46 @@ export class PatentingComponent implements OnInit, AfterViewInit {
     const lastDischarge: boolean = this.lastDischarge;
     const errorType: string = this.code.value;
     const fileId: string = this.fileId ?? '';
-   
-  
-    this._patentingService.getPatentingsByFilter(dateFrom, dateTo, lastDischarge, errorType, fileId,
-      pageNumber = this.pageNumber,
-      pageSize = this. pageSize
-    ).subscribe({
-      next: (response) => {
-        this.dataSource = new MatTableDataSource<any>(response.results);
-        this.totalItems = response.totalItems;
-        this.pageNumber = response.pageNumber;
-        this.pageSize = response.pageSize;
-  
-        if (this.dataSource.data.length === 0) {
-          Toast.fire({
-            icon: 'info',
-            title: 'No se encontraron resultados.',
-          });
-        }
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.isLoading = false;
-        const error = ErrorHelper.getErrorMessage(err);
-        this.sweetAlert.error('Ha ocurrido un error!', error, null, true);
-      },
-    });
+
+    this._patentingService
+      .getPatentingsByFilter(
+        dateFrom,
+        dateTo,
+        lastDischarge,
+        errorType,
+        fileId,
+        (pageNumber = this.pageNumber),
+        (pageSize = this.pageSize)
+      )
+      .subscribe({
+        next: (response) => {
+          this.dataSource = new MatTableDataSource<any>(response.results);
+          this.totalItems = response.totalItems;
+          this.pageNumber = response.pageNumber;
+          this.pageSize = response.pageSize;
+
+
+          if (this.dataSource.data.length === 0) {
+            Toast.fire({
+              icon: 'info',
+              title: 'No se encontraron resultados.',
+            });
+          }
+          this.isLoading = false;
+        },
+        error: (err) => {
+          this.isLoading = false;
+          const error = ErrorHelper.getErrorMessage(err);
+          this.sweetAlert.error('Ha ocurrido un error!', error, null, true);
+        },
+      });
   }
 
-  
   onPageChange(event: PageEvent): void {
     this.pageNumber = event.pageIndex + 1;
     this.filterPatentings(this.pageNumber);
   }
-  
+
   resetFiltering() {
     this.form.reset();
     this.matSelect.options.forEach((data: MatOption) => data.deselect());
