@@ -117,6 +117,18 @@
                 Ver todos
               </p>
             </button>
+
+            <button
+              *ngIf="!fileId"
+              class="flex flex-row items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
+              [disabled]="isLoading"
+              (click)="downloadXLS()"
+            >
+              <mat-icon class="text-white">download</mat-icon>
+              <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">
+                Descargar
+              </p>
+            </button>
           </div>
 
           <!-- <mat-checkbox color="warn" class="ml-3" (change)="showOnlyErrors(showErrors)" [(ngModel)]="showErrors">
