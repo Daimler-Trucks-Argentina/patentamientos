@@ -645,7 +645,7 @@
         <mat-paginator
           [length]="totalItems"
           [pageSize]="pageSize"
-          [pageSizeOptions]="[5, 10, 20]"
+          [pageSizeOptions]="[50, 100, 500, 1000]"
           (page)="onPageChange($event)"
           showFirstLastButtons
           class="bg-[rgb(227,227,227)] flex justify-end"

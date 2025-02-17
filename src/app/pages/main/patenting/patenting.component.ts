@@ -74,7 +74,7 @@ export class PatentingComponent implements OnInit, AfterViewInit {
     isEnabled: false,
     isFullscreen: false,
   };
-  pageSize: number = 10;
+  pageSize: number = 50;
   pageNumber: number = 1;
   totalItems?: number;
   code: any = { value: '' };
@@ -275,42 +275,56 @@ export class PatentingComponent implements OnInit, AfterViewInit {
     });
   }
 
+  
   downloadXLS(): void {
     this.isLoading = true;
     const dates = this.form.getRawValue();
-    const dateFrom: string = dates.fromDate
-      ? new Date(dates.fromDate!).toISOString()
-      : '';
-    const dateTo: string = dates.toDate
-      ? new Date(dates.toDate!).toISOString()
-      : new Date().toISOString();
+    const dateFrom: string = dates.fromDate ? new Date(dates.fromDate!).toISOString() : '';
+    const dateTo: string = dates.toDate ? new Date(dates.toDate!).toISOString() : new Date().toISOString();
     const lastDischarge: boolean = this.lastDischarge;
     const errorType: string = this.code.value;
     const fileId: string = this.fileId ?? '';
 
     this._patentingService
-      .getPatentingsByFilter(
-        dateFrom,
-        dateTo,
-        lastDischarge,
-        errorType,
-        fileId,
-        1,
-        10000000
-      )
+      .getPatentingsByFilter(dateFrom, dateTo, lastDischarge, errorType, fileId, 1, 10000000)
       .subscribe({
         next: (response) => {
-          const worksheet: WorkSheet = utils.json_to_sheet(response.results);
+          console.log('Datos recibidos:', response.results);
+
+          // Validar que hay datos
+          if (!response.results || response.results.length === 0) {
+            console.warn('No hay datos para exportar.');
+            this.isLoading = false;
+            this.sweetAlert.warning('Atención', 'No hay datos para exportar.', null, true);
+            return;
+          }
+
+          // Convertir datos a un formato plano
+          const cleanedData = response.results.map(this.flattenData);
+
+          console.log('Datos transformados:', cleanedData);
+
+          // Crear hoja de cálculo con encabezados definidos
+          const worksheet: WorkSheet = utils.json_to_sheet(cleanedData, {
+            header: Object.keys(cleanedData[0])
+          });
+
+          // Crear el libro de Excel
           const workbook: WorkBook = {
-            Sheets: { data: worksheet },
-            SheetNames: ['datos'],
+            Sheets: { patentamientos: worksheet },
+            SheetNames: ['patentamientos']
           };
+
+          // Escribir el buffer de Excel
           const excelBuffer: any = write(workbook, {
             bookType: 'xlsx',
-            type: 'array',
+            type: 'array'
           });
-          this.saveAsExcelFile(excelBuffer, 'patentamientos');
 
+          console.log('Buffer generado:', excelBuffer);
+
+          // Guardar el archivo Excel
+          this.saveAsExcelFile(excelBuffer, 'patentamientos');
           this.isLoading = false;
         },
         error: (err) => {
@@ -320,6 +334,54 @@ export class PatentingComponent implements OnInit, AfterViewInit {
         },
       });
   }
+
+  saveAsExcelFile(buffer: any, fileName: string): void {
+    try {
+      const data: Blob = new Blob([buffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      });
+
+      const url: string = window.URL.createObjectURL(data);
+      const a: HTMLAnchorElement = document.createElement('a');
+      a.href = url;
+      a.download = `${fileName}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      console.log(`Archivo ${fileName}.xlsx guardado con éxito.`);
+    } catch (error) {
+      console.error('Error al guardar el archivo:', error);
+      this.sweetAlert.error('Error', 'No se pudo descargar el archivo.', null, true);
+    }
+  }
+
+  // Función que aplana los objetos
+  flattenData(item: any): any {
+    const flattened: any = {};
+
+    // Aplanar propiedades directas
+    for (const key in item) {
+      if (item.hasOwnProperty(key)) {
+        if (typeof item[key] === 'object' && item[key] !== null) {
+          // Si es un objeto anidado, aplanarlo
+          for (const nestedKey in item[key]) {
+            if (item[key].hasOwnProperty(nestedKey)) {
+              flattened[`${key}_${nestedKey}`] = item[key][nestedKey];
+            }
+          }
+        } else {
+          // Si no es un objeto, lo dejamos tal cual
+          flattened[key] = item[key];
+        }
+      }
+    }
+
+    return flattened;
+  }
+
+
 
   createOrUpdate(patentingId?: string) {
     const dialogRef = this.dialog.open(PatentingViewDialogComponent, {
@@ -571,6 +633,7 @@ export class PatentingComponent implements OnInit, AfterViewInit {
           this.pageNumber = response.pageNumber;
           this.pageSize = response.pageSize;
 
+
           if (this.dataSource.data.length === 0) {
             Toast.fire({
               icon: 'info',
@@ -598,19 +661,5 @@ export class PatentingComponent implements OnInit, AfterViewInit {
     this.code.value = '';
     this.matCheckbox['checked'] = false;
     this.lastDischarge = false;
-  }
-
-  saveAsExcelFile(buffer: any, fileName: string): void {
-    const data: Blob = new Blob([buffer], {
-      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    const url: string = window.URL.createObjectURL(data);
-    const a: HTMLAnchorElement = document.createElement('a');
-    a.href = url;
-    a.download = `${fileName}.xlsx`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
   }
 }
