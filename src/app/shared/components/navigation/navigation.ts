@@ -220,9 +220,9 @@ export const navigation: Navigation[] = [
       },*/
       {
         id: 'complete-reports',
-        title: 'Reporte Completo',
+        title: 'Reporte Comercial',
         type: 'item',
-        url: '/pages/main/complete-reports',
+        url: '/pages/main/comercial-reports',
         permission: '00000000-0000-0000-0000-000000000001',
       },
     ],

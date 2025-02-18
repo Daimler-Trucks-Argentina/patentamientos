@@ -99,7 +99,7 @@ const routes: Routes = [
         component: PatentingsReportingComponent,
       },*/
       {
-        path: 'complete-reports',
+        path: 'comercial-reports',
         component: CompleteReportsComponent,
       },
     ],

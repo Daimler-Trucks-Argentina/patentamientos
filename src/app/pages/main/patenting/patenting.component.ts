@@ -197,11 +197,8 @@ export class PatentingComponent implements OnInit, AfterViewInit {
     this.paginator._intl.itemsPerPageLabel = 'Registros:';
     this.paginator._intl.changes.next();
     this.paginator.page.subscribe((event: PageEvent) => {
-      console.log('Evento de paginación:', event);
       this.pageNumber = event.pageIndex + 1;
-      console.log(this.pageNumber);
       this.pageSize = event.pageSize;
-
       this.filterPatentings();
     });
   }

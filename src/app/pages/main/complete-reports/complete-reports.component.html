@@ -1,362 +1,837 @@
 <div
-    class="{{ fullScreen.isEnabled ? 'h-fit w-screen' : 'h-full w-full' }} flex flex-col items-center justify-center p-4 overflow-hidden">
+  class="{{
+    fullScreen.isEnabled ? 'h-fit w-screen' : 'h-full w-full'
+  }} flex flex-col items-center justify-center p-4 overflow-hidden"
+>
+  <div
+    class="bg-[rgb(227,227,227)] h-full w-full flex flex-col rounded-b-xl mt-4"
+  >
     <div
-        class="relative bg-[rgb(227,227,227)] {{ fullScreen.isEnabled ? 'h-fit w-full' : 'h-full md:w-11/12' }} flex flex-col rounded-b-xl mt-4">
-        <div *ngIf="!isXsOrSm" class="absolute flex justify-end w-full z-50 -mt-2 ml-2">
-            <button mat-icon-button
-                matTooltip="{{ fullScreen.isEnabled ? 'Salir de pantalla completa' : 'Pantalla completa' }}"
-                matTooltipPosition="above" (click)="toggleFullscreen()"><mat-icon>{{
-                    fullScreen.isEnabled ? 'fullscreen_exit' : 'fullscreen'}}</mat-icon></button>
+      *ngIf="!isXsOrSm"
+      class="absolute flex justify-end w-full z-50 -mt-2 ml-2"
+    >
+      <button
+        mat-icon-button
+        matTooltip="{{
+          fullScreen.isEnabled
+            ? 'Salir de pantalla completa'
+            : 'Pantalla completa'
+        }}"
+        matTooltipPosition="above"
+        (click)="toggleFullscreen()"
+      >
+        <mat-icon>{{
+          fullScreen.isEnabled ? "fullscreen_exit" : "fullscreen"
+        }}</mat-icon>
+      </button>
+    </div>
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+    <div class="flex flex-col md:flex-row w-full items-center bg-[#E8E8E8]">
+      <div class="flex flex-row w-full">
+        <div
+          class="w-52 md:w-96 bg-[#000000] h-28 items-center rounded-tr-full rounded-br-full flex justify-center"
+        >
+          <p class="large text-center pr-5 pl-2 pt-2 gotham-book text-white">
+            Reporte Comercial
+          </p>
         </div>
-        <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
-        <div class="flex flex-col md:flex-row w-full items-center bg-[#E8E8E8]">
-            <div class="flex flex-row w-full">
-                <div
-                    class="w-52 md:w-80 bg-[#000000] h-28 items-center rounded-tr-full rounded-br-full flex justify-center">
-                    <p class="large text-center pr-5 pl-2 pt-2 gotham-book text-white">Reporte Completo</p>
-                </div>
-                <div class="flex items-center flex-col md:flex-row ml-3 pt-1">
-                    <div class="relative flex flex-row mt-6  md:-mt-5 mr-5 md:mr-0">
-                        <input (keyup)="applyFilter($event)" #input
-                            class="gotham-book h-10 {{fullScreen.isEnabled ? 'md:w-72' : 'md:w-56'}} w-40 rounded-full pl-3 drop-shadow-xl pr-7 z-10">
-                        <div
-                            class="flex flex-row items-center -ml-6 bg-[#294A71] drop-shadow-xl h-10 rounded-full w-14 md:w-28 justify-center z-20">
-                            <mat-icon class="text-white">search</mat-icon>
-                            <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">Buscar</p>
-                        </div>
-                    </div>
-
-                </div>
+        <div class="flex w-full items-center flex-col md:flex-row ml-3 pt-5">
+          <div class="relative flex flex-row mt-6 md:-mt-5 mr-5 md:mr-0">
+            <input
+              (keyup)="applyFilter($event)"
+              #input
+              class="gotham-book h-10 {{
+                fullScreen.isEnabled ? 'md:w-72' : 'md:w-56'
+              }} w-40 rounded-full pl-3 drop-shadow-xl pr-7 z-10"
+            />
+            <div
+              class="flex flex-row items-center -ml-6 bg-[#294A71] drop-shadow-xl h-10 rounded-full w-14 md:w-28 justify-center z-20"
+            >
+              <mat-icon class="text-white">search</mat-icon>
+              <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">
+                Buscar
+              </p>
+              <mat-icon class="text-white cursor-pointer" (click)="openFilter()"
+                >expand_more</mat-icon
+              >
             </div>
+          </div>
+
+          <div
+            class="w-full flex justify-center md:justify-end mb-2 md:mb-0 flex-row gap-4 md:pl-4 pt-7 md:pt-0 pr-5 md:pr-5"
+          >
+            <button
+              class="flex flex-row items-center {{
+                showFilter ? 'bg-[#1e4c83]' : 'bg-[#294A71]'
+              }}
+                                    drop-shadow-xl -mt-5 h-10 p-3 rounded-full
+                                    w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
+              [disabled]="isLoading"
+              (click)="toggleFilter()"
+            >
+              <mat-icon class="text-white">tune</mat-icon>
+              <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">
+                Filtrar
+              </p>
+            </button>
+
+            <button
+              class="flex flex-row items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
+              [disabled]="isLoading"
+              (click)="getReports()"
+            >
+              <mat-icon class="text-white">toc</mat-icon>
+              <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">
+                Ver todos
+              </p>
+            </button>
+
+            <button
+              class="flex flex-row items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
+              [disabled]="isLoading"
+              (click)="downloadXLS()"
+            >
+              <mat-icon class="text-white">download</mat-icon>
+              <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">
+                Descargar
+              </p>
+            </button>
+          </div>
         </div>
-        <div class="table-container {{ fullScreen.isEnabled ? 'max-h-[34rem]' : 'max-h-[550px]' }}">
+      </div>
+    </div>
+    <div class="w-full">
+      <mat-accordion class="w-full">
+        <mat-expansion-panel class="bg-[rgb(227,227,227)]">
+          <div class="flex justify-center items-center flex-col md:flex-row">
+            <form
+              class="flex items-center justify-center w-full flex-col md:flex-row gap-x-2 mt-2 -mb-6"
+              [formGroup]="form"
+            >
+              <div class="flex flex-row gap-x-6 md:gap-x-2">
+                <mat-form-field class="w-36 md:w-48 h-14">
+                  <input
+                    matInput
+                    readonly
+                    [matDatepicker]="fromDate"
+                    placeholder="Desde"
+                    formControlName="fromDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="fromDate"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #fromDate></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field class="w-36 md:w-48 h-14">
+                  <input
+                    matInput
+                    readonly
+                    [matDatepicker]="toDate"
+                    [min]="form.value.fromDate"
+                    placeholder="Hasta"
+                    formControlName="toDate"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="toDate"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #toDate></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="flex flex-row gap-x-4 md:gap-x-2">
+              </div>
+              <div class="ml-3 mt-2 md:mt-0 mb-3 md:mb-0">
+                <button
+                  class="flex items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
+                  (click)="getReports()"
+                  [disabled]="isLoading"
+                >
+                  <mat-icon class="text-white">search</mat-icon>
+                  <p class="gotham-book text-white pt-2.5 pl-1 md:inline">
+                    Buscar
+                  </p>
+                </button>
+              </div>
+              <div class="ml-3 mt-2 md:mt-0 mb-3 md:mb-0">
+                <button
+                  class="flex items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
+                  (click)="resetFiltering()"
+                  [disabled]="isLoading"
+                >
+                  <mat-icon class="text-white">remove_circle</mat-icon>
+                  <p class="gotham-book text-white pt-2.5 pl-1 md:inline">
+                    Limpiar filtros
+                  </p>
+                </button>
+              </div>
+            </form>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+    <!-- <div
+            class="absolute flex self-end {{fullScreen.isEnabled ? 'pt-20 md:mt-8 md:pt-9 ml-2' : 'mt-3 md:-mt-1 pt-20'}} z-0">
+            <div *ngIf="!isXsOrSm" class="{{fullScreen.isEnabled ? 'mt-1' : ''}}">
+                <button [disabled]="selection.selected.length <= 1"
+                    class="bg-[#294A71] hover:bg-[#3b69a1] text-white text-sm px-4 py-2 border rounded-full disabled:bg-[#404750] active:bg-[#1f2327] scale-90 ml-3"
+                    (click)="createMultipleOfmms()">Crear
+                    múltiples
+                    OFMMs</button>
+            </div>
+            <mat-form-field class="h-14 {{fullScreen.isEnabled ? 'mt-1' : ''}}">
+                <mat-select (selectionChange)="filterByCode($event)" placeholder="Filtrar por error"
+                    floatlLabel="never">
+                    <mat-option value="all" [disabled]="isLoading">Todos</mat-option>
+                    <mat-option *ngFor='let rule of rules' [value]="rule.code">({{rule.code}})
+                        {{rule.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-checkbox *ngIf="!fileId" color="warn" class="mr-4" (change)="lastDischarge($event)">
+                <p class="gotham-book pt-2.5">Últ. carga</p>
+            </mat-checkbox>
+        </div> -->
+    <div
+      class="table-container {{
+        fullScreen.isEnabled ? 'max-h-[34rem]' : 'max-h-[450px]'
+      }}"
+    >
             <mat-table [dataSource]="dataSource" matSort matSortActive="errores" matSortDirection="asc"
                 class="mat-elevation-z8 mt-3 md:mt-0 overflow-x-auto">
-                <ng-container matColumnDef="id">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Id </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Id:</span>
-                        {{ element.yearMonth ? element.yearMonth : '-' }}
-                    </td>
-                </ng-container>
-
+                
+                
                 <ng-container matColumnDef="plate">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Dominio </th>
+                        Plate
+                    </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Dominio:</span>
-                        {{element.codBrand ?? '-'}}
+                        <span class="mobile-label">Plate:</span>
+                        {{element.plate ?? '-'}}
                     </td>
                 </ng-container>
-
+                
                 <ng-container matColumnDef="chasis">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Chasis/VIN </th>
+                        Chasis
+                    </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Chasis/VIN:</span>
-                        {{element.brand ?? '-'}}
+                        <span class="mobile-label">Chasis:</span>
+                        {{element.chasis ?? '-'}}
                     </td>
                 </ng-container>
-
+                
                 <ng-container matColumnDef="motor">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Motor</th>
+                        Motor
+                    </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
                         <span class="mobile-label">Motor:</span>
-                        {{element.codModel ?? '-'}}
+                        {{element.motor ?? '-'}}
                     </td>
                 </ng-container>
-
+                
                 <ng-container matColumnDef="mercedesTerminalId">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Terminal </th>
+                        Mercedes Terminal ID
+                    </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Terminal:</span>
-                        {{element.model ?? '-'}}
+                        <span class="mobile-label">Mercedes Terminal ID:</span>
+                        {{element.mercedesTerminalId ?? '-'}}
                     </td>
                 </ng-container>
-
+                
                 <ng-container matColumnDef="descripcionTerminal">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Descr. Terminal
+                        Descripción Terminal
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Descr. Terminal:</span>
-                        {{element.codTrademark ?? '-'}}
+                        <span class="mobile-label">Descripción Terminal:</span>
+                        {{element.descripcionTerminal ?? '-'}}
                     </td>
                 </ng-container>
-
+                
                 <ng-container matColumnDef="mercedesMarcaId">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Marca
+                        Mercedes Marca ID
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Marca:</span>
-                        {{element.trademark ?? '-'}}
+                        <span class="mobile-label">Mercedes Marca ID:</span>
+                        {{element.mercedesMarcaId ?? '-'}}
                     </td>
                 </ng-container>
-
+                
                 <ng-container matColumnDef="descripcionMarca">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Desc. Marca
+                        Descripción Marca
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Desc. Marca:</span>
-                        {{element.doorsQty ?? '-'}}
+                        <span class="mobile-label">Descripción Marca:</span>
+                        {{element.descripcionMarca ?? '-'}}
                     </td>
                 </ng-container>
-
+                
                 <ng-container matColumnDef="mercedesModeloId">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Modelo
+                        Mercedes Modelo ID
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Modelo:</span>
-                        {{element.engine ?? '-'}}
+                        <span class="mobile-label">Mercedes Modelo ID:</span>
+                        {{element.mercedesModeloId ?? '-'}}
                     </td>
                 </ng-container>
-
+                
                 <ng-container matColumnDef="descripcionModelo">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Desc. Model
+                        Descripción Modelo
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Desc. Model:</span>
-                        {{element.motorType ?? '-'}}
+                        <span class="mobile-label">Descripción Modelo:</span>
+                        {{element.descripcionModelo ?? '-'}}
                     </td>
                 </ng-container>
-
+                
                 <ng-container matColumnDef="versionPatentamiento">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Version
+                        Versión Patentamiento
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Version:</span>
-                        {{element.fuelType ?? '-'}}
+                        <span class="mobile-label">Versión Patentamiento:</span>
+                        {{element.versionPatentamiento ?? '-'}}
                     </td>
                 </ng-container>
-
+                
                 <ng-container matColumnDef="descripcionVerPat">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Desc. Version
+                        Descripción Ver Pat
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Desc. Version:</span>
-                        {{element.power ?? '-'}}
+                        <span class="mobile-label">Descripción Ver Pat:</span>
+                        {{element.descripcionVerPat ?? '-'}}
                     </td>
                 </ng-container>
-
+                
                 <ng-container matColumnDef="segCategoria">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Categoria
+                        Seg Categoría
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Categoria:</span>
-                        {{element.powerUnit ?? '-'}}
+                        <span class="mobile-label">Seg Categoría:</span>
+                        {{element.segCategoria ?? '-'}}
                     </td>
                 </ng-container>
-
+                
                 <ng-container matColumnDef="categoriaDescription">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Categoria Descripcion
+                        Categoría Description
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Categoria Descripcion:</span>
-                        {{element.mercedesVehicleType ?? '-'}}
+                        <span class="mobile-label">Categoría Description:</span>
+                        {{element.categoriaDescription ?? '-'}}
                     </td>
                 </ng-container>
-
+                
                 <ng-container matColumnDef="segmento">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
                         Segmento
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
                         <span class="mobile-label">Segmento:</span>
-                        {{element.traction ?? '-'}}
+                        {{element.segmento ?? '-'}}
                     </td>
                 </ng-container>
-
+                
                 <ng-container matColumnDef="segmentoDescription">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Segmento Descripcion
+                        Segmento Description
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Segmento Descripcion:</span>
-                        {{element.gearsQty ?? '-'}}
+                        <span class="mobile-label">Segmento Description:</span>
+                        {{element.segmentoDescription ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="bodyStyle">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Body Style
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Body Style:</span>
+                        {{element.bodyStyle ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="bodyStyleDescription">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Body Style Description
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Body Style Description:</span>
+                        {{element.bodyStyleDescription ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="mercedesConfiguration">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Mercedes Configuration
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Mercedes Configuration:</span>
+                        {{element.mercedesConfiguration ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="carreoceriaDescription">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Carrocería Description
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Carrocería Description:</span>
+                        {{element.carreoceriaDescription ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="ofmm">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        OFMM
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">OFMM:</span>
+                        {{element.ofmm ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="ofmmOrigen">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        OFMM Origen
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">OFMM Origen:</span>
+                        {{element.ofmmOrigen ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="ofmmFabrica">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        OFMM Fábrica
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">OFMM Fábrica:</span>
+                        {{element.ofmmFabrica ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="ofmmMarca">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        OFMM Marca
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">OFMM Marca:</span>
+                        {{element.ofmmMarca ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="ofmmModelo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        OFMM Modelo
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">OFMM Modelo:</span>
+                        {{element.ofmmModelo ?? '-'}}
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="transmissionType">
+
+                <ng-container matColumnDef="ofmmDescription1">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        TIPO DE TRANSMISIÓN
+                        OFMM Description 1
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Tipo de Transmisión:</span>
-                        {{element.transmissionType ?? '-'}}
+                        <span class="mobile-label">OFMM Description 1:</span>
+                        {{element.ofmmDescription1 ?? '-'}}
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="axleQty">
+                <ng-container matColumnDef="ofmmDescription2">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        CANTIDAD DE EJES
+                        OFMM Description 2
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Cantidad de Ejes:</span>
-                        {{element.axleQty ?? '-'}}
+                        <span class="mobile-label">OFMM Description 2:</span>
+                        {{element.ofmmDescription2 ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="fechaPatentamiento">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Fecha Patentamiento
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Fecha Patentamiento:</span>
+                        {{element.fechaPatentamiento ?? '-'}}
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="weight">
+                <ng-container matColumnDef="fechaCarga">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        PESO
+                        Fecha Carga
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Fecha Carga:</span>
+                        {{element.fechaCarga ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaInsc">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Fecha Insc
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Fecha Insc:</span>
+                        {{element.fechaInsc ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="yearModelo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Año Modelo
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Año Modelo:</span>
+                        {{element.yearModelo ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="titular">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Titular
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Titular:</span>
+                        {{element.titular ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="direccionTitular">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Direccion Titular
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Direccion Titular:</span>
+                        {{element.direccionTitular ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="cpTitular">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Codigo Postal Titular
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Codigo Postal Titular:</span>
+                        {{element.cpTitular ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="provinciaTitular">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Provincia del Titular
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Provincia del Titular:</span>
+                        {{element.provinciaTitular ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="provinciaTitularDescription">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Provincia Titular Descripcion
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Provincia Titular Descripcion:</span>
+                        {{element.provinciaTitularDescription ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="dptoTitular">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Departamento Titular
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Departamento Titular:</span>
+                        {{element.dptoTitular ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="deptoTitularDescription">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Departamento Titular Descripcion
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Departamento Titular Descripcion:</span>
+                        {{element.deptoTitularDescription ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="localidadTitular">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Localidad Titular
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Localidad Titular:</span>
+                        {{element.localidadTitular ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="localidadTitularDescription">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Localidad Titular Descripcion
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Localidad Titular Descripcion:</span>
+                        {{element.localidadTitularDescription ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="regSecs">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Reg Secs
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Reg Secs:</span>
+                        {{element.regSecs ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="regSecsDescription">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Reg Secs Descripcion
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Reg Secs Descripcion:</span>
+                        {{element.regSecsDescription ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="registroDepto">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Registro Depto
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Registro Depto:</span>
+                        {{element.registroDepto ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="registroLocalidad">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Registro Localidad
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Registro Localidad:</span>
+                        {{element.registroLocalidad ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="registroProvincia">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Registro Provincia 
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Registro Provincia :</span>
+                        {{element.registroProvincia ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="conceZonaCamion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Conce Zona Camion
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Conce Zona Camion:</span>
+                        {{element.conceZonaCamion ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="descCEZCamion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        descCEZCamion
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">descCEZCamion:</span>
+                        {{element.descCEZCamion ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="cuitTitular">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Cuit Titular
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Cuit Titular:</span>
+                        {{element.cuitTitular ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="tipoClienteGub">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Tipo ClienteGub
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Tipo ClienteGub:</span>
+                        {{element.tipoClienteGub ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="tipoClienteGubDescription">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Tipo ClienteGub Descripcion
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Tipo ClienteGub Descripcion:</span>
+                        {{element.tipoClienteGubDescription ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="categoriaGubernamen">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Categoria Gubernamental
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Categoria Gubernamental:</span>
+                        {{element.categoriaGubernamen ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="catGubDescription">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Cat. Gub. Descripcion
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Cat. Gub. Descripcion:</span>
+                        {{element.catGubDescription ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="segmentoGubernament">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Segmento Gubernamental
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Segmento Gubernamental:</span>
+                        {{element.segmentoGubernament ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="descSegGub">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Desc. Seg. Gub.
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Desc. Seg. Gub.:</span>
+                        {{element.descSegGub ?? '-'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="esPatGubernamental">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Es Pat Gubernamental
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Es Pat Gubernamental:</span>
+                        {{element.esPatGubernamental ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="clasificCUIT">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Clasific CUIT
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Clasific CUIT:</span>
+                        {{element.clasificCUIT ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="clasificacionCUITDescription">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Clasificación CUIT Description
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Clasificación CUIT Description:</span>
+                        {{element.clasificacionCUITDescription ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="codpaispr">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Código País PR
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Código País PR:</span>
+                        {{element.codpaispr ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="codpaisfa">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Código País FA
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Código País FA:</span>
+                        {{element.codpaisfa ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="codauto">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Código Auto
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Código Auto:</span>
+                        {{element.codauto ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="codfab">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Código Fabricante
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Código Fabricante:</span>
+                        {{element.codfab ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="codmar">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Código Marca
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Código Marca:</span>
+                        {{element.codmar ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="codmod">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Código Modelo
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Código Modelo:</span>
+                        {{element.codmod ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="codpro">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Código Producto
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Código Producto:</span>
+                        {{element.codpro ?? '-'}}
+                    </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="peso">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Peso
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
                         <span class="mobile-label">Peso:</span>
-                        {{element.weight ?? '-'}}
+                        {{element.peso ?? '-'}}
                     </td>
                 </ng-container>
-
-                <ng-container matColumnDef="loadCapacity">
+                
+                <ng-container matColumnDef="cantidadPatentes">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        CAPACIDAD DE CARGA
+                        Cantidad Patentes
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Capacidad de Carga:</span>
-                        {{element.loadCapacity ?? '-'}}
+                        <span class="mobile-label">Cantidad Patentes:</span>
+                        {{element.cantidadPatentes ?? '-'}}
                     </td>
                 </ng-container>
-
-                <ng-container matColumnDef="category">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        CATEGORÍA
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Categoría:</span>
-                        {{element.mercedesCategory ?? '-'}}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="origin">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        ORIGEN DEL VEHÍCULO
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Origen del vehìculo:</span>
-                        {{element.origin ?? '-'}}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="initialStock">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        STOCK INICIAL
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Stock inicial:</span>
-                        {{element.initialStock ?? '-'}}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="import_ProdMonth">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        IMPORT/PROD. MES
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Import/Prod. Mes:</span>
-                        {{element.import_ProdMonth ?? '-'}}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="import_ProdAccum">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        IMPORT/PROD. ACUM.
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Import/Prod. Acum.:</span>
-                        {{element.import_ProdAccum ?? '-'}}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="monthlySale">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        VENTA MENSUAL RS
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Venta mensual RS:</span>
-                        {{element.monthlySale ?? '-'}}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="monthlyAccum">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        VENTA ACUMULADA
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Venta Acumulada:</span>
-                        {{element.monthlyAccum ?? '-'}}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="exportMonthly">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        EXPORTACIÓN MENSUAL
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Exportación Mensual:</span>
-                        {{element.exportMonthly ?? '-'}}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="exportAccum">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        EXPORTACIÓN ACUMULADA
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Exportación Acumulada:</span>
-                        {{element.exportAccum ?? '-'}}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="savingSystemMonthly">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        SIST. AHORRO MES
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Sist. Ahorro Mes:</span>
-                        {{element.savingSystemMonthly ?? '-'}}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="savingSystemAccum">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        SIST. AHORRO ACUM.
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Sist. Ahorro Acum.:</span>
-                        {{element.savingSystemAccum ?? '-'}}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="finalStock">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        STOCK FINAL
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Stock Final:</span>
-                        {{element.finalStock ?? '-'}}
-                    </td>
-                </ng-container>
-
-                <ng-container matColumnDef="noOkStock">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        STOCK NO OK
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Stock No OK:</span>
-                        {{element.noOkStock ?? '-'}}
-                    </td>
-                </ng-container>
-
+                
+                
+<!----          ## ERROR FIELD ##
                 <ng-container matColumnDef="estado">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header="errores"
                         class="gotham-bold text-[#152A43] uppercase">
@@ -369,7 +844,7 @@
                             *ngIf="fullScreen.isEnabled"><br /> {{ element.errorName ?? ''}}</span>
                     </td>
                 </ng-container>
-
+               ## ACTIONS FIELD ##
                 <ng-container matColumnDef="acciones">
                     <th mat-header-cell *matHeaderCellDef class="gotham-bold text-[#152A43] uppercase"> ACCIONES </th>
                     <td mat-cell *matCellDef="let element"
@@ -384,7 +859,7 @@
                             <mat-icon class="text-white text-center scale-75">close</mat-icon>
                         </button>
                     </td>
-                </ng-container>
+                </ng-container>-->
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="titulos mat-header-row">
                 </tr>
@@ -394,15 +869,25 @@
                 </tr>
             </mat-table>
         </div>
-        <hr class="h-0.5 mt-2 w-[95%] border-[#757575ad] border-solid rounded-full self-center">
+        <hr
+          class="h-0.5 mt-2 w-[95%] border-[#757575ad] border-solid rounded-full self-center"
+        />
         <div class="w-[70%] md:w-full flex flex-col md:flex-row">
-            <p class="w-full gotham-book flex items-center justify-start pl-5 md:pl-10" *ngIf="errorsQty >= 1">Se {{
-                errorsQty > 1 ? 'encontraron' : 'encontró' }}
-                {{errorsQty}} {{ errorsQty > 1 ? 'errores' : 'error' }}.</p>
-            <div class="w-[150%] flex items-end md:justify-end">
-                <mat-paginator hidePageSize="true" showFirstLastButtons="true" [pageSize]="pageSize"
-                    class="bg-[rgb(227,227,227)] flex justify-end"></mat-paginator>
-            </div>
+          <div class="w-[150%] flex items-end md:justify-end">
+            <mat-paginator
+              [length]="totalItems"
+              [pageSize]="pageSize"
+              [pageSizeOptions]="pageSizeOptions"
+              (page)="onPageChange($event)"
+              showFirstLastButtons
+              class="bg-[rgb(227,227,227)] flex justify-end"
+            ></mat-paginator>
+          </div>
         </div>
+        <!-- <button mat-raised-button (click)="createMultipleOfmms()">CREAR MULTIPLES OFMM</button>
+            <div>
+                <button mat-raised-button (click)="logSelection()">Console Log Selected</button>
+            </div> -->
+      </div>
     </div>
-</div>
+    
