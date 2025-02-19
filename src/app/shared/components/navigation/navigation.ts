@@ -197,12 +197,12 @@ export const navigation: Navigation[] = [
     ],
   },
   {
-    id: 'reporting',
+    id: 'reports',
     title: 'Reportes',
     type: 'collapsable',
     collapsed: true,
     permission: '00000000-0000-0000-0000-000000000001',
-    url: '/pages/main/reporting',
+    url: '/pages/main/reports',
     children: [
       /*{
         id: 'patentings',
@@ -219,10 +219,10 @@ export const navigation: Navigation[] = [
         permission: '00000000-0000-0000-0000-000000000001',
       },*/
       {
-        id: 'complete-reports',
+        id: 'comercial-report',
         title: 'Reporte Comercial',
         type: 'item',
-        url: '/pages/main/comercial-reports',
+        url: '/pages/main/reports/comercial-report',
         permission: '00000000-0000-0000-0000-000000000001',
       },
     ],
