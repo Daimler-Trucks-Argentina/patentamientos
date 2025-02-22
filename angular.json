@@ -131,13 +131,13 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "lch.mercedesbenz.web:build:production"
+              "buildTarget": "lch.mercedesbenz.web:build:production"
             },
             "development": {
-              "browserTarget": "lch.mercedesbenz.web:build:development"
+              "buildTarget": "lch.mercedesbenz.web:build:development"
             },
             "staging": {
-              "browserTarget": "lch.mercedesbenz.web:build:staging"
+              "buildTarget": "lch.mercedesbenz.web:build:staging"
             }
           },
           "defaultConfiguration": "development"
@@ -145,7 +145,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "lch.mercedesbenz.web:build"
+            "buildTarget": "lch.mercedesbenz.web:build"
           }
         },
         "test": {
