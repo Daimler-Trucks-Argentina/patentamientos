@@ -20,15 +20,11 @@ import { Toast } from 'src/app/core/helpers/sweetAlert.helper';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { VehicleType } from 'src/app/models/vehicle-types/vehicle-type.model';
 import { VehicleTypeService } from 'src/app/services/vehicle-types/vehicle-type.service';
-import moment from 'moment';
+import * as moment from 'moment';
 import { OfmmDialogComponent } from '../../catalogs/ofmms/ofmm-dialog/ofmm-dialog.component';
 import { TerminalService } from 'src/app/services/terminals/terminal.service';
 import { Terminal } from 'src/app/models/terminals/terminal.model';
-import {
-  BreakpointObserver,
-  BreakpointState,
-  Breakpoints,
-} from '@angular/cdk/layout';
+import { BreakpointObserver, BreakpointState, Breakpoints, } from '@angular/cdk/layout';
 import { v4 } from 'uuid';
 import { PatentingVersion } from 'src/app/models/patenting-versions/patenting-version.model';
 import { PatentingVersionService } from 'src/app/services/patenting-versions/patenting-version.service';
@@ -60,6 +56,7 @@ export class PatentingViewDialogComponent implements OnInit {
   vehicleTypes: VehicleType[] = [];
   terminals: Terminal[] = [];
   groupedDataError: { codigo: string; regla: string; count: number }[] = [];
+
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -123,30 +120,27 @@ export class PatentingViewDialogComponent implements OnInit {
         factories,
         vehicleTypes,
         terminals,
-        patentingVersions,
+        patentingVersions
       ]) => {
         console.log(`${this.TAG} > getData > rules`, rules);
         console.log('PatentingId', patentingData);
         this.dataError = rules ?? [];
 
         // Agrupar y contar errores
-        const errorMap: { [key: string]: { regla: string; count: number } } =
-          {};
+        const errorMap: { [key: string]: { regla: string; count: number } } = {};
         this.dataError.forEach((error) => {
-          if (!errorMap[error.codigo]) {
-            errorMap[error.codigo] = { regla: error.regla, count: 0 };
-          }
-          errorMap[error.codigo].count++;
+            if (!errorMap[error.codigo]) {
+                errorMap[error.codigo] = { regla: error.regla, count: 0 };
+            }
+            errorMap[error.codigo].count++;
         });
-
+    
         // Convertir el mapa en un array para usarlo en la plantilla
-        this.groupedDataError = Object.entries(errorMap).map(
-          ([codigo, { regla, count }]) => ({
+        this.groupedDataError = Object.entries(errorMap).map(([codigo, { regla, count }]) => ({
             codigo,
             regla,
             count,
-          })
-        );
+        }));
         this.patentingData = patentingData;
         brands.forEach((b) => {
           b.codName = `(${b.mercedesMarcaId}) ${b.name}`;
@@ -160,10 +154,7 @@ export class PatentingViewDialogComponent implements OnInit {
           t.codName = `(${t.mercedesTerminalId}) ${t.name}`;
         });
         this.terminals = terminals;
-        console.log(
-          `${this.TAG} > getData > patentingVersions`,
-          patentingVersions
-        );
+        console.log( `${this.TAG} > getData > patentingVersions`, patentingVersions );
         const patVer: PatentingVersion[] = [];
         patentingVersions.forEach((pv) => {
           if (pv.version && pv.description) {

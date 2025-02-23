@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -28,35 +28,41 @@ import { ReportService } from './services/reports/reports.service';
 import { WholesaleVersionService } from './services/wholesale-versions/wholesale-version.service';
 import { CustomPaginatorIntl } from './shared/components/paginator/custom-paginator-intl';
 
-@NgModule({ declarations: [AppComponent],
-    bootstrap: [AppComponent], imports: [BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatDialogModule], providers: [
-        { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl },
-        { provide: HTTP_INTERCEPTORS, useClass: MainHttpInterceptor, multi: true },
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: MainErrorHttpInterceptor,
-            multi: true,
-        },
-        { provide: MatPaginatorIntl, useValue: getSpanishPaginatorIntl() },
-        AuthService,
-        RoleService,
-        UserService,
-        SecurityParameterService,
-        PermissionService,
-        PatentingService,
-        BrandService,
-        CarModelService,
-        FactoryService,
-        VehicleTypeService,
-        TerminalService,
-        OfmmService,
-        ClosureService,
-        SegmentationPlateService,
-        ReportService,
-        WholesaleVersionService,
-        provideHttpClient(withInterceptorsFromDi())
-    ] })
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    MatDialogModule,
+  ],
+  providers: [
+    { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl },
+    { provide: HTTP_INTERCEPTORS, useClass: MainHttpInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MainErrorHttpInterceptor,
+      multi: true,
+    },
+    { provide: MatPaginatorIntl, useValue: getSpanishPaginatorIntl() },
+    AuthService,
+    RoleService,
+    UserService,
+    SecurityParameterService,
+    PermissionService,
+    PatentingService,
+    BrandService,
+    CarModelService,
+    FactoryService,
+    VehicleTypeService,
+    TerminalService,
+    OfmmService,
+    ClosureService,
+    SegmentationPlateService,
+    ReportService,
+    WholesaleVersionService
+  ],
+  bootstrap: [AppComponent],
+})
 export class AppModule {}
