@@ -112,9 +112,7 @@ export class PermissionService extends BaseService<Permission> {
     );
   }
 
-  public getGranted(
-    roleId: string | null
-  ): Observable<Permission[] | undefined> {
+  public getGranted(roleId: string | null): Observable<Permission[]> {
     const user = this.authService.user;
     if (
       user &&
@@ -122,12 +120,10 @@ export class PermissionService extends BaseService<Permission> {
       user.role.permissions &&
       user.role.permissions.length > 0
     ) {
-      return new Observable(
-        (observer: Subscriber<Permission[] | undefined>) => {
-          observer.next(user?.role?.permissions);
-          observer.complete();
-        }
-      );
+      return new Observable((observer: Subscriber<Permission[]>) => {
+        observer.next(user?.role?.permissions);
+        observer.complete();
+      });
     }
     let url: string = `${this.controller}/granted?roleId=${roleId}`;
     return this.HttpClient.get<BaseResponse<Permission>>(url).pipe(
