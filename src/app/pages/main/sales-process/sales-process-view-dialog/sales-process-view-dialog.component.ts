@@ -1,9 +1,17 @@
-import { BreakpointObserver, Breakpoints, BreakpointState, } from '@angular/cdk/layout';
+import {
+  BreakpointObserver,
+  Breakpoints,
+  BreakpointState,
+} from '@angular/cdk/layout';
 import { Component, Inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDatepicker } from '@angular/material/datepicker';
-import { MAT_DIALOG_DATA,  MatDialog, MatDialogRef, } from '@angular/material/dialog';
-import * as moment from 'moment';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import moment from 'moment';
 import { combineLatest, Subject, takeUntil } from 'rxjs';
 import { ErrorHelper } from 'src/app/core/helpers/error.helper';
 import { SweetAlert2Helper } from 'src/app/core/helpers/sweet-alert-2.helper';
@@ -36,7 +44,9 @@ export interface DialogData {
   styleUrls: ['./sales-process-view-dialog.component.scss'],
 })
 export class SalesProcessViewDialogComponent {
-  @ViewChild('registerDate', { static: true }) registerDate:  | MatDatepicker<Date> | undefined;
+  @ViewChild('registerDate', { static: true }) registerDate:
+    | MatDatepicker<Date>
+    | undefined;
   TAG = SalesProcessViewDialogComponent.name;
   private unsubscribeAll: Subject<any>;
   dataError: any[] = [];
@@ -48,8 +58,7 @@ export class SalesProcessViewDialogComponent {
   isLoading = false;
   isXsOrSm = false;
   formGroup: FormGroup;
-  grado : Grado = new Grado();
- 
+  grado: Grado = new Grado();
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -69,12 +78,17 @@ export class SalesProcessViewDialogComponent {
   ) {
     this.unsubscribeAll = new Subject();
     this.odsWholesale = this.data.odsWholesale;
-    this.grados = data.grados;   
+    this.grados = data.grados;
     this.filteredGrados = this.grados.filter((g) => {
-      const comparisonResult = new Date(g.dateTo) > new Date(new Date().toISOString()); 
-      return comparisonResult;})!; //filter((g) => g.grade === this.odsWholesale.codTrademark)!;
-    console.log( `${this.TAG} > constructor > this.odsWholesale`, this.odsWholesale );
-    console.log( `${this.TAG} > constructor > this.grados`, this.grados  ); 
+      const comparisonResult =
+        new Date(g.dateTo) > new Date(new Date().toISOString());
+      return comparisonResult;
+    })!; //filter((g) => g.grade === this.odsWholesale.codTrademark)!;
+    console.log(
+      `${this.TAG} > constructor > this.odsWholesale`,
+      this.odsWholesale
+    );
+    console.log(`${this.TAG} > constructor > this.grados`, this.grados);
     this.formGroup = this.createFormGroup();
   }
 
@@ -364,7 +378,10 @@ export class SalesProcessViewDialogComponent {
     this.formGroup.get(`registerDateDisplay`)?.setValue(formattedDate);
   }
 
-  searchComparisonFn = (searchTerm: string, option: { grade: string }): boolean => { 
+  searchComparisonFn = (
+    searchTerm: string,
+    option: { grade: string }
+  ): boolean => {
     return option.grade.toLowerCase().includes(searchTerm.toLowerCase());
   };
 
@@ -413,7 +430,7 @@ export class SalesProcessViewDialogComponent {
       statePatentaId: '00000000-0000-0000-0000-000000000001',
       fileId: this.odsWholesale.fileId,
     };
-    console.log("createDto",createDto)
+    console.log('createDto', createDto);
     this._odsWholesaleService.saveWholesale(createDto).subscribe({
       next: (response) => {
         this.isLoading = false;
@@ -433,17 +450,33 @@ export class SalesProcessViewDialogComponent {
 
   createGrado() {
     this.isLoading = true;
-    const $combineLatest = combineLatest([ this.terminalService.getAll(), this.brandService.getAll(), this.carModelService.getAll(), this.wholesaleVersionService.getAll() ]);
+    const $combineLatest = combineLatest([
+      this.terminalService.getAll(),
+      this.brandService.getAll(),
+      this.carModelService.getAll(),
+      this.wholesaleVersionService.getAll(),
+    ]);
     $combineLatest.pipe(takeUntil(this.unsubscribeAll)).subscribe({
       next: ([terminals, brands, carModels, wholesaleversions]) => {
         console.log(`${this.TAG} > getData > terminals`, terminals);
         console.log(`${this.TAG} > getData > brands`, brands);
         console.log(`${this.TAG} > getData > carModels`, carModels);
-        console.log(`${this.TAG} > getData > wholesaleversions`, wholesaleversions);
-        terminals.forEach((t) => { t.codName = `(${t.mercedesTerminalId}) ${t.name}`; });
-        brands.forEach((b) => { b.codName = `(${b.mercedesMarcaId}) ${b.name}`; });
-        carModels.forEach((cm) => { cm.codName = `(${cm.mercedesModeloId}) ${cm.name}`; });
-        wholesaleversions.forEach((wsv) => { wsv.codName = `(${wsv.version}) ${wsv.description}`; });
+        console.log(
+          `${this.TAG} > getData > wholesaleversions`,
+          wholesaleversions
+        );
+        terminals.forEach((t) => {
+          t.codName = `(${t.mercedesTerminalId}) ${t.name}`;
+        });
+        brands.forEach((b) => {
+          b.codName = `(${b.mercedesMarcaId}) ${b.name}`;
+        });
+        carModels.forEach((cm) => {
+          cm.codName = `(${cm.mercedesModeloId}) ${cm.name}`;
+        });
+        wholesaleversions.forEach((wsv) => {
+          wsv.codName = `(${wsv.version}) ${wsv.description}`;
+        });
         this.isLoading = false;
         const dialogRef = this.dialog.open(GradoDialogComponent, {
           width: this.isXsOrSm ? '90%' : '65%',
@@ -455,13 +488,13 @@ export class SalesProcessViewDialogComponent {
             brands: brands,
             carModels: carModels,
             wholesale: this.odsWholesale,
-            versions: wholesaleversions
+            versions: wholesaleversions,
           },
         });
         dialogRef.afterClosed().subscribe((result) => {
-          console.log("nuevo grado", result);
+          console.log('nuevo grado', result);
           this.grado = result;
-          if (!this.filteredGrados.some(grado => grado.id === result.id)) {
+          if (!this.filteredGrados.some((grado) => grado.id === result.id)) {
             this.filteredGrados.push(result);
           }
           this.formGroup.get(`grado`)?.setValue(result.id);
@@ -475,5 +508,4 @@ export class SalesProcessViewDialogComponent {
       },
     });
   }
-
 }
