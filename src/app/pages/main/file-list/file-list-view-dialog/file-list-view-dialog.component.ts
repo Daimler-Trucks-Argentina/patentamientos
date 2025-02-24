@@ -34,7 +34,7 @@ export class FileListViewDialogComponent implements OnInit {
     this.isLoading = true;
     this.fileService.getByFileId(this.data.file.id!).subscribe({
       next: (res: any) => {
-        console.log(res);
+        console.log("FILE LIST!",res);
         res.forEach((element: any) => {
           if (element.fecha_De_Inscr) {
             const raw = new Date(element.fecha_De_Inscr);

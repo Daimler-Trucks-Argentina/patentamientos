@@ -112,14 +112,14 @@ export class FileService extends BaseService<File> {
     );
   }
 
-  public getByFileId(fileId: string): Observable<File | null> {
+  public getByFileId(fileId: string): Observable<any> {
     const url: string = `${this.controller}/getByFileId?fileId=${fileId}`;
     return this.HttpClient.get<BaseResponse<File>>(url).pipe(
       map((response) => {
         if (response.statusCode !== 200) {
           return null;
         }
-        return response.result;
+        return response.results;
       })
     );
   }
