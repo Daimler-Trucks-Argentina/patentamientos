@@ -191,6 +191,11 @@ export class FileListComponent implements OnInit {
   }
 
   processPat(fileObject: File) {
+    var id = fileObject.id
+    var fileType : string = 'daily'
+    if(fileObject.fileTypeID == this.types.monthly){
+      fileType = 'monthly'
+    }
     if (fileObject.status == 'Procesado') {
       fileObject.fileTypeID == this.types.wholesale ||
       fileObject.fileTypeID == this.types.specialWholesale
@@ -199,14 +204,34 @@ export class FileListComponent implements OnInit {
     } else {
       //TODO process
       this.isLoading = true;
-      const $combineLatest = combineLatest([
-        this.fileService.processByFileId(
-          fileObject.id!,
-          fileObject.fileTypeID,
-          ''
-        ),
-      ]);
-      $combineLatest.pipe(takeUntil(this.unsubscribeAll)).subscribe({
+      var $combineLatest
+      
+        if(fileObject.fileTypeID == this.types.daily || 
+          fileObject.fileTypeID == this.types.monthly){
+            console.log("nuevo endpoint")
+            console.log("FILE OBJECT" , fileObject)
+          $combineLatest = combineLatest([
+          this.fileService.processDayOrMonthFile(
+            fileType,
+            id
+          ),
+        ]);
+        }else{
+          $combineLatest = combineLatest([
+          this.fileService.processByFileId(
+            fileObject.id!,
+            fileObject.fileTypeID,
+            ''
+          ),
+        ]);
+        }
+        $combineLatest = combineLatest([
+          this.fileService.processDayOrMonthFile(
+            fileType,
+            id
+          ),
+        ]);
+      $combineLatest!.pipe(takeUntil(this.unsubscribeAll)).subscribe({
         next: ([response]) => {
           console.log(`${this.TAG} > processByFileId > response`, response);
           this.isLoading = false;

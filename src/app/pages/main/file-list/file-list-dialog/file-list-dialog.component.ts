@@ -50,6 +50,8 @@ export class FileListDialogComponent implements OnInit, OnDestroy {
   loading = false;
   accept = 'Subir';
   fileTypes: FileType[] = [];
+  dailyType: string = '00000000-0000-0000-0000-000000000010';
+  monthType: string = '00000000-0000-0000-0000-000000000030';
   wholesaleType: string = '00000000-0000-0000-0000-000000000020';
   specialWholesaleType: string = '00000000-0000-0000-0000-000000000040';
   historicalType: string = '00000000-0000-0000-0000-000000000050';
@@ -219,8 +221,8 @@ export class FileListDialogComponent implements OnInit, OnDestroy {
       this.create(createDto, closureDto);
     }
     if (this.actionMode === ActionMode.update) {
-      this.update(createDto, closureDto);
-    }
+        this.update(createDto, closureDto);
+      }
   }
 
   create(createDto: FileCreateDto, closureDto: ClosureCreateDto): void {
@@ -275,6 +277,7 @@ export class FileListDialogComponent implements OnInit, OnDestroy {
       },
     });
   }
+
 
   update(createDto: FileCreateDto, closureDto: ClosureCreateDto): void {
     this.fileService.update(createDto).subscribe({

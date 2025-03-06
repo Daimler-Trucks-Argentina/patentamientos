@@ -90,6 +90,11 @@ export class FileService extends BaseService<File> {
     );
   }
 
+  public updateDaily(fileCreateDto: FileCreateDto): Observable<any> {
+    const url: string = `${this.controller}/update`;
+    return this.HttpClient.post(url, fileCreateDto)
+  }
+
   public override delete(id: string) {
     return super.delete(id, (response: number | null) => {
       const index = this.entities.findIndex((e) => e.id == id);
@@ -127,6 +132,21 @@ export class FileService extends BaseService<File> {
 
   public processByFileId(fileId: string, fileTypeId: string, wsID?: string): Observable<any | null> {
     const url: string = `Patentings/process-by-fileId?fileId=${fileId}&fileTypeId=${fileTypeId}&wsID=${wsID}`;
+    return this.HttpClient.get<BaseResponse<any>>(url).pipe(
+      map((response) => {
+        if (response.statusCode !== 200) {
+          return null;
+        }
+        return response.result;
+      })
+    );
+  }
+
+  public processDayOrMonthFile(
+    fileType: string,
+    fileId: any
+  ): Observable<any | null> {
+    const url: string = `Patentings/process-${fileType}-by-fileId?fileId=${fileId}`;
     return this.HttpClient.get<BaseResponse<any>>(url).pipe(
       map((response) => {
         if (response.statusCode !== 200) {
