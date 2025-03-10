@@ -108,45 +108,36 @@
               class="flex items-center justify-center w-full flex-col md:flex-row gap-x-2 mt-2 -mb-6"
               [formGroup]="form"
             >
-              <div class="flex flex-row gap-x-6 md:gap-x-2">
+            <div class="flex flex-row gap-x-6 md:gap-x-2 items-center">
+                <span class="gotham-book text-black pt-2.5 pl-1 hidden md:inline mr-8 mb-8">Selección de periodo:</span>
+                
                 <mat-form-field class="w-36 md:w-48 h-14">
-                  <input
-                    matInput
-                    readonly
-                    [matDatepicker]="fromDate"
-                    placeholder="Desde"
-                    formControlName="fromDate"
-                  />
-                  <mat-datepicker-toggle
-                    matSuffix
-                    [for]="fromDate"
-                  ></mat-datepicker-toggle>
-                  <mat-datepicker #fromDate></mat-datepicker>
+                  <input matInput 
+                         [formControl]="form.controls.month"
+                         type="number" 
+                         placeholder="Mes" 
+                         min="1" 
+                         max="12" />
                 </mat-form-field>
-
+                
                 <mat-form-field class="w-36 md:w-48 h-14">
-                  <input
-                    matInput
-                    readonly
-                    [matDatepicker]="toDate"
-                    [min]="form.value.fromDate"
-                    placeholder="Hasta"
-                    formControlName="toDate"
-                  />
-                  <mat-datepicker-toggle
-                    matSuffix
-                    [for]="toDate"
-                  ></mat-datepicker-toggle>
-                  <mat-datepicker #toDate></mat-datepicker>
+                  <input matInput 
+                         [formControl]="form.controls.year"
+                         type="number" 
+                         placeholder="Año" 
+                         min="1900" 
+                         max="2100" />
                 </mat-form-field>
               </div>
+              
+              
               <div class="flex flex-row gap-x-4 md:gap-x-2">
               </div>
               <div class="ml-3 mt-2 md:mt-0 mb-3 md:mb-0">
                 <button
                   class="flex items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
                   (click)="getReports()"
-                  [disabled]="isLoading"
+                  [disabled]="isLoading || !form.controls.month.value || !form.controls.year.value"
                 >
                   <mat-icon class="text-white">search</mat-icon>
                   <p class="gotham-book text-white pt-2.5 pl-1 md:inline">
@@ -820,6 +811,42 @@
                     </td>
                 </ng-container>
                 
+                <ng-container matColumnDef="fabricaDescripcion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        OFMM Fabrica Descripcion
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">OFMM Fabrica Descripcion:</span>
+                        {{element.fabricaDescripcion ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="titularGubernamental">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Titular Gubernamental
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Titular Gubernamental:</span>
+                        {{element.titularGubernamental ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="anioPeriodoCierre">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Año Periodo Cierre
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Año Periodo Cierre:</span>
+                        {{element['añoPeriodoCierre'] ?? '-'}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="mesPeriodoCierre">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
+                        Mes Periodo Cierre
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="gotham-book info">
+                        <span class="mobile-label">Mes Periodo Cierre:</span>
+                        {{element.mesPeriodoCierre ?? '-'}}
+                    </td>
+                </ng-container>
                 <ng-container matColumnDef="cantidadPatentes">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
                         Cantidad Patentes
