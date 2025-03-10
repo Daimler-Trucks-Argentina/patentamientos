@@ -1,24 +1,15 @@
-import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
-import { Subject, combineLatest, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 import screenfull from 'screenfull';
 import { ErrorHelper } from 'src/app/core/helpers/error.helper';
 import { SweetAlert2Helper } from 'src/app/core/helpers/sweet-alert-2.helper';
 import { Toast } from 'src/app/core/helpers/sweetAlert.helper';
-import { ActionMode } from 'src/app/models/action-mode.enum';
-import { Grado } from 'src/app/models/grados/grado.model';
-import { Rule } from 'src/app/models/rules/rule.model';
-import { OdsWholesale } from 'src/app/models/wholesales/ods-wholesale.model';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { GradoService } from 'src/app/services/grados/grado.service';
-import { OdsWholesaleService } from 'src/app/services/odswholesales/odswholesale.service';
-import { RuleService } from 'src/app/services/rules/rule.service';
-import { SalesProcessViewDialogComponent } from '../sales-process/sales-process-view-dialog/sales-process-view-dialog.component';
 import { SalesProcessComponent } from '../sales-process/sales-process.component';
 import { ReportService } from 'src/app/services/reports/reports.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -54,14 +45,11 @@ export class CompleteReportsComponent {
   };
   code: any = { value: '' };
   form = new FormGroup({
-      fromDate: new FormControl(null, { validators: [Validators.required] }),
-      toDate: new FormControl(null, { validators: [Validators.required] }),
+      year: new FormControl<any>(null),
+      month: new FormControl<any>(null)
     });
-    get fromDate() {
-      return this.form.get('fromDate')!.value;
-    }
-    get toDate() {
-      return this.form.get('toDate')!.value;
+    get period() {
+      return this.form.get('period')!.value;
     }
     pipe: DatePipe;
   displayedColumns: string[] = [
@@ -87,42 +75,47 @@ export class CompleteReportsComponent {
     'ofmm',
     'ofmmOrigen',
     'ofmmFabrica',
+    'fabricaDescripcion',
     'ofmmMarca',
+    //'ofmmDescription(Descripc OFMM marca )',
     'ofmmModelo',
+    //'ofmmDescription(Descripc OFMM modelo )',
     'ofmmDescription1',
     'ofmmDescription2',
     'fechaPatentamiento',
     'fechaCarga',
+    'anioPeriodoCierre',
+    'mesPeriodoCierre',
     'fechaInsc',
     'yearModelo',
     'titular',
-    'direccionTitular',
-    'cpTitular',
-    'provinciaTitular',
-    'provinciaTitularDescription',
-    'dptoTitular',
-    'deptoTitularDescription',
-    'localidadTitular',
-    'localidadTitularDescription',
-    'regSecs',
-    'regSecsDescription',
     'registroDepto',
     'registroLocalidad',
     'registroProvincia',
     'conceZonaCamion',
     'descCEZCamion',
+    //'conceZonaVan',
+    //'descCEZVan',
+    //'conceZonaCamion',
+    //'descCEZCamion',
+    //'conceZonaAuto',
+    //'descCEZAuto',
     'cuitTitular',
     'tipoClienteGub',
     'tipoClienteGubDescription',
+    'titularGubernamental',
     'categoriaGubernamen',
     'catGubDescription',
     'segmentoGubernament',
     'descSegGub',
+    //'descSegGub',
     'esPatGubernamental',
     'clasificCUIT',
     'clasificacionCUITDescription',
     'codpaispr',
     'codpaisfa',
+    'codpro',
+    //'descr prov',
     'codauto',
     'codfab',
     'codmar',
@@ -130,6 +123,7 @@ export class CompleteReportsComponent {
     'codpro',
     'peso',
     'cantidadPatentes'
+    //'cantidadPatentes'
 ];
 
 
@@ -144,10 +138,7 @@ export class CompleteReportsComponent {
     public dialog: MatDialog,
     private sweetAlert: SweetAlert2Helper,
     public breakpointObserver: BreakpointObserver,
-    private activatedRoute: ActivatedRoute,
     private authService: AuthService,
-    private ruleService: RuleService,
-    private gradoService: GradoService,
     private reportService: ReportService
   ) {
     this.pipe = new DatePipe('en');
@@ -190,24 +181,24 @@ export class CompleteReportsComponent {
 
   getReports(pageNumber?: number, pageSize?: number) {
       this.isLoading = true;
-      const dates = this.form.getRawValue();
-      const dateFrom: string = dates.fromDate
-        ? new Date(dates.fromDate!).toISOString()
-        : '';
-      const dateTo: string = dates.toDate
-        ? new Date(dates.toDate!).toISOString()
-        : '';
+      const selectedYear = this.form.value.year; 
+      const selectedMonth = this.form.value.month; 
   
       this.reportService
         .getReport(
-          dateFrom,
-          dateTo,
+          selectedYear,
+          selectedMonth,
           (pageNumber = this.pageNumber),
           (pageSize = this.pageSize)
         )
         .subscribe({
           next: (response) => {
-            this.dataSource = new MatTableDataSource<any>(response.results);
+            this.dataSource = new MatTableDataSource<any>(
+              response.results.map((item: { [x: string]: any; }) => ({
+                ...item,
+                anioPeriodoCierre: item['añoPeriodoCierre'] // Renombra la propiedad
+              }))
+            );
             this.totalItems = response.totalItems;
             this.pageNumber = response.pageNumber;
             this.pageSize = response.pageSize;
@@ -258,13 +249,16 @@ export class CompleteReportsComponent {
     // #REGION DOWNLOAD
     downloadXLS(): void {
         this.isLoading = true;
-        const dates = this.form.getRawValue();
-        const dateFrom: string = dates.fromDate ? new Date(dates.fromDate!).toISOString() : '';
-        const dateTo: string = dates.toDate ? new Date(dates.toDate!).toISOString() : new Date().toISOString();
-        
-    
-        this.reportService
-          .getReport(dateFrom, dateTo, 1, 1000000)
+        const selectedYear = this.form.value.year; 
+        const selectedMonth = this.form.value.month; 
+
+  
+      this.reportService
+        .getReport(
+          selectedYear,
+          selectedMonth, 
+          1, 
+          this.totalItems)
           .subscribe({
             next: (response) => {
     
