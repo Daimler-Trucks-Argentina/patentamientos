@@ -264,7 +264,7 @@ export class CompleteReportsComponent {
         
     
         this.reportService
-          .getReport(dateFrom, dateTo, this.pageNumber, this.pageSize)
+          .getReport(dateFrom, dateTo, 1, 1000000)
           .subscribe({
             next: (response) => {
     
