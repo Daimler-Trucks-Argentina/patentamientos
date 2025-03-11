@@ -25,6 +25,8 @@ export class ReportService extends BaseService<any> {
   }
 
   public getReport(
+    dateFrom: string | null,
+    dateTo: string,
     anioPeriodoCierre: number | null,
     mesPeriodoCierre: number,
     pageNumber: number | undefined,
@@ -32,7 +34,11 @@ export class ReportService extends BaseService<any> {
   ): Observable<any> {
     const url: string = `${
       this.controller
-    }/commercial?PageSize=${pageSize}&PageNumber=${pageNumber}&AñoPeriodoCierre=${anioPeriodoCierre}&MesPeriodoCierre=${mesPeriodoCierre}`;
+    }/commercial?FechaPatentamientoDesde=${
+      dateFrom ?? ''
+    }&FechaPatentamientoHasta=${
+      dateTo ?? ''
+    }&PageSize=${pageSize}&PageNumber=${pageNumber}&AñoPeriodoCierre=${anioPeriodoCierre}&MesPeriodoCierre=${mesPeriodoCierre}`;
     return this.HttpClient.get(url);
   }
 }

@@ -20,7 +20,9 @@ import { WorkSheet, utils, WorkBook, write } from 'xlsx';
 import { MatOption } from '@angular/material/core';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatSelect } from '@angular/material/select';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { CustomPaginatorIntl } from 'src/app/shared/components/paginator/custom-paginator-intl';
+
 
 @Component({
   selector: 'app-complete-reports',
@@ -34,6 +36,7 @@ export class CompleteReportsComponent {
   isLoading = false;
   showFilter = false;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatButtonToggleModule) toggle!: MatButtonToggleModule;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatExpansionPanel) expansionPanel!: MatExpansionPanel;
   @ViewChild(NgxMatSelectComponent) filterPat!: NgxMatSelectComponent;
@@ -45,8 +48,12 @@ export class CompleteReportsComponent {
   };
   code: any = { value: '' };
   form = new FormGroup({
+    filterType: new FormControl<any>(null),
+    fromDate: new FormControl(null, { validators: [Validators.required] }),
+      toDate: new FormControl(null, { validators: [Validators.required] }),
       year: new FormControl<any>(null),
-      month: new FormControl<any>(null)
+      month: new FormControl<any>(null),
+      
     });
     get period() {
       return this.form.get('period')!.value;
@@ -86,7 +93,6 @@ export class CompleteReportsComponent {
     'fechaCarga',
     'anioPeriodoCierre',
     'mesPeriodoCierre',
-    'fechaInsc',
     'yearModelo',
     'titular',
     'registroDepto',
@@ -181,13 +187,21 @@ export class CompleteReportsComponent {
 
   getReports(pageNumber?: number, pageSize?: number) {
       this.isLoading = true;
-      const selectedYear = this.form.value.year; 
-      const selectedMonth = this.form.value.month; 
-  
+      const dates = this.form.getRawValue();
+      const dateFrom: string = dates.fromDate
+        ? new Date(dates.fromDate!).toISOString()
+        : '';
+      const dateTo: string = dates.toDate
+        ? new Date(dates.toDate!).toISOString()
+        : '';
+        const selectedYear = this.form.value.year; 
+        const selectedMonth = this.form.value.month; 
       this.reportService
         .getReport(
+          dateFrom,
+          dateTo,
           selectedYear,
-          selectedMonth,
+          selectedMonth, 
           (pageNumber = this.pageNumber),
           (pageSize = this.pageSize)
         )
@@ -249,12 +263,19 @@ export class CompleteReportsComponent {
     // #REGION DOWNLOAD
     downloadXLS(): void {
         this.isLoading = true;
+        const dates = this.form.getRawValue();
+      const dateFrom: string = dates.fromDate
+        ? new Date(dates.fromDate!).toISOString()
+        : '';
+      const dateTo: string = dates.toDate
+        ? new Date(dates.toDate!).toISOString()
+        : '';
         const selectedYear = this.form.value.year; 
         const selectedMonth = this.form.value.month; 
-
-  
       this.reportService
         .getReport(
+          dateFrom,
+          dateTo,
           selectedYear,
           selectedMonth, 
           1, 
