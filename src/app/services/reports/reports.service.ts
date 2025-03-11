@@ -34,11 +34,13 @@ export class ReportService extends BaseService<any> {
   ): Observable<any> {
     const url: string = `${
       this.controller
-    }/commercial?FechaPatentamientoDesde=${
+    }/commercial?PageSize=${pageSize}
+    &PageNumber=${pageNumber}&
+    FechaPatentamientoDesde=${
       dateFrom ?? ''
     }&FechaPatentamientoHasta=${
       dateTo ?? ''
-    }&PageSize=${pageSize}&PageNumber=${pageNumber}&AñoPeriodoCierre=${anioPeriodoCierre}&MesPeriodoCierre=${mesPeriodoCierre}`;
+    }&AñoPeriodoCierre=${anioPeriodoCierre}&MesPeriodoCierre=${mesPeriodoCierre}`;
     return this.HttpClient.get(url);
   }
 }
