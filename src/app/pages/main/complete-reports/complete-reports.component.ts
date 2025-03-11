@@ -210,7 +210,9 @@ export class CompleteReportsComponent {
             this.dataSource = new MatTableDataSource<any>(
               response.results.map((item: { [x: string]: any; }) => ({
                 ...item,
-                anioPeriodoCierre: item['añoPeriodoCierre'] // Renombra la propiedad
+                anioPeriodoCierre: item['añoPeriodoCierre'],
+                fechaPatentamiento: item['fechaPatentamiento'] ? this.formatDate(item['fechaPatentamiento']) : '-',
+                fechaCarga: item['fechaCarga'] ? this.formatDate(item['fechaCarga']) : '-'
               }))
             );
             this.totalItems = response.totalItems;
@@ -232,6 +234,14 @@ export class CompleteReportsComponent {
             this.sweetAlert.error('Ha ocurrido un error!', error, null, true);
           },
         });
+    }
+
+    formatDate(dateString: string): string {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0'); // Agrega cero si es necesario
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
     }
   
     onPageChange(event: PageEvent): void {
