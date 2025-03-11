@@ -101,66 +101,89 @@
       </div>
     </div>
     <div class="w-full">
-      <mat-accordion class="w-full">
-        <mat-expansion-panel class="bg-[rgb(227,227,227)]">
-          <div class="flex justify-center items-center flex-col md:flex-row">
-            <form
-              class="flex items-center justify-center w-full flex-col md:flex-row gap-x-2 mt-2 -mb-6"
-              [formGroup]="form"
-            >
-            <div class="flex flex-row gap-x-6 md:gap-x-2 items-center">
-                <span class="gotham-book text-black pt-2.5 pl-1 hidden md:inline mr-8 mb-8">Selección de periodo:</span>
-                
-                <mat-form-field class="w-36 md:w-48 h-14">
-                  <input matInput 
-                         [formControl]="form.controls.month"
-                         type="number" 
-                         placeholder="Mes" 
-                         min="1" 
-                         max="12" />
-                </mat-form-field>
-                
-                <mat-form-field class="w-36 md:w-48 h-14">
-                  <input matInput 
-                         [formControl]="form.controls.year"
-                         type="number" 
-                         placeholder="Año" 
-                         min="1900" 
-                         max="2100" />
-                </mat-form-field>
-              </div>
-              
-              
-              <div class="flex flex-row gap-x-4 md:gap-x-2">
-              </div>
-              <div class="ml-3 mt-2 md:mt-0 mb-3 md:mb-0">
-                <button
-                  class="flex items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
-                  (click)="getReports()"
-                  [disabled]="isLoading || !form.controls.month.value || !form.controls.year.value"
+        <mat-accordion class="w-full">
+            <mat-expansion-panel class="bg-[rgb(227,227,227)]">
+              <div class="flex justify-center items-center flex-col md:flex-row">
+                <form
+                  class="flex items-center justify-center w-full flex-col md:flex-row gap-x-2 mt-2 -mb-6"
+                  [formGroup]="form"
                 >
-                  <mat-icon class="text-white">search</mat-icon>
-                  <p class="gotham-book text-white pt-2.5 pl-1 md:inline">
-                    Buscar
-                  </p>
-                </button>
+                  <!-- Selección de filtro -->
+                  <div class="flex flex-row gap-x-6 md:gap-x-2 items-center">
+                    <span class="gotham-book text-black pt-2.5 pl-1 hidden md:inline mr-8 mb-8">Filtrar por:</span>
+                    <mat-form-field class="w-36 md:w-48 h-14">
+                      <mat-select formControlName="filterType">
+                        <mat-option value="range">Desde - Hasta</mat-option>
+                        <mat-option value="period">Por Periodo</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+          
+                  <!-- Filtro por Rango de Fechas -->
+                  <div class="flex flex-row gap-x-6 md:gap-x-2 items-center" *ngIf="form.controls.filterType.value === 'range'">
+                    <mat-form-field class="w-36 md:w-48 h-14">
+                      <input
+                        matInput
+                        readonly
+                        [matDatepicker]="fromDate"
+                        placeholder="Desde"
+                        formControlName="fromDate"
+                      />
+                      <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+                      <mat-datepicker #fromDate></mat-datepicker>
+                    </mat-form-field>
+          
+                    <mat-form-field class="w-36 md:w-48 h-14">
+                      <input
+                        matInput
+                        readonly
+                        [matDatepicker]="toDate"
+                        [min]="form.value.fromDate"
+                        placeholder="Hasta"
+                        formControlName="toDate"
+                      />
+                      <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
+                      <mat-datepicker #toDate></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+          
+                  <!-- Filtro por Periodo -->
+                  <div class="flex flex-row gap-x-6 md:gap-x-2 items-center" *ngIf="form.controls.filterType.value === 'period'">
+                    <mat-form-field class="w-36 md:w-48 h-14">
+                      <input matInput [formControl]="form.controls.month" type="number" placeholder="Mes" min="1" max="12" />
+                    </mat-form-field>
+                    <mat-form-field class="w-36 md:w-48 h-14">
+                      <input matInput [formControl]="form.controls.year" type="number" placeholder="Año" min="1900" max="2100" />
+                    </mat-form-field>
+                  </div>
+          
+                  <div class="flex flex-row gap-x-4 md:gap-x-2"></div>
+                  <div class="ml-3 mt-2 md:mt-0 mb-3 md:mb-0">
+                    <button
+                      class="flex items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
+                      (click)="getReports()"
+                      [disabled]="isLoading"
+                    >
+                      <mat-icon class="text-white">search</mat-icon>
+                      <p class="gotham-book text-white pt-2.5 pl-1 md:inline">Buscar</p>
+                    </button>
+                  </div>
+                  <div class="ml-3 mt-2 md:mt-0 mb-3 md:mb-0">
+                    <button
+                      class="flex items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
+                      (click)="resetFiltering()"
+                      [disabled]="isLoading"
+                    >
+                      <mat-icon class="text-white">remove_circle</mat-icon>
+                      <p class="gotham-book text-white pt-2.5 pl-1 md:inline">Limpiar filtros</p>
+                    </button>
+                  </div>
+                </form>
               </div>
-              <div class="ml-3 mt-2 md:mt-0 mb-3 md:mb-0">
-                <button
-                  class="flex items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
-                  (click)="resetFiltering()"
-                  [disabled]="isLoading"
-                >
-                  <mat-icon class="text-white">remove_circle</mat-icon>
-                  <p class="gotham-book text-white pt-2.5 pl-1 md:inline">
-                    Limpiar filtros
-                  </p>
-                </button>
-              </div>
-            </form>
-          </div>
-        </mat-expansion-panel>
-      </mat-accordion>
+            </mat-expansion-panel>
+          </mat-accordion>
+          
+          
     </div>
     <!-- <div
             class="absolute flex self-end {{fullScreen.isEnabled ? 'pt-20 md:mt-8 md:pt-9 ml-2' : 'mt-3 md:-mt-1 pt-20'}} z-0">
