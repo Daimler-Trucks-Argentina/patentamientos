@@ -162,7 +162,6 @@ export class CompleteReportsComponent {
       this.paginator.page.subscribe((event: PageEvent) => {
         this.pageNumber = event.pageIndex + 1;
         this.pageSize = event.pageSize;
-        this.getReports();
       });
     }
 
@@ -200,10 +199,10 @@ export class CompleteReportsComponent {
         .getReport(
           dateFrom,
           dateTo,
-          selectedYear,
-          selectedMonth, 
           (pageNumber = this.pageNumber),
-          (pageSize = this.pageSize)
+          (pageSize = this.pageSize),
+          selectedYear,
+          selectedMonth,
         )
         .subscribe({
           next: (response) => {
@@ -216,7 +215,7 @@ export class CompleteReportsComponent {
               }))
             );
             this.totalItems = response.totalItems;
-            this.pageNumber = response.pageNumber;
+           // this.pageNumber = response.pageNumber;
             this.pageSize = response.pageSize;
   
   
@@ -281,7 +280,7 @@ export class CompleteReportsComponent {
       const selectedMonth = this.form.value.month;
     
       this.reportService
-        .getReport(dateFrom, dateTo, selectedYear, selectedMonth, 1, this.totalItems)
+        .getReport(dateFrom, dateTo, 1, this.totalItems, selectedYear, selectedMonth)
         .subscribe({
           next: (response) => {
             if (!response.results || response.results.length === 0) {
