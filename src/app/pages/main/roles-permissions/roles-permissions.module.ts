@@ -5,6 +5,7 @@ import { RolesPermissionsRoutingModule } from './roles-permissions-routing.modul
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
 
 @NgModule({
   declarations: [RolesPermissionsComponent],
@@ -13,7 +14,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     RolesPermissionsRoutingModule,
     MatTooltipModule,
     MatExpansionModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    SpinnerComponent
   ],
   providers: [],
 })

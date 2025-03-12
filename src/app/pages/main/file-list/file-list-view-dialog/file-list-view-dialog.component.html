@@ -1,4 +1,7 @@
+<app-spinner *ngIf="isLoading"></app-spinner>
+
 <div class="w-full h-full flex items-center justify-center bg-[rgb(227,227,227)]">
+
     <div class="bg-[rgb(227,227,227)] h-full w-full flex flex-col rounded-b-xl">
         <div class="flex flex-row bg-[#E8E8E8] drop-shadow-lg">
             <div
@@ -19,7 +22,6 @@
                 <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">Buscar</p>
             </div>
         </div>
-        <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
         <div class="table-container !overflow-x-auto">
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mt-3 md:mt-0">
                 <ng-container *ngFor="let displayedColumn of displayedColumns" [matColumnDef]="displayedColumn">

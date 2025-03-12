@@ -57,6 +57,7 @@ import { CatInternalVersionService } from 'src/app/services/cat-internal-version
 import { PatentingVersionsComponent } from './patenting-versions/patenting-versions.component';
 import { WholeSalesVersionsComponent } from './wholesale-versions/wholesale-versions.component';
 import { UpdateOfmmsDialogComponent } from './ofmms/update-ofmms-dialog/update-ofmms.component';
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +99,7 @@ import { UpdateOfmmsDialogComponent } from './ofmms/update-ofmms-dialog/update-o
     PatentingVersionDialogComponent,
     WholesaleVersionsDialogComponent, 
   ],
-  imports: [CommonModule, CatalogsRoutingModule, SharedModule, ClipboardModule],
+  imports: [CommonModule, CatalogsRoutingModule, SharedModule, ClipboardModule,SpinnerComponent],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'es-MX'},
     {

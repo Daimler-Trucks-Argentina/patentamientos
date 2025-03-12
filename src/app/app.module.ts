@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -29,6 +29,7 @@ import { WholesaleVersionService } from './services/wholesale-versions/wholesale
 import { CustomPaginatorIntl } from './shared/components/paginator/custom-paginator-intl';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 
 @NgModule({
   declarations: [AppComponent],
@@ -41,6 +42,7 @@ import { MatTableModule } from '@angular/material/table';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    SpinnerComponent
   ],
   providers: [
     { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl },
@@ -66,8 +68,9 @@ import { MatTableModule } from '@angular/material/table';
     ClosureService,
     SegmentationPlateService,
     ReportService,
-    WholesaleVersionService
+    WholesaleVersionService,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

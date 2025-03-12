@@ -1,3 +1,4 @@
+<app-spinner *ngIf="isLoading"></app-spinner>
 <div
     class="{{ fullScreen.isEnabled ? 'h-fit w-screen' : 'h-full w-full' }} flex flex-col items-center justify-center p-4 overflow-hidden">
     <div
@@ -8,7 +9,6 @@
                 matTooltipPosition="above" (click)="toggleFullscreen()"><mat-icon>{{
                     fullScreen.isEnabled ? 'fullscreen_exit' : 'fullscreen'}}</mat-icon></button>
         </div>
-        <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
         <div class="flex flex-col md:flex-row w-full items-center bg-[#E8E8E8]">
             <div class="flex flex-row w-full">
                 <div
