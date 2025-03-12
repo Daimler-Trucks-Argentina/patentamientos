@@ -46,8 +46,10 @@ export class ComercialReportsComponent {
   };
   code: any = { value: '' };
   form = new FormGroup({
-    filterType: new FormControl<any>(null),
-    fromDate: new FormControl(null, { validators: [Validators.required] }),
+      filterType: new FormControl<any>(null),
+      searchType: new FormControl<any>(null),
+      searchValue: new FormControl<any>(null),
+      fromDate: new FormControl(null, { validators: [Validators.required] }),
       toDate: new FormControl(null, { validators: [Validators.required] }),
       year: new FormControl<any>(null),
       month: new FormControl<any>(null),
@@ -138,6 +140,7 @@ export class ComercialReportsComponent {
   pageNumber: number = 1;
   totalItems?: number;
 
+
   constructor(
     public dialog: MatDialog,
     private sweetAlert: SweetAlert2Helper,
@@ -150,7 +153,6 @@ export class ComercialReportsComponent {
   }
 
   ngOnInit(): void {
-      this.getReports()
   }
 
   ngAfterViewInit() {
@@ -168,70 +170,77 @@ export class ComercialReportsComponent {
     if (!this.fullScreen.isEnabled) {
       this.fullScreen.isEnabled = true;
       if (!screenfull.isFullscreen) screenfull.toggle();
-      this.getReports();
+      this.searchReports();
       this.pageSize = 150;
       this.authService.onDrawerOpenedEmitter.emit(false);
       this.authService.onHeaderEmitter.emit(false);
     } else {
       this.fullScreen.isEnabled = false;
-      this.getReports();
+      this.searchReports();
       this.pageSize = 5;
       this.authService.onDrawerOpenedEmitter.emit(true);
       this.authService.onHeaderEmitter.emit(true);
       if (screenfull.isFullscreen) screenfull.toggle();
     }
   }
-
-  getReports(pageNumber?: number, pageSize?: number) {
-      this.isLoading = true;
-      const dates = this.form.getRawValue();
-      const dateFrom: string = dates.fromDate
-        ? new Date(dates.fromDate!).toISOString()
-        : '';
-      const dateTo: string = dates.toDate
-        ? new Date(dates.toDate!).toISOString()
-        : '';
-        const selectedYear = this.form.value.year; 
-        const selectedMonth = this.form.value.month; 
-      this.reportService
-        .getComercialReport(
-          dateFrom,
-          dateTo,
-          (pageNumber = this.pageNumber),
-          (pageSize = this.pageSize),
-          selectedYear,
-          selectedMonth,
-        )
-        .subscribe({
-          next: (response) => {
-            this.dataSource = new MatTableDataSource<any>(
-              response.results.map((item: { [x: string]: any; }) => ({
-                ...item,
-                anioPeriodoCierre: item['añoPeriodoCierre'],
-                fechaPatentamiento: item['fechaPatentamiento'] ? this.formatDate(item['fechaPatentamiento']) : '-',
-                fechaCarga: item['fechaCarga'] ? this.formatDate(item['fechaCarga']) : '-'
-              }))
-            );
-            this.totalItems = response.totalItems;
-           // this.pageNumber = response.pageNumber;
-            this.pageSize = response.pageSize;
   
+  searchReports(pageNumber?: number, pageSize?: number) {
+    this.isLoading = true;
+    const dates = this.form.getRawValue();
+    const dateFrom: string = dates.fromDate ? new Date(dates.fromDate!).toISOString() : '';
+    const dateTo: string = dates.toDate ? new Date(dates.toDate!).toISOString() : '';
+    const selectedYear = this.form.value.year;
+    const selectedMonth = this.form.value.month;
   
-            if (this.dataSource.data.length === 0) {
-              Toast.fire({
-                icon: 'info',
-                title: 'No se encontraron resultados.',
-              });
-            }
-            this.isLoading = false;
-          },
-          error: (err) => {
-            this.isLoading = false;
-            const error = ErrorHelper.getErrorMessage(err);
-            this.sweetAlert.error('Ha ocurrido un error!', error, null, true);
-          },
-        });
+    let plate = null, chasis = null, ofmm = null, cuitTitular = null;
+  
+    switch (dates.searchType) {
+      case 'plate':
+        plate = dates.searchValue;
+        break;
+      case 'chasis':
+        chasis = dates.searchValue;
+        break;
+      case 'ofmm':
+        ofmm = dates.searchValue;
+        break;
+      case 'cuitTitular':
+        cuitTitular = dates.searchValue;
+        break;
     }
+  
+    this.reportService
+      .getComercialReport(dateFrom, dateTo, 1, this.pageSize, selectedYear, selectedMonth, plate, chasis, ofmm, cuitTitular)
+      .subscribe({
+        next: (response) => {
+          this.dataSource = new MatTableDataSource<any>(
+            response.results.map((item: { [x: string]: any; }) => ({
+              ...item,
+              anioPeriodoCierre: item['añoPeriodoCierre'],
+              fechaPatentamiento: item['fechaPatentamiento'] ? this.formatDate(item['fechaPatentamiento']) : '-',
+              fechaCarga: item['fechaCarga'] ? this.formatDate(item['fechaCarga']) : '-'
+            }))
+          );
+  
+          this.totalItems = response.totalItems;
+          this.pageSize = response.pageSize;
+  
+          if (this.dataSource.data.length === 0) {
+            Toast.fire({
+              icon: 'info',
+              title: 'No se encontraron resultados.',
+            });
+          }
+          this.isLoading = false;
+        },
+        error: (err) => {
+          this.isLoading = false;
+          const error = ErrorHelper.getErrorMessage(err);
+          this.sweetAlert.error('Ha ocurrido un error!', error, null, true);
+        },
+      });
+  }
+  
 
     formatDate(dateString: string): string {
       const date = new Date(dateString);
@@ -244,7 +253,7 @@ export class ComercialReportsComponent {
     onPageChange(event: PageEvent): void {
       this.pageSize = event.pageSize;
       this.pageNumber = event.pageIndex + 1;
-      this.getReports(this.pageNumber);
+      this.searchReports(this.pageNumber);
     }
 
     toggleFilter() {

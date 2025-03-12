@@ -106,7 +106,6 @@ export class DailyReportComponent {
   }
 
   ngOnInit(): void {
-      this.getReports()
   }
 
   ngAfterViewInit() {

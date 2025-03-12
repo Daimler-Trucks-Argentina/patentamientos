@@ -7,13 +7,15 @@ import { FileListViewDialogComponent } from './file-list-view-dialog/file-list-v
 import { FileListComponent } from './file-list.component';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
 
 @NgModule({
   declarations: [FileListComponent, FileListDialogComponent, FileListViewDialogComponent],
   imports: [
     FileListRoutingModule,
     SharedModule,
-    CommonModule 
+    CommonModule,
+    SpinnerComponent
   ],
   providers: [DatePipe, { provide: MAT_DATE_LOCALE, useValue: 'es-MX' }],
 })

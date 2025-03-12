@@ -5,6 +5,7 @@ import { UsersRoutingModule } from './users-routing.module';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
 
 @NgModule({
   declarations: [UsersComponent],
@@ -13,7 +14,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     UsersRoutingModule,
     MatTableModule,
     MatPaginatorModule,
-    MatTooltipModule
+    MatTooltipModule,
+    SpinnerComponent
   ],
   providers: [],
 })

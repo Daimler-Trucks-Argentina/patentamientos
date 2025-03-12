@@ -4,6 +4,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { AddUserComponent } from './add-user.component';
 import { AddUserRoutingModule } from './add-user-routing.module';
 import {MatSelectModule} from '@angular/material/select';
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
 
 @NgModule({
   declarations: [AddUserComponent],
@@ -11,7 +12,8 @@ import {MatSelectModule} from '@angular/material/select';
     SharedModule,
     MatTooltipModule,
     AddUserRoutingModule,
-    MatSelectModule
+    MatSelectModule,
+    SpinnerComponent
   ],
   providers: [],
 })

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { CategoryService } from 'src/app/services/categories/category.service';
 import { RuleService } from 'src/app/services/rules/rule.service';
@@ -25,6 +25,7 @@ import { PatentingVersionService } from 'src/app/services/patenting-versions/pat
 import { ComercialReportsComponent } from './reports/comercial-report/comercial-report.component';
 import { ParkReportComponent } from './reports/park-report/park-report.component';
 import { DailyReportComponent } from './reports/daily-report/daily-report.component';
+import { SpinnerComponent } from 'src/app/shared/components/spinner/spinner.component';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { DailyReportComponent } from './reports/daily-report/daily-report.compon
     PatentingsReportingComponent,
     ComercialReportsComponent,
     ParkReportComponent,
-    DailyReportComponent
+    DailyReportComponent,
+    
   ],
   imports: [
     SharedModule,
@@ -50,6 +52,7 @@ import { DailyReportComponent } from './reports/daily-report/daily-report.compon
     MatSidenavModule,
     NavigationModule,
     FileListModule, 
+    SpinnerComponent
   ],
   providers: [
     RuleService,
@@ -60,5 +63,6 @@ import { DailyReportComponent } from './reports/daily-report/daily-report.compon
     TmmvService,
     PatentingVersionService
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class MainModule {}
