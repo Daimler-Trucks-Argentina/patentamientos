@@ -24,7 +24,7 @@ export class ReportService extends BaseService<any> {
     );
   }
 
-  public getReport(
+  public getComercialReport(
     dateFrom: string | null,
     dateTo: string,
     pageNumber: number | undefined,
@@ -40,6 +40,34 @@ export class ReportService extends BaseService<any> {
     &PageSize=${pageSize}
     &AñoPeriodoCierre=${anioPeriodoCierre}
     &MesPeriodoCierre=${mesPeriodoCierre}`;
+    return this.HttpClient.get(url);
+  }
+  public getParkReport(
+    pageNumber: number | undefined,
+    pageSize: number | undefined,
+    year: number | undefined,
+    month: number | undefined
+  ): Observable<any> {
+    const url: string = `${
+      this.controller
+    }/VehicleFleet?
+    PageSize=${pageSize}
+    &PageNumber=${pageNumber}
+    &year=${year}
+    &month=${month}`;
+    return this.HttpClient.get(url);
+  }
+  public getDailyReport(
+    pageNumber: number | undefined,
+    pageSize: number | undefined,
+    patentingDate: string,
+  ): Observable<any> {
+    const url: string = `${
+      this.controller
+    }/daily?
+    PageSize=${pageSize}
+    &PageNumber=${pageNumber}
+    &FechaPatentamiento=${patentingDate}`;
     return this.HttpClient.get(url);
   }
 }

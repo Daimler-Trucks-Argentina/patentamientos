@@ -5,9 +5,9 @@ import { PatentingComponent } from './patenting/patenting.component';
 import { SegmentationProcessComponent } from './segmentation-process/segmentation-process.component'; 
 import { SalesProcessComponent } from './sales-process/sales-process.component';
 import { SpecialSalesProcessComponent } from './special-sales-process/special-sales-process.component'; 
-import { ExtractionsReportingComponent } from './catalogs/reportings/extractions-reporting/extractions-reporting.component';
-import { PatentingsReportingComponent } from './catalogs/reportings/patentings-reporting/patentings-reporting.component';
-import { CompleteReportsComponent } from './complete-reports/complete-reports.component';
+import { ComercialReportsComponent } from './reports/comercial-report/comercial-report.component';
+import { ParkReportComponent } from './reports/park-report/park-report.component';
+import { DailyReportComponent } from './reports/daily-report/daily-report.component';
 
 
 const routes: Routes = [
@@ -85,6 +85,18 @@ const routes: Routes = [
         component: SpecialSalesProcessComponent,
       },
       {
+        path: 'reports/comercial-report',
+        component: ComercialReportsComponent,
+      },
+      {
+        path: 'reports/daily-report',
+        component: DailyReportComponent,
+      },
+      /*{
+        path: 'reports/park-report',
+        component: ParkReportComponent,
+      },*/
+      {
         path: '',
         redirectTo: '/pages/main/file-list',
         pathMatch: 'full',
@@ -98,10 +110,7 @@ const routes: Routes = [
         path: 'reporting/patentings',
         component: PatentingsReportingComponent,
       },*/
-      {
-        path: 'reports/comercial-report',
-        component: CompleteReportsComponent,
-      },
+      
     ],
   },
 ];

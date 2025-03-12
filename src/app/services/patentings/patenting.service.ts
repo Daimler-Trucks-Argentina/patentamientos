@@ -159,7 +159,15 @@ export class PatentingService extends BaseService<Patenting> {
     pageSize: number | undefined
   ): Observable<any> {
     // Construcción de la URL con query params
-    const url: string = `${this.controller}/patentings-filtered?dateFrom=${dateFrom ?? ''}&dateTo=${dateTo}&lastDischarge=${lastDischarge}&errorType=${errorType ?? ''}&fileId=${fileId ?? ''}&pageNumber=${pageNumber}&pageSize=${pageSize}`;
+    const url: string = `${this.controller}
+    /patentings-filtered?
+    dateFrom=${dateFrom ?? ''}
+    &dateTo=${dateTo}
+    &lastDischarge=${lastDischarge}
+    &errorType=${errorType ?? ''}
+    &fileId=${fileId ?? ''}
+    &pageNumber=${pageNumber}
+    &pageSize=${pageSize}`;
     return this.HttpClient.get(url)
   }
   
