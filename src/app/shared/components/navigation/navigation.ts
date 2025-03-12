@@ -241,6 +241,7 @@ export const navigation: Navigation[] = [
       },*/
     ],
   },
+  /*
   {
     id: 'security',
     title: 'Seguridad',
@@ -271,4 +272,5 @@ export const navigation: Navigation[] = [
       },
     ],
   },
+  */
 ];
