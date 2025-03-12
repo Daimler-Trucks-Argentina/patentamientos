@@ -22,7 +22,9 @@ import { TmmvService } from 'src/app/services/tmmvs/tmmv.service';
 import { PatentingsReportingComponent } from './catalogs/reportings/patentings-reporting/patentings-reporting.component';
 import { ExtractionsReportingComponent } from './catalogs/reportings/extractions-reporting/extractions-reporting.component';
 import { PatentingVersionService } from 'src/app/services/patenting-versions/patenting-version.service';
-import { CompleteReportsComponent } from './complete-reports/complete-reports.component';
+import { ComercialReportsComponent } from './reports/comercial-report/comercial-report.component';
+import { ParkReportComponent } from './reports/park-report/park-report.component';
+import { DailyReportComponent } from './reports/daily-report/daily-report.component';
 
 
 @NgModule({
@@ -36,7 +38,9 @@ import { CompleteReportsComponent } from './complete-reports/complete-reports.co
     SpecialSalesProcessComponent,    
     ExtractionsReportingComponent,
     PatentingsReportingComponent,
-    CompleteReportsComponent
+    ComercialReportsComponent,
+    ParkReportComponent,
+    DailyReportComponent
   ],
   imports: [
     SharedModule,

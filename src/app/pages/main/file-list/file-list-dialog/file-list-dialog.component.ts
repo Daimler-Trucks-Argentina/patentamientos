@@ -166,6 +166,7 @@ export class FileListDialogComponent implements OnInit, OnDestroy {
       next: ([fileTypes]) => {
         console.log(`${this.TAG} > getData > fileTypes`, fileTypes);
         this.fileTypes = fileTypes;
+        console.log(this.fileTypes)
       },
       error: (err) => {
         console.error(`FileListDialog > getData > error`, err);

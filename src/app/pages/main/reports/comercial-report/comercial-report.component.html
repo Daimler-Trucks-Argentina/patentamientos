@@ -217,10 +217,10 @@
                 
                 <ng-container matColumnDef="plate">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Plate
+                        Dominio
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Plate:</span>
+                        <span class="mobile-label">Dominio:</span>
                         {{element.plate ?? '-'}}
                     </td>
                 </ng-container>
@@ -230,7 +230,7 @@
                         Chasis
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Chasis:</span>
+                        <span class="mobile-label">Chasis/VIN:</span>
                         {{element.chasis ?? '-'}}
                     </td>
                 </ng-container>
@@ -247,100 +247,100 @@
                 
                 <ng-container matColumnDef="mercedesTerminalId">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Mercedes Terminal ID
+                        Terminal
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Mercedes Terminal ID:</span>
+                        <span class="mobile-label">Terminal:</span>
                         {{element.mercedesTerminalId ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="descripcionTerminal">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Descripción Terminal
+                        Descr. Terminal
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Descripción Terminal:</span>
+                        <span class="mobile-label">Descr. Terminal:</span>
                         {{element.descripcionTerminal ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="mercedesMarcaId">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Mercedes Marca ID
+                        Marca
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Mercedes Marca ID:</span>
+                        <span class="mobile-label">Marca:</span>
                         {{element.mercedesMarcaId ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="descripcionMarca">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Descripción Marca
+                        Desc. Marca
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Descripción Marca:</span>
+                        <span class="mobile-label">Desc. Marca:</span>
                         {{element.descripcionMarca ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="mercedesModeloId">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Mercedes Modelo ID
+                        Modelo
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Mercedes Modelo ID:</span>
+                        <span class="mobile-label">Modelo:</span>
                         {{element.mercedesModeloId ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="descripcionModelo">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Descripción Modelo
+                        Desc. Model
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Descripción Modelo:</span>
+                        <span class="mobile-label">Desc. Model:</span>
                         {{element.descripcionModelo ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="versionPatentamiento">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Versión Patentamiento
+                        Version
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Versión Patentamiento:</span>
+                        <span class="mobile-label">Version:</span>
                         {{element.versionPatentamiento ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="descripcionVerPat">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Descripción Ver Pat
+                        Desc. Version
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Descripción Ver Pat:</span>
+                        <span class="mobile-label">Desc. Version:</span>
                         {{element.descripcionVerPat ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="segCategoria">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Seg Categoría
+                        Categoria
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Seg Categoría:</span>
+                        <span class="mobile-label">Categoria:</span>
                         {{element.segCategoria ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="categoriaDescription">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Categoría Description
+                        Desc. Categoria
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Categoría Description:</span>
+                        <span class="mobile-label">Desc. Categoria:</span>
                         {{element.categoriaDescription ?? '-'}}
                     </td>
                 </ng-container>
@@ -357,50 +357,50 @@
                 
                 <ng-container matColumnDef="segmentoDescription">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Segmento Description
+                        Desc. Segmento
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Segmento Description:</span>
+                        <span class="mobile-label">Desc. Segmento:</span>
                         {{element.segmentoDescription ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="bodyStyle">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Body Style
+                        BodyStyle
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Body Style:</span>
+                        <span class="mobile-label">BodyStyle:</span>
                         {{element.bodyStyle ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="bodyStyleDescription">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Body Style Description
+                        Desc. BodyStyle
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Body Style Description:</span>
+                        <span class="mobile-label">Desc. BodyStyle:</span>
                         {{element.bodyStyleDescription ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="mercedesConfiguration">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Mercedes Configuration
+                        Carroceria
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Mercedes Configuration:</span>
+                        <span class="mobile-label">Carroceria:</span>
                         {{element.mercedesConfiguration ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="carreoceriaDescription">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Carrocería Description
+                        Desc. Carreoceria
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Carrocería Description:</span>
+                        <span class="mobile-label">Desc. Carreoceria:</span>
                         {{element.carreoceriaDescription ?? '-'}}
                     </td>
                 </ng-container>
@@ -534,10 +534,10 @@
                 </ng-container>
                 <ng-container matColumnDef="cpTitular">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Codigo Postal Titular
+                        CP Titular
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Codigo Postal Titular:</span>
+                        <span class="mobile-label">CP Titular:</span>
                         {{element.cpTitular ?? '-'}}
                     </td>
                 </ng-container>
@@ -552,29 +552,29 @@
                 </ng-container>
                 <ng-container matColumnDef="provinciaTitularDescription">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Provincia Titular Descripcion
+                        Desc. Provincia Titular
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Provincia Titular Descripcion:</span>
+                        <span class="mobile-label">Desc. Provincia Titular:</span>
                         {{element.provinciaTitularDescription ?? '-'}}
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="dptoTitular">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Departamento Titular
+                        Dpto. Titular
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Departamento Titular:</span>
+                        <span class="mobile-label">Dpto. Titular:</span>
                         {{element.dptoTitular ?? '-'}}
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="deptoTitularDescription">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Departamento Titular Descripcion
+                        Desc. Depto Titular
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Departamento Titular Descripcion:</span>
+                        <span class="mobile-label">Desc. Depto Titular:</span>
                         {{element.deptoTitularDescription ?? '-'}}
                     </td>
                 </ng-container>
@@ -590,10 +590,10 @@
                 </ng-container>
                 <ng-container matColumnDef="localidadTitularDescription">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Localidad Titular Descripcion
+                        Desc. Localidad Titular
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Localidad Titular Descripcion:</span>
+                        <span class="mobile-label">Desc. Localidad Titular:</span>
                         {{element.localidadTitularDescription ?? '-'}}
                     </td>
                 </ng-container>
@@ -608,34 +608,34 @@
                 </ng-container>
                 <ng-container matColumnDef="regSecsDescription">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Reg Secs Descripcion
+                        Desc. Reg Secs
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Reg Secs Descripcion:</span>
+                        <span class="mobile-label">Desc. Reg Secs:</span>
                         {{element.regSecsDescription ?? '-'}}
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="registroDepto">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Registro Depto
+                        Registro/Depto
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Registro Depto:</span>
+                        <span class="mobile-label">Registro/Depto:</span>
                         {{element.registroDepto ?? '-'}}
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="registroLocalidad">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Registro Localidad
+                        Registro/Localidad
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Registro Localidad:</span>
+                        <span class="mobile-label">Registro/Localidad:</span>
                         {{element.registroLocalidad ?? '-'}}
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="registroProvincia">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Registro Provincia 
+                        Registro/Provincia 
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
                         <span class="mobile-label">Registro Provincia :</span>
@@ -644,64 +644,64 @@
                 </ng-container>
                 <ng-container matColumnDef="conceZonaCamion">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Conce Zona Camion
+                        Conce. Zona Camion
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Conce Zona Camion:</span>
+                        <span class="mobile-label">Conce. Zona Camion:</span>
                         {{element.conceZonaCamion ?? '-'}}
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="descCEZCamion">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        descCEZCamion
+                        Desc. CE z/Camion
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">descCEZCamion:</span>
+                        <span class="mobile-label">Desc. CE z/Camion:</span>
                         {{element.descCEZCamion ?? '-'}}
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="cuitTitular">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Cuit Titular
+                        CUIT Titular
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Cuit Titular:</span>
+                        <span class="mobile-label">CUIT Titular:</span>
                         {{element.cuitTitular ?? '-'}}
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="tipoClienteGub">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Tipo ClienteGub
+                        Tipo Cliente Gub
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Tipo ClienteGub:</span>
+                        <span class="mobile-label">Tipo Cliente Gub:</span>
                         {{element.tipoClienteGub ?? '-'}}
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="tipoClienteGubDescription">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Tipo ClienteGub Descripcion
+                        Desc. Tipo Cliente Gub
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Tipo ClienteGub Descripcion:</span>
+                        <span class="mobile-label">Desc. Tipo Cliente Gub:</span>
                         {{element.tipoClienteGubDescription ?? '-'}}
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="categoriaGubernamen">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Categoria Gubernamental
+                        CCategoria Gubernamen
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Categoria Gubernamental:</span>
+                        <span class="mobile-label">CCategoria Gubernamen:</span>
                         {{element.categoriaGubernamen ?? '-'}}
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="catGubDescription">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Cat. Gub. Descripcion
+                        Desc. Cat. Gub.
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Cat. Gub. Descripcion:</span>
+                        <span class="mobile-label">Desc. Cat. Gub.:</span>
                         {{element.catGubDescription ?? '-'}}
                     </td>
                 </ng-container>
@@ -746,80 +746,80 @@
                 
                 <ng-container matColumnDef="clasificacionCUITDescription">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Clasificación CUIT Description
+                        Desc. Clasificacion CUIT
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Clasificación CUIT Description:</span>
+                        <span class="mobile-label">Desc. Clasificacion CUIT:</span>
                         {{element.clasificacionCUITDescription ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="codpaispr">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Código País PR
+                        CODPAISPR
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Código País PR:</span>
+                        <span class="mobile-label">CODPAISPR:</span>
                         {{element.codpaispr ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="codpaisfa">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Código País FA
+                        CODPAISFA
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Código País FA:</span>
+                        <span class="mobile-label">CODPAISFA:</span>
                         {{element.codpaisfa ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="codauto">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Código Auto
+                        CODAUTO
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Código Auto:</span>
+                        <span class="mobile-label">CODAUTO:</span>
                         {{element.codauto ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="codfab">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Código Fabricante
+                        CODFAB
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Código Fabricante:</span>
+                        <span class="mobile-label">CODFAB:</span>
                         {{element.codfab ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="codmar">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Código Marca
+                        CODMAR
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Código Marca:</span>
+                        <span class="mobile-label">CODMAR:</span>
                         {{element.codmar ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="codmod">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Código Modelo
+                        CODMOD
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Código Modelo:</span>
+                        <span class="mobile-label">CODMOD:</span>
                         {{element.codmod ?? '-'}}
                     </td>
                 </ng-container>
                 
                 <ng-container matColumnDef="codpro">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="gotham-bold text-[#152A43] uppercase">
-                        Código Producto
+                        CODPRO
                     </th>
                     <td mat-cell *matCellDef="let element" class="gotham-book info">
-                        <span class="mobile-label">Código Producto:</span>
+                        <span class="mobile-label">CODPRO:</span>
                         {{element.codpro ?? '-'}}
                     </td>
                 </ng-container>

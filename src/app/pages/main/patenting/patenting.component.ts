@@ -257,6 +257,7 @@ export class PatentingComponent implements OnInit, AfterViewInit {
 
     this._patentingService
       .getPatentingsByFilter(dateFrom, dateTo, lastDischarge, errorType, fileId, 1, this.totalItems)
+
       .subscribe({
         next: (response) => {
           console.log('Datos recibidos:', response.results);

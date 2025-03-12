@@ -225,6 +225,20 @@ export const navigation: Navigation[] = [
         url: '/pages/main/reports/comercial-report',
         permission: '00000000-0000-0000-0000-000000000001',
       },
+      {
+        id: 'daily-report',
+        title: 'Reporte Diario',
+        type: 'item',
+        url: '/pages/main/reports/daily-report',
+        permission: '00000000-0000-0000-0000-000000000001',
+      },
+      /*{
+        id: 'park-report',
+        title: 'Reporte Parque',
+        type: 'item',
+        url: '/pages/main/reports/park-report',
+        permission: '00000000-0000-0000-0000-000000000001',
+      },*/
     ],
   },
   {

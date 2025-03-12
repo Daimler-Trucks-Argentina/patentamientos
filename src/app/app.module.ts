@@ -23,10 +23,12 @@ import { SegmentationPlateService } from './services/segmentation-plates/segment
 import { TerminalService } from './services/terminals/terminal.service';
 import { OfmmService } from './services/ofmms/ofmm.service';
 import { getSpanishPaginatorIntl } from './core/helpers/custom-paginator.helper';
-import { MatPaginatorIntl } from '@angular/material/paginator';
+import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { ReportService } from './services/reports/reports.service';
 import { WholesaleVersionService } from './services/wholesale-versions/wholesale-version.service';
 import { CustomPaginatorIntl } from './shared/components/paginator/custom-paginator-intl';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,6 +38,9 @@ import { CustomPaginatorIntl } from './shared/components/paginator/custom-pagina
     BrowserAnimationsModule,
     HttpClientModule,
     MatDialogModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
   providers: [
     { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl },
