@@ -36,27 +36,6 @@
           </p>
         </div>
         <div class="flex w-full items-center flex-col md:flex-row ml-3 pt-5">
-          <div class="relative flex flex-row mt-6 md:-mt-5 mr-5 md:mr-0">
-            <input
-              (keyup)="applyFilter($event)"
-              #input
-              class="gotham-book h-10 {{
-                fullScreen.isEnabled ? 'md:w-72' : 'md:w-56'
-              }} w-40 rounded-full pl-3 drop-shadow-xl pr-7 z-10"
-            />
-            <div
-              class="flex flex-row items-center -ml-6 bg-[#294A71] drop-shadow-xl h-10 rounded-full w-14 md:w-28 justify-center z-20"
-            >
-              <mat-icon class="text-white">search</mat-icon>
-              <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">
-                Buscar
-              </p>
-              <mat-icon class="text-white cursor-pointer" (click)="openFilter()"
-                >expand_more</mat-icon
-              >
-            </div>
-          </div>
-
           <div
             class="w-full flex justify-center md:justify-end mb-2 md:mb-0 flex-row gap-4 md:pl-4 pt-7 md:pt-0 pr-5 md:pr-5"
           >
@@ -74,18 +53,14 @@
                 Filtrar
               </p>
             </button>
-
-            <button
-              class="flex flex-row items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
-              [disabled]="isLoading"
-              (click)="getReports()"
-            >
-              <mat-icon class="text-white">toc</mat-icon>
-              <p class="gotham-book text-white pt-2.5 pl-1 hidden md:inline">
-                Ver todos
-              </p>
-            </button>
-
+                <button
+                  class="flex items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
+                  (click)="searchReports()"
+                  [disabled]="isLoading"
+                >
+                  <mat-icon class="text-white">search</mat-icon>
+                  <p class="gotham-book text-white pt-2.5 pl-1 md:inline">Buscar</p>
+                </button>
             <button
               class="flex flex-row items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
               [disabled]="isLoading"
@@ -105,16 +80,28 @@
             <mat-expansion-panel class="bg-[rgb(227,227,227)]">
               <div class="flex justify-center items-center flex-col md:flex-row">
                 <form
-                  class="flex items-center justify-center w-full flex-col md:flex-row gap-x-2 mt-2 -mb-6"
+                  class="flex items-center justify-center w-full md:flex-row gap-x-2 mt-2 -mb-6"
                   [formGroup]="form"
                 >
+                <div class="flex justify-center items-center flex-col md:flex-row">
+                <span class="gotham-book text-black pt-2.5 pl-1 hidden md:inline mr-8 mb-8">Buscar por:</span>
+                <div class="relative flex flex-row mt-6 md:-mt-5 mr-5 md:mr-0">
+                    <select formControlName="searchType" class="gotham-book h-10 w-32 rounded-l-full pl-3 drop-shadow-xl">
+                      <option class="gotham-book text-black" value="plate">Dominio</option>
+                      <option class="gotham-book text-black" value="chasis">Chasis</option>
+                      <option class="gotham-book text-black" value="ofmm">OFMM</option>
+                      <option class="gotham-book text-black" value="cuitTitular">CUIT Titular</option>
+                    </select>
+                </div>
+                    <input formControlName="searchValue" class="gotham-book h-10 w-40 md:w-56 rounded-r-full pl-3 drop-shadow-xl pr-7 z-10" />
+                  </div>
                   <!-- Selección de filtro -->
                   <div class="flex flex-row gap-x-6 md:gap-x-2 items-center">
                     <span class="gotham-book text-black pt-2.5 pl-1 hidden md:inline mr-8 mb-8">Filtrar por:</span>
                     <mat-form-field class="w-36 md:w-48 h-14">
                       <mat-select formControlName="filterType">
-                        <mat-option value="range">Desde - Hasta</mat-option>
-                        <mat-option value="period">Por Periodo</mat-option>
+                        <mat-option class="gotham-book text-black" value="range">Desde - Hasta</mat-option>
+                        <mat-option class="gotham-book text-black" value="period">Por Periodo</mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
@@ -155,18 +142,6 @@
                     <mat-form-field class="w-36 md:w-48 h-14">
                       <input matInput [formControl]="form.controls.year" type="number" placeholder="Año" min="1900" max="2100" />
                     </mat-form-field>
-                  </div>
-          
-                  <div class="flex flex-row gap-x-4 md:gap-x-2"></div>
-                  <div class="ml-3 mt-2 md:mt-0 mb-3 md:mb-0">
-                    <button
-                      class="flex items-center bg-[#294A71] drop-shadow-xl -mt-5 h-10 p-3 rounded-full w-auto justify-center hover:cursor-pointer hover:bg-[#415772] disabled:bg-[#404750] disabled:cursor-default"
-                      (click)="getReports()"
-                      [disabled]="isLoading"
-                    >
-                      <mat-icon class="text-white">search</mat-icon>
-                      <p class="gotham-book text-white pt-2.5 pl-1 md:inline">Buscar</p>
-                    </button>
                   </div>
                   <div class="ml-3 mt-2 md:mt-0 mb-3 md:mb-0">
                     <button
@@ -915,7 +890,7 @@
                 </tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="height mat-row row-hover"></tr>
                 <tr *matNoDataRow>
-                    <td class="mat-cell" colspan="5">No se encontró el resultado: "{{input.value}}"</td>
+                    <td class="mat-cell" colspan="5">No se encontró el resultado</td>
                 </tr>
             </mat-table>
         </div>

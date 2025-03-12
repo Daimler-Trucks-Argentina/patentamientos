@@ -25,12 +25,16 @@ export class ReportService extends BaseService<any> {
   }
 
   public getComercialReport(
-    dateFrom: string | null,
-    dateTo: string,
-    pageNumber: number | undefined,
-    pageSize: number | undefined,
-    anioPeriodoCierre: number | null,
-    mesPeriodoCierre: number,
+    dateFrom?: string | null,
+    dateTo?: string | null,
+    pageNumber?: number | undefined,
+    pageSize?: number | undefined,
+    anioPeriodoCierre?: number | null,
+    mesPeriodoCierre?: number | null,
+    plate?: string | null,
+    chasis?: string | null,
+    ofmm?: string | null,
+    cuitTitular?: string | null,
   ): Observable<any> {
     const url: string = `${
       this.controller
@@ -38,8 +42,12 @@ export class ReportService extends BaseService<any> {
     &FechaPatentamientoHasta=${dateTo ?? ''}
     &PageNumber=${pageNumber}
     &PageSize=${pageSize}
-    &AñoPeriodoCierre=${anioPeriodoCierre}
-    &MesPeriodoCierre=${mesPeriodoCierre}`;
+    &AñoPeriodoCierre=${anioPeriodoCierre  ?? ''}
+    &MesPeriodoCierre=${mesPeriodoCierre  ?? ''}
+    &Plate=${plate  ?? ''}
+    &Chasis=${chasis ?? ''}
+    &Ofmm=${ofmm ?? ''}
+    &CuitTitular=${cuitTitular ?? ''}`;
     return this.HttpClient.get(url);
   }
   public getParkReport(
