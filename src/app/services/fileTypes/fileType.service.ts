@@ -40,7 +40,7 @@ export class FileTypeService extends BaseService<FileType> {
   }
 
   public override getAll(): Observable<FileType[]> {
-    const url: string = `${this.controller}/all`;
+    const url: string = `${this.controller}/all2`;
     return this.HttpClient.get<BaseResponse<FileType>>(url).pipe(
       map((response) => {
         let entities: FileType[] = [];
