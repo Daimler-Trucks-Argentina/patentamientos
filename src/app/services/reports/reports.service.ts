@@ -71,10 +71,8 @@ export class ReportService extends BaseService<any> {
     patentingDate: string,
   ): Observable<any> {
     const url: string = `${
-      this.controller
-    }/daily?PageSize=${pageSize}
-    &PageNumber=${pageNumber}
-    &FechaPatentamiento=${patentingDate}`;
+    this.controller
+    }/daily?PageSize=${pageSize}&PageNumber=${pageNumber}&FechaPatentamiento=${patentingDate}`;
     return this.HttpClient.get(url);
   }
 }

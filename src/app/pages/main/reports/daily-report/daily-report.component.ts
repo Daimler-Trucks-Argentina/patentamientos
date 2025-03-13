@@ -204,7 +204,8 @@ export class DailyReportComponent {
           .getDailyReport(1, this.totalItems, patentingDate)
           .subscribe({
             next: (response) => {
-    
+              console.log("EXCELL", response.results)
+              console.log("EXCELL", this.totalItems)
               if (!response.results || response.results.length === 0) {
                 console.warn('No hay datos para exportar.');
                 this.isLoading = false;
