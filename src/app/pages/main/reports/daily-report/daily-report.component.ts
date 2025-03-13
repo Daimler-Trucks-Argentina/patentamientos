@@ -50,12 +50,6 @@ export class DailyReportComponent {
   form = new FormGroup({
       patentingDate: new FormControl(null, { validators: [Validators.required] }),
     });
-    get fromDate() {
-      return this.form.get('fromDate')!.value;
-    }
-    get toDate() {
-      return this.form.get('toDate')!.value;
-    }
     pipe: DatePipe;
   displayedColumns: string[] = [
             "mercedesTerminalId",
@@ -115,7 +109,6 @@ export class DailyReportComponent {
       this.paginator.page.subscribe((event: PageEvent) => {
         this.pageNumber = event.pageIndex + 1;
         this.pageSize = event.pageSize;
-        this.getReports();
       });
     }
 
@@ -131,7 +124,7 @@ export class DailyReportComponent {
     } else {
       this.fullScreen.isEnabled = false;
       this.getReports();
-      this.pageSize = 5;
+      this.pageSize = 50;
       this.authService.onDrawerOpenedEmitter.emit(true);
       this.authService.onHeaderEmitter.emit(true);
       if (screenfull.isFullscreen) screenfull.toggle();
@@ -143,20 +136,20 @@ export class DailyReportComponent {
       const dates = this.form.getRawValue();
       const patentingDate: string = dates.patentingDate
         ? new Date(dates.patentingDate!).toISOString()
-        : '';
-  
-        const year: number = 2024
-        const month: number = 1        
+        : '';      
     
         this.reportService
-          .getDailyReport( this.pageNumber, this.pageSize, patentingDate)
+          .getDailyReport( 
+          (pageNumber = this.pageNumber),
+          (pageSize = this.pageSize), 
+            patentingDate)
         .subscribe({
           next: (response) => {
             this.dataSource = new MatTableDataSource<any>(response.results);
             console.log(response.results)
             this.totalItems = response.totalItems;
-            this.pageNumber = response.pageNumber;
-            //this.pageSize = response.pageSize;
+            //this.pageNumber = response.pageNumber;
+            this.pageSize = response.pageSize;
   
   
             if (this.dataSource.data.length === 0) {
@@ -208,7 +201,7 @@ export class DailyReportComponent {
         const patentingDate: string = dates.patentingDate ? new Date(dates.patentingDate!).toISOString() : '';        
     
         this.reportService
-          .getDailyReport(1, 10, patentingDate)
+          .getDailyReport(1, this.totalItems, patentingDate)
           .subscribe({
             next: (response) => {
     

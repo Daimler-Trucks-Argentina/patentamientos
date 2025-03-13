@@ -72,8 +72,7 @@ export class ReportService extends BaseService<any> {
   ): Observable<any> {
     const url: string = `${
       this.controller
-    }/daily?
-    PageSize=${pageSize}
+    }/daily?PageSize=${pageSize}
     &PageNumber=${pageNumber}
     &FechaPatentamiento=${patentingDate}`;
     return this.HttpClient.get(url);

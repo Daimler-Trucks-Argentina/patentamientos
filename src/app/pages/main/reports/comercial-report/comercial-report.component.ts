@@ -45,14 +45,21 @@ export class ComercialReportsComponent {
     isFullscreen: false,
   };
   code: any = { value: '' };
-  form = new FormGroup({
-      filterType: new FormControl<any>(null),
-      searchType: new FormControl<any>(null),
-      searchValue: new FormControl<any>(null),
-      fromDate: new FormControl(null, { validators: [Validators.required] }),
-      toDate: new FormControl(null, { validators: [Validators.required] }),
+  dateForm = new FormGroup({
+      fromDate: new FormControl(null),
+      toDate: new FormControl(null),
       year: new FormControl<any>(null),
-      month: new FormControl<any>(null),
+      month: new FormControl<any>(null)
+
+      
+    });
+  form = new FormGroup({
+      filterType: new FormControl<any>('range'),
+      plate: new FormControl<any>(null),
+      chasis: new FormControl<any>(null),
+      ofmm: new FormControl<any>(null),
+      cuitTitular: new FormControl<any>(null),
+
       
     });
     get period() {
@@ -177,7 +184,7 @@ export class ComercialReportsComponent {
     } else {
       this.fullScreen.isEnabled = false;
       this.searchReports();
-      this.pageSize = 5;
+      this.pageSize = 50;
       this.authService.onDrawerOpenedEmitter.emit(true);
       this.authService.onHeaderEmitter.emit(true);
       if (screenfull.isFullscreen) screenfull.toggle();
@@ -186,31 +193,27 @@ export class ComercialReportsComponent {
   
   searchReports(pageNumber?: number, pageSize?: number) {
     this.isLoading = true;
-    const dates = this.form.getRawValue();
+    const dates = this.dateForm.getRawValue();
+
     const dateFrom: string = dates.fromDate ? new Date(dates.fromDate!).toISOString() : '';
     const dateTo: string = dates.toDate ? new Date(dates.toDate!).toISOString() : '';
-    const selectedYear = this.form.value.year;
-    const selectedMonth = this.form.value.month;
+    const selectedYear = this.dateForm.value.year;
+    const selectedMonth = this.dateForm.value.month;
   
-    let plate = null, chasis = null, ofmm = null, cuitTitular = null;
   
-    switch (dates.searchType) {
-      case 'plate':
-        plate = dates.searchValue;
-        break;
-      case 'chasis':
-        chasis = dates.searchValue;
-        break;
-      case 'ofmm':
-        ofmm = dates.searchValue;
-        break;
-      case 'cuitTitular':
-        cuitTitular = dates.searchValue;
-        break;
-    }
+    const plate = this.form.value.plate || null;
+    const chasis = this.form.value.chasis || null;
+    const ofmm = this.form.value.ofmm || null;
+    const cuitTitular = this.form.value.cuitTitular || null;
   
     this.reportService
-      .getComercialReport(dateFrom, dateTo, 1, this.pageSize, selectedYear, selectedMonth, plate, chasis, ofmm, cuitTitular)
+      .getComercialReport(dateFrom, 
+        dateTo, 
+        (pageNumber = this.pageNumber),
+        (pageSize = this.pageSize), 
+        selectedYear, 
+        selectedMonth, 
+        plate, chasis, ofmm, cuitTitular)
       .subscribe({
         next: (response) => {
           this.dataSource = new MatTableDataSource<any>(
@@ -266,25 +269,14 @@ export class ComercialReportsComponent {
       }
     }
 
-    openFilter() {
-      this.filterPat.panel.open();
-    }
-
-    applyFilter(event: Event) {
-      const filterValue = (event.target as HTMLInputElement).value;
-      this.dataSource.filter = filterValue.trim().toLowerCase();
-      
-    }
-
-
     // #REGION DOWNLOAD
     downloadXLS(): void {
       this.isLoading = true;
-      const dates = this.form.getRawValue();
+      const dates = this.dateForm.getRawValue();
       const dateFrom: string = dates.fromDate ? new Date(dates.fromDate!).toISOString() : '';
       const dateTo: string = dates.toDate ? new Date(dates.toDate!).toISOString() : '';
-      const selectedYear = this.form.value.year;
-      const selectedMonth = this.form.value.month;
+      const selectedYear = this.dateForm.value.year;
+      const selectedMonth = this.dateForm.value.month;
     
       this.reportService
         .getComercialReport(dateFrom, dateTo, 1, this.totalItems, selectedYear, selectedMonth)
@@ -373,10 +365,13 @@ export class ComercialReportsComponent {
       }
 
       resetFiltering() {
+          this.dateForm.reset();
           this.form.reset();
           this.matSelect.options.forEach((data: MatOption) => data.deselect());
           this.code.value = '';
           this.matCheckbox['checked'] = false;
         }
+        resetFilterType(){
+          this.dateForm.reset();
+        }
 }
-
