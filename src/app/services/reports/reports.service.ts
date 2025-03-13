@@ -66,7 +66,7 @@ export class ReportService extends BaseService<any> {
     return this.HttpClient.get(url);
   }
   public getDailyReport(
-    pageNumber: number | undefined,
+    pageNumber: number | null,
     pageSize: number | undefined,
     patentingDate: string,
   ): Observable<any> {

@@ -201,7 +201,7 @@ export class DailyReportComponent {
         const patentingDate: string = dates.patentingDate ? new Date(dates.patentingDate!).toISOString() : '';        
     
         this.reportService
-          .getDailyReport(1, this.totalItems, patentingDate)
+          .getDailyReport(null, this.totalItems, patentingDate)
           .subscribe({
             next: (response) => {
               console.log("EXCELL", response.results)
