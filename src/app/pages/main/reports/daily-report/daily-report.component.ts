@@ -44,7 +44,7 @@ export class DailyReportComponent {
   };
   code: any = { value: '' };
   form = new FormGroup({
-      patentingDate: new FormControl(''),
+      patentingDate: new FormControl(null, { validators: [Validators.required] }),
     });
     pipe: DatePipe;
   displayedColumns: string[] = [
@@ -127,22 +127,18 @@ export class DailyReportComponent {
     }
   }
 
-  onDateChange(event: any) {
-    if (event) {
-      const selectedDate = new Date(event.detail.value);
-      const formattedDate = selectedDate.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-      this.form.controls.patentingDate.setValue(formattedDate);
-    }
-  }
+
   
 
   getReports(pageNumber?: number, pageSize?: number) {
       this.isLoading = true;
       const dates = this.form.getRawValue();
 
-      const patentingDate = this.form.controls.patentingDate.value 
-      ? this.form.controls.patentingDate.value 
-      : new Date().toISOString().split('T')[0]; 
+      const selectedDate = 
+        dates.patentingDate ? new Date(dates.patentingDate) 
+        : new Date();
+  
+        const patentingDate = selectedDate.toISOString().split('T')[0];  
     
         this.reportService
           .getDailyReport( 
