@@ -10,7 +10,6 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSelect } from '@angular/material/select';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
 import { NgxMatSelectComponent } from 'ngx-mat-select';
 import { Subject } from 'rxjs';
 import screenfull from 'screenfull';
@@ -18,12 +17,9 @@ import { ErrorHelper } from 'src/app/core/helpers/error.helper';
 import { SweetAlert2Helper } from 'src/app/core/helpers/sweet-alert-2.helper';
 import { Toast } from 'src/app/core/helpers/sweetAlert.helper';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { GradoService } from 'src/app/services/grados/grado.service';
 import { ReportService } from 'src/app/services/reports/reports.service';
-import { RuleService } from 'src/app/services/rules/rule.service';
 import { CustomPaginatorIntl } from 'src/app/shared/components/paginator/custom-paginator-intl';
 import { WorkSheet, utils, WorkBook, write } from 'xlsx';
-import { ParkReportComponent } from '../park-report/park-report.component';
 
 @Component({
   selector: 'app-daily-report',
@@ -48,7 +44,7 @@ export class DailyReportComponent {
   };
   code: any = { value: '' };
   form = new FormGroup({
-      patentingDate: new FormControl(null, { validators: [Validators.required] }),
+      patentingDate: new FormControl(''),
     });
     pipe: DatePipe;
   displayedColumns: string[] = [
@@ -131,12 +127,22 @@ export class DailyReportComponent {
     }
   }
 
+  onDateChange(event: any) {
+    if (event) {
+      const selectedDate = new Date(event.detail.value);
+      const formattedDate = selectedDate.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+      this.form.controls.patentingDate.setValue(formattedDate);
+    }
+  }
+  
+
   getReports(pageNumber?: number, pageSize?: number) {
       this.isLoading = true;
       const dates = this.form.getRawValue();
-      const patentingDate: string = dates.patentingDate
-        ? new Date(dates.patentingDate!).toISOString()
-        : '';      
+
+      const patentingDate = this.form.controls.patentingDate.value 
+      ? this.form.controls.patentingDate.value 
+      : new Date().toISOString().split('T')[0]; 
     
         this.reportService
           .getDailyReport( 
@@ -198,10 +204,14 @@ export class DailyReportComponent {
     downloadXLS(): void {
         this.isLoading = true;
         const dates = this.form.getRawValue();
-        const patentingDate: string = dates.patentingDate ? new Date(dates.patentingDate!).toISOString() : '';        
+        const selectedDate = 
+        dates.patentingDate ? new Date(dates.patentingDate) 
+        : new Date();
+  
+        const patentingDate = selectedDate.toISOString().split('T')[0];        
     
         this.reportService
-          .getDailyReport(null, this.totalItems, patentingDate)
+          .downloadDailyReport(patentingDate)
           .subscribe({
             next: (response) => {
               console.log("EXCELL", response.results)

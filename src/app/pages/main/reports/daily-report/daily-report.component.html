@@ -26,120 +26,125 @@
         }}</mat-icon>
       </button>
     </div>
-    <div class="flex flex-col md:flex-row w-full items-center bg-[#E8E8E8]">
-      <div class="flex flex-row w-full">
-        <div
-          class="w-52 md:w-96 bg-[#000000] h-28 items-center rounded-tr-full rounded-br-full flex justify-center"
-        >
-          <p class="large text-center pr-5 pl-2 pt-2 gotham-book text-white">
-            Reporte Diario
-          </p>
-        </div>
-        <div class="flex w-full items-center flex-col md:flex-row ml-3 pt-5">
 
-          <div
-          class="w-full flex justify-center md:justify-end mb-2 md:mb-0 flex-row gap-4 md:pl-4 pt-7 md:pt-0 pr-5 md:pr-5"
-        >
-          <!--Filtros-->
-          <wb-button
-            class=" {{ showFilter ? 'bg-[#1e4c83]' : 'bg-[#294A71]' }}
-"
-            [disabled]="isLoading"
-            (click)="toggleFilter()"
-            size="s"
-          >
+        <div class="flex flex-col md:flex-row w-full items-center bg-[#E8E8E8]">
+          <div class="flex flex-row w-full">
+            <div
+              class="w-52 md:w-96 bg-[#000000] h-28 items-center rounded-tr-full rounded-br-full flex justify-center"
+            >
+              <p class="large text-center pr-5 pl-2 pt-2 gotham-book text-white">
+                Reporte Diario
+              </p>
+            </div>
+            <div class="flex w-full items-center flex-col md:flex-row ml-3 pt-5">
+    
+              <div
+              class="w-full flex justify-center md:justify-end mb-2 md:mb-0 flex-row gap-4 md:pl-4 pt-7 md:pt-0 pr-5 md:pr-5"
+            >
+           <!--Buscar-->
+              <wb-button
+                (click)="getReports()"
+                [disabled]="isLoading"
+                size="s"
+              >
+                <wb-icon
+                  class="text-white"
+                  name="bds/search/16"
+                  aria-hidden="true"
+                  flip-rtl
+                ></wb-icon>
+                <p class="gotham-book text-white pt-2.5 pl-1 md:inline">Buscar</p>
+              </wb-button>
+              <!--Descargar-->
+
+              <wb-button [disabled]="isLoading" (click)="downloadXLS()" size="s">
+                Descargar
+              </wb-button>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="w-full">
+          <wb-accordion-item
+          button-action-label="Expand/Collapse Simple section"
+          close-aria-label="Close Simple section">
+            <span slot="header">
             <wb-icon
-              class="text-white"
+              class="text-black"
               name="bds/filter/24"
               aria-hidden="true"
               flip-rtl
             ></wb-icon>
-            {{
-              showFilter ? 'Ocultar Filtros' : 'Ver Filtros'
-            }}
-          </wb-button>
-          <!--Buscar-->
+            Filtros
+          </span>
+          <div slot="content">
+            <form
+            class="flex items-center justify-center w-full flex-col md:flex-row gap-x-2"
+            [formGroup]="form"
+          >
+              <!-- Filtro por rango de fechas 
+              <wb-datepicker-control>
+                <wb-input-control>
+                  <wb-input>
+                    <label>Pickup Date</label>
+                    <input type="date" />
+                  </wb-input>
+                </wb-input-control>
+              </wb-datepicker-control>
+              <wb-datepicker-control
+              theme=""
+              variant=""
+              class="wb-datepicker-control hydrated"
+              start-week-at="monday"
+              clear-dates-button-label="Clear"
+              confirm-selection-button-label="Ok"
+            >
+              <wb-input
+                type="date"
+                name="dob"
+                theme=""
+                special-action-label="Hasta"
+                class="wb-input hydrated"
+                size="l"
+                reader-validation-message=""
+                as="input"
+                [formControl]="form.controls.patentingDate"
+                formControlName="patentingDate"
+                (valueChange)="onDateChange($event)"
+              >
+                <span slot="label">Hasta</span>
+                <input style="display: none;" aria-hidden="true" type="hidden" name="dob" />
+              </wb-input>
+            </wb-datepicker-control>-->
+            
+               
+             <mat-form-field class="w-36 md:w-48">
+                <input matInput readonly [matDatepicker]="toDate" [formControl]="form.controls.patentingDate" 
+                placeholder="Hasta"
+                   />
+                <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
+                <mat-datepicker #toDate></mat-datepicker>
+              </mat-form-field>
+            <!-- Limpiar filtro-->
+        <div class="ml-3 mt-2 md:mt-0 mb-3 md:mb-0">
           <wb-button
-            (click)="getReports()"
+            (click)="resetFiltering()"
             [disabled]="isLoading"
             size="s"
+            icon-only
           >
             <wb-icon
-              class="text-white"
-              name="bds/search/16"
+              name="bds/close/24"
               aria-hidden="true"
               flip-rtl
             ></wb-icon>
-            <p class="gotham-book text-white pt-2.5 pl-1 md:inline">Buscar</p>
+            Limpiar filtros
           </wb-button>
-          <!--Descargar-->
-          <wb-button [disabled]="isLoading" (click)="downloadXLS()" size="s">
-            Descargar
-          </wb-button>
+          </div>
+          </form>
+          </div>
+        </wb-accordion-item>
         </div>
-        </div>
-      </div>
-    </div>
-    <div class="w-full">
-        <mat-accordion class="w-full">
-            <mat-expansion-panel class="bg-[rgb(227,227,227)]">
-              <div class="flex justify-center items-center flex-col md:flex-row">
-                <form
-                  class="flex items-center justify-center w-full flex-col md:flex-row gap-x-2 mt-2 -mb-6"
-                  [formGroup]="form"
-                >
-                    <!-- Filtro por rango de fechas -->
-                    <mat-form-field class="w-36 md:w-48">
-                      <input matInput readonly [matDatepicker]="toDate" [formControl]="form.controls.patentingDate" 
-                      placeholder="Hasta"
-                         />
-                      <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
-                      <mat-datepicker #toDate></mat-datepicker>
-                    </mat-form-field>
-                  <!--Limpiar filtro-->
-              <div class="ml-3 mt-2 md:mt-0 mb-3 md:mb-0">
-                <wb-button
-                  (click)="resetFiltering()"
-                  [disabled]="isLoading"
-                  size="s"
-                  icon-only
-                >
-                  <wb-icon
-                    name="bds/close/24"
-                    aria-hidden="true"
-                    flip-rtl
-                  ></wb-icon>
-                  Limpiar filtros
-                </wb-button>
-                </div>
-                </form>
-              </div>
-            </mat-expansion-panel>
-          </mat-accordion>
-          
-          
-    </div>
-    <!-- <div
-            class="absolute flex self-end {{fullScreen.isEnabled ? 'pt-20 md:mt-8 md:pt-9 ml-2' : 'mt-3 md:-mt-1 pt-20'}} z-0">
-            <div *ngIf="!isXsOrSm" class="{{fullScreen.isEnabled ? 'mt-1' : ''}}">
-                <button [disabled]="selection.selected.length <= 1"
-                    class="bg-[#294A71] hover:bg-[#3b69a1] text-white text-sm px-4 py-2 border rounded-full disabled:bg-[#404750] active:bg-[#1f2327] scale-90 ml-3"
-                    (click)="createMultipleOfmms()">Crear
-                    múltiples
-                    OFMMs</button>
-            </div>
-            <mat-form-field class="h-14 {{fullScreen.isEnabled ? 'mt-1' : ''}}">
-                <mat-select (selectionChange)="filterByCode($event)" placeholder="Filtrar por error"
-                    floatlLabel="never">
-                    <mat-option value="all" [disabled]="isLoading">Todos</mat-option>
-                    <mat-option *ngFor='let rule of rules' [value]="rule.code">({{rule.code}})
-                        {{rule.name}}</mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-checkbox *ngIf="!fileId" color="warn" class="mr-4" (change)="lastDischarge($event)">
-                <p class="gotham-book pt-2.5">Últ. carga</p>
-            </mat-checkbox>
-        </div> -->
     <div
       class="table-container {{
         fullScreen.isEnabled ? 'max-h-[34rem]' : 'max-h-[450px]'
@@ -465,9 +470,6 @@
             ></mat-paginator>
           </div>
         </div>
-        <!-- <button mat-raised-button (click)="createMultipleOfmms()">CREAR MULTIPLES OFMM</button>
-            <div>
-                <button mat-raised-button (click)="logSelection()">Console Log Selected</button>
-            </div> -->
       </div>
     </div>
+       
