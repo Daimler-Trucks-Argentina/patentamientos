@@ -77,54 +77,32 @@
             ></wb-icon>
             Filtros
           </span>
-          <div slot="content">
-            <form
-            class="flex items-center justify-center w-full flex-col md:flex-row gap-x-2"
-            [formGroup]="form"
-          >
-              <!-- Filtro por rango de fechas 
-              <wb-datepicker-control>
-                <wb-input-control>
-                  <wb-input>
-                    <label>Pickup Date</label>
-                    <input type="date" />
+          <div slot="content"  class="flex items-center justify-center w-full flex-col md:flex-row gap-x-2">
+              <!-- Filtro por rango de fechas -->
+
+            <wb-datepicker-control
+                  class="wb-datepicker-control hydrated"
+                  clear-dates-button-label="Clear"
+                  confirm-selection-button-label="Ok"
+                >
+                  <wb-input
+                  #fromDateInput
+                    type="date"
+                    name="dob"
+                    class="wb-input hydrated"
+                    size="l"
+                    reader-validation-message=""
+                    as="input"
+                  >
+                    <span slot="label">Hasta</span>
+                    <input
+                      style="display: none;"
+                      aria-hidden="true"
+                      type="hidden"
+                      name="dob"
+                    />
                   </wb-input>
-                </wb-input-control>
-              </wb-datepicker-control>
-              <wb-datepicker-control
-              theme=""
-              variant=""
-              class="wb-datepicker-control hydrated"
-              start-week-at="monday"
-              clear-dates-button-label="Clear"
-              confirm-selection-button-label="Ok"
-            >
-              <wb-input
-                type="date"
-                name="dob"
-                theme=""
-                special-action-label="Hasta"
-                class="wb-input hydrated"
-                size="l"
-                reader-validation-message=""
-                as="input"
-                [formControl]="form.controls.patentingDate"
-                formControlName="patentingDate"
-                (valueChange)="onDateChange($event)"
-              >
-                <span slot="label">Hasta</span>
-                <input style="display: none;" aria-hidden="true" type="hidden" name="dob" />
-              </wb-input>
-            </wb-datepicker-control>-->
-            
-               
-             <mat-form-field class="w-36 md:w-48">
-                <input matInput readonly [matDatepicker]="toDate" [formControl]="form.controls.patentingDate" 
-                placeholder="Hasta"
-                   />
-                <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
-                <mat-datepicker #toDate></mat-datepicker>
-              </mat-form-field>
+            </wb-datepicker-control>
             <!-- Limpiar filtro-->
         <div class="ml-3 mt-2 md:mt-0 mb-3 md:mb-0">
           <wb-button
@@ -141,7 +119,6 @@
             Limpiar filtros
           </wb-button>
           </div>
-          </form>
           </div>
         </wb-accordion-item>
         </div>
@@ -460,14 +437,12 @@
         />
         <div class="w-[70%] md:w-full flex flex-col md:flex-row">
           <div class="w-[150%] flex items-end md:justify-end">
-            <mat-paginator
-              [length]="totalItems"
-              [pageSize]="pageSize"
-              [pageSizeOptions]="pageSizeOptions"
-              (page)="onPageChange($event)"
-              showFirstLastButtons
-              class="bg-[rgb(227,227,227)] flex justify-end"
-            ></mat-paginator>
+            <mat-paginator 
+            [pageSizeOptions]="pageSizeOptions"  
+            showFirstLastButtons="true" 
+            [pageSize]="pageSize"
+            class="bg-[rgb(227,227,227)]">
+        </mat-paginator>
           </div>
         </div>
       </div>
