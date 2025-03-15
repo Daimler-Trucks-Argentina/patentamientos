@@ -1,6 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { DatePipe } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatOption } from '@angular/material/core';
@@ -38,14 +38,12 @@ export class DailyReportComponent {
   @ViewChild(NgxMatSelectComponent) filterPat!: NgxMatSelectComponent;
   @ViewChild(MatSelect) matSelect!: MatSelect;
   @ViewChild(MatCheckbox) matCheckbox!: MatCheckbox;
+  @ViewChild('fromDateInput') fromDateInput!: ElementRef;
   fullScreen = {
     isEnabled: false,
     isFullscreen: false,
   };
   code: any = { value: '' };
-  form = new FormGroup({
-      patentingDate: new FormControl(null, { validators: [Validators.required] }),
-    });
     pipe: DatePipe;
   displayedColumns: string[] = [
             "mercedesTerminalId",
@@ -127,31 +125,24 @@ export class DailyReportComponent {
     }
   }
 
-
-  
-
   getReports(pageNumber?: number, pageSize?: number) {
       this.isLoading = true;
-      const dates = this.form.getRawValue();
 
-      const selectedDate = 
-        dates.patentingDate ? new Date(dates.patentingDate) 
-        : new Date();
+      const selectedDate = this.fromDateInput?.nativeElement.value 
+         ? new Date(this.fromDateInput.nativeElement.value) 
+        : new Date(); 
+
   
         const patentingDate = selectedDate.toISOString().split('T')[0];  
     
         this.reportService
           .getDailyReport( 
-          (pageNumber = this.pageNumber),
-          (pageSize = this.pageSize), 
             patentingDate)
         .subscribe({
           next: (response) => {
             this.dataSource = new MatTableDataSource<any>(response.results);
-            console.log(response.results)
-            this.totalItems = response.totalItems;
-            //this.pageNumber = response.pageNumber;
-            this.pageSize = response.pageSize;
+            this.dataSource.paginator = this.paginator;
+            this.sortAndPaginate();
   
   
             if (this.dataSource.data.length === 0) {
@@ -169,12 +160,6 @@ export class DailyReportComponent {
           },
         });
     }
-  
-    onPageChange(event: PageEvent): void {
-      this.pageSize = event.pageSize;
-      this.pageNumber = event.pageIndex + 1;
-      this.getReports(this.pageNumber);
-    }
 
     toggleFilter() {
       if (!this.showFilter) {
@@ -186,32 +171,36 @@ export class DailyReportComponent {
       }
     }
 
-    openFilter() {
-      this.filterPat.panel.open();
-    }
-
-    applyFilter(event: Event) {
-      const filterValue = (event.target as HTMLInputElement).value;
-      this.dataSource.filter = filterValue.trim().toLowerCase();
+    sortAndPaginate() {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sortingDataAccessor = (item, property) => {
+        switch (property) {
+          case 'terminal_id':
+            return item.terminal.mercedesTerminalId;
+          case 'terminal_name':
+            return item.terminal.name;
+          default:
+            return item[property];
+        }
+      };
+      this.dataSource.sort = this.sort;
     }
 
 
     // #REGION DOWNLOAD
     downloadXLS(): void {
         this.isLoading = true;
-        const dates = this.form.getRawValue();
-        const selectedDate = 
-        dates.patentingDate ? new Date(dates.patentingDate) 
+
+        const selectedDate = this.fromDateInput?.nativeElement.value 
+         ? new Date(this.fromDateInput.nativeElement.value) 
         : new Date();
   
         const patentingDate = selectedDate.toISOString().split('T')[0];        
     
         this.reportService
-          .downloadDailyReport(patentingDate)
+          .getDailyReport(patentingDate)
           .subscribe({
             next: (response) => {
-              console.log("EXCELL", response.results)
-              console.log("EXCELL", this.totalItems)
               if (!response.results || response.results.length === 0) {
                 console.warn('No hay datos para exportar.');
                 this.isLoading = false;
@@ -290,9 +279,6 @@ export class DailyReportComponent {
       }
 
       resetFiltering() {
-          this.form.reset();
-          this.matSelect.options.forEach((data: MatOption) => data.deselect());
-          this.code.value = '';
-          this.matCheckbox['checked'] = false;
+        this.fromDateInput?.nativeElement.value.reset()
         }
 }

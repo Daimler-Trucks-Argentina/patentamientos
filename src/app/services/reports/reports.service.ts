@@ -65,17 +65,8 @@ export class ReportService extends BaseService<any> {
     &month=${month}`;
     return this.HttpClient.get(url);
   }
+
   public getDailyReport(
-    pageNumber: number | null,
-    pageSize: number | undefined,
-    patentingDate: string,
-  ): Observable<any> {
-    const url: string = `${
-    this.controller
-    }/daily?PageSize=${pageSize}&PageNumber=${pageNumber}&FechaPatentamiento=${patentingDate}`;
-    return this.HttpClient.get(url);
-  }
-  public downloadDailyReport(
     patentingDate: string,
   ): Observable<any> {
     const url: string = `${
